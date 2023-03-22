@@ -1,0 +1,140 @@
+---
+title: "How to use mermaid in Rmd"
+date: 2022-11-03
+author: Jianqi Huang
+---
+
+## Introduction
+
+`mermaid` is a useful plugin in diagramming and charting tool in markdown to create and modify diagrams dynamically based on JavaScript.
+
+
+```{r,fig.width=50}
+library(DiagrammeR)
+g  <- mermaid("
+graph LR
+    A-->B;B-->C;C-->F;F-->A")
+g
+```
+
+
+some is different with mermaid in markdown that we need to construct the relationship from 'A' to 'B' to 'C' by the program with two lines.But we could complete in `markdown` in one line 
+`a-->b-->c`
+
+```{r}
+g<-DiagrammeR("
+graph LR
+  a==>b{that me think}
+  a==>d
+  b==>text
+  text==>c
+")
+g
+```
+- Note:we use the function `DiagrammeR` or `mermaid` is the same
+
+## Node Shape and Text
+the basic grammar is `[ID][opening brace][label][closing brace]
+`
+
+- `id1{rhomb}`
+- `id2(round retangle)`
+-	`id3[retangle]`
+
+- `id4((circular))`
+-	`id5>flag]`
+
+```{r}
+mermaid("
+graph TD
+  A{node text1}
+  B(node text2)
+  C((note text3))
+  D[note text4]
+  E>note text5]
+")
+```
+
+## Defining a graph
+
+- `graph LR`: left to right
+- `graph RL`: right to left
+- `graph TB`: top to bottom
+- `graph BT`: bottom to top
+- `graph TD`: top down (same as TB)
+
+
+
+## Other setting
+
+- arrow and no arrow:'-->' and '---' ,the no arrow is different from mermaid in markdown that '--'.
+- dotted line: `-.-`
+- adding text: just add a dot `.` before the text
+- bold arrow: `==>`
+
+```{r}
+DiagrammeR("
+  graph TB
+    a-.->b
+    b---tx
+    tx==>c
+  ")
+```
+
+
+## adding color and border
+`stlye [ID] fill:[color_numver],stroke:[border_number]`
+```{r}
+DiagrammeR("
+graph LR
+  A(Rounded)-->B[Squared];
+  B-->C{A Decision};
+  C-->D[Square One];
+  C-->E[Square Two];
+  style A fill:#E5E25F,stroke:#334;
+  style B fill:#87AB51,stroke:#333; 
+  style C fill:#3C8937;
+  style D fill:#23772C; 
+  style E fill:#B6E6E6;"
+)
+```
+
+  
+
+## Text in the arrow
+
+```{r}
+mermaid(
+"   graph LR
+    A[Hard edge] -->|Link text| B(Round edge)
+    B --> C{Decision} 
+    C -->|One| D[Result one]
+    C -->|Two| E[Result two]
+    ")
+```
+
+## Mermaid sequence diagrams
+we could draw a sequence diagram using 'sequenceDiagram'. Next to describe the relationship from an attribute to another.
+```{r}
+DiagrammeR("
+ sequenceDiagram;
+    customer->>ticket seller: ask for a ticket;
+    ticket seller->>database: seats;
+    alt tickets available
+      database->>ticket seller: ok;
+      ticket seller->>customer: confirm;
+      customer->>ticket seller: ok;
+      ticket seller->>database: book a seat;
+      ticket seller->>printer: print a ticket;
+    else sold out
+      database->>ticket seller: none left;
+      ticket seller->>customer: sorry;
+    end
+")
+```
+
+That may be useful when doing project management
+
+## Source
+- https://mermaid-js.github.io/mermaid/#/
+- https://rich-iannone.github.io/DiagrammeR/graphviz_and_mermaid.html

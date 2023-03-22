@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>社会科学简单介绍</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="黄建祺" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="zh-CN.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# 社会科学简单介绍
+]
+.author[
+### 黄建祺
+]
+.institute[
+### 上杭一中2020届高三10班
+]
+.date[
+### 2023/02/05
+]
+
+---
+
+
+
+
+
+
+---
+class: middle, center
+# 社会科学与自然科学
+
+---
+class: middle
+- **社会科学（social science）**是对人类社会组织、结构与活动进行描述、解释和预测的实证主义科学研究，如社会学研究当代人类社会，政治学研究政治、政策和有关的活动，经济学研究资源分配。广义的“社会科学”，是对所有以人和社会为研究对象的实证与跨学科研究及人文学科的统称。——from wikipedia
+
+- **自然科学（natural science）**是研究大自然中有机或无机的事物和现象的科学。自然科学包括天文学、物理学、化学、地球科学、生物学、医学等。
+
+--
+
+- 研究对象上存在差异；
+
+- 研究方法（范式）上也有较大的不同；
+
+- 都是从现象出发进行知识发现；
+
+---
+
+## 经济学：一门关于选择的科学
+
+最早起源于17世纪亚当斯密所著的《国富论》，现代经济学定义为关注于生产、分配和消费商品和服务，国家分配资源，个人、企业、政府进行选择的学科。
+
+在1930年以后，凯恩斯出版通论，开启凯恩斯主义经济学，之后萨缪尔森等人将大量的数学引入经济学开启了新古典综合时代。后来也有奥地利学派和货币主义学派和理性预期等。
+
+还有贝克尔将经济学分析的触角延伸到更多的领域，包括犯罪、家庭等，“经济学帝国”由此而来。
+
+1990年之后，人们开始逐渐怀疑“理性人”的基本假设，行为经济学开始兴起至今。
+
+
+---
+class: center, middle
+# 一些经济学的基本概念
+
+---
+## 外部性（Externality）
+Definition：当一个人从事一种影响**旁观者**福利并对这种影响既不付报酬又不得报酬的活动时，就产生了外部性。经济外部性又称作外部成本、溢出效应。
+- 正外部性：对旁观者的影响是有利的；
+- 负外部性：对旁观者的影响是不利的；
+
+Note：旁观者是否是真正的旁观者；
+
+比如汽车排放尾气：会对行人会产生负的外部性；
+
+--
+- 这种外部影响并没有通过市场机制反映出来，不能通过市场进行买卖。
+
+--
+- 通过外部性可以很好理解为何政府征收税收、补贴等行为。
+
+
+---
+
+&lt;https://about-econ.netlify.app/&gt;
+
+![](why-social-sci_files/page.png)
+
+--
+
+- 希望大家在生活中是一个能够创造正外部性远超过负外部性的人。
+
+---
+### 边际效用(marginal utility)
+
+- 边际：边缘
+- 效用：满足
+
+消费者从增加的一单位的商品或服务中增加的满足。
+
+`$$f'(x)=\frac{\Delta y}{\Delta x}$$`
+
+---
+
+### 边际效用递减
+
+&lt;img src="why-social-sci_files/u-de.jpeg" width="440" /&gt;
+
+---
+
+在之前本人[对于自己高中时候的反思……](https://www.jianqihuang.com/cn/2022/10/16/%E9%AB%98%E4%B8%AD%E7%9A%84%E6%96%87%E7%A7%91/)
+
+![](why-social-sci_files/reflect.png)
+--from my personal page.
+
+---
+#### 边际效用递增
+
+`$$MU=\frac{\Delta TU}{\Delta Q}$$`
+
+知识依赖型经济存在边际收益递增的现象。
+
+
+---
+class: middle
+# 因果推断（causal inference）
+
+因果推断是所有的社会科学的一个重要部分。
+
+---
+
+## 潜在因果框架
+自然科学实验中，最常用的科学方法是建立“实验组-对照组”实验，来探究某个定理或现象。在经济学中，同样是控制一组变量，一组进行干预，另一组进行控制。对于每一个干预状态，就会有一个（潜在）结果。干预完成之后，我们就有了这个可以看到的结果。
+
+比如，考察大学教育对个人收入的影响，干预变量或原因变量是大学教育，那么对于任意个体$i$有两种干预状态，用$D_i$来表示，$D_i=1$表示个体$i$完成了大学教育，$D_i=0$表示个体$i$完成高中教育。
+
+无论个体实际是完成大学教育还是高中教育，事前每个个体均有两种可能的状态：**完成高中教育或完成大学教育**。每一个状态下对应于一个潜在结果，$Y_{1i}$表示个体$i$在状态$D_{i}=1$（大学）下的潜在结果；$Y_{0i}$表示$D_{i}=0$（高中）下的潜在结果。
+
+因此，在这种干预之下，我们就可以估计个体的因果效应：
+
+$$
+\tau_i=Y_{1i}-Y_{0i}
+$$
+
+这个$\tau_i$就是个体$i$在干预下的因果效应。
+
+---
+
+#### 反事实
+但现实生活中，我们只有事后的一个结果，在事情的另一面我们是不得而知的（除非你是电影信条的男主），未发生的事实我们就称为是反事实。
+
+
+#### 稳定性假设
+没有了两个潜在结果，是否就不能进行估计了？
+
+计量经济学家做出了一个假设，第一，不同个体的潜在结果之间不会有交互影响；第二，干预水平对所有个体都是相同的。
+
+---
+### 随机试验
+有了上述的假设之后，我们就认为在人群中抓取一些人来做实验：但这些人需要在了解和控制一定的属性（变量）之后再分组。
+
+- 最终，我们会发现我们并不能估计某一个个体的因果效应，只能估计一个总体的平均因果效应。
+
+--
+
+要注意违背伦理道德的问题：比如随机抽取一部分人不能考大学，再另一部分人送他上大学，再比较他们之间的收入差距。
+
+
+---
+class: cener, middle
+# 经济学一些有趣的研究
+
+---
+class: cener, middle
+# 房价与财政
+
+---
+
+
+### 分税制改革历史背景
+#### 财政包干
+
+![](why-social-sci_files/Picture1.png)
+
+---
+
+![](why-social-sci_files/Picture2.png)
+
+- 包干形式从（1）到（4），是一个从总额分成到大包干的不同形式，对地方的增收激励越来强。
+- 广东最早实行定额上解的“大包干”，其经济发展速度在全国也最快，变成了省级财政最充裕的省份。
+- 地方政府“放水养鱼”与乡镇企业的兴起，“村村冒烟、户户上班”……
+- “藏富于企”
+
+---
+
+- 当时的财政部长刘仲藜说：
+
+![](why-social-sci_files/Picture4.png)
+
+- 当时的财政部预算司副司长、后来的财政部长项怀诚说：
+
+![](why-social-sci_files/Picture5.png)
+
+
+---
+
+
+![](why-social-sci_files/Picture6.png)
+---
+![](why-social-sci_files/Picture7.png)
+---
+class: middle
+![](why-social-sci_files/zhu.jpeg)
+
+---
+
+
+## 1994年分税制改革的内容
+- 按税种划分中央和地方的收入
+  - 中央政府固定收入：消费税、车辆购置税、关税、进口环节增值税；
+  - 地方政府固定收入：土地使用税、耕地占用税、土地增值税、房产税、车船税、契税、筵席税；
+- 中央政府与地方政府共享收入：
+  - 增值税：中央政府75%，地方政府25%；
+  - 营业税：铁道部、各银行总行、各保险总公司集中缴纳的部分归中央政府，其余部分归地方政府；
+  - 企业所得税：铁道部、各银行总行及海洋石油企业缴纳的部分归中央政府，其余部分中央与地方政府按60%与40%的比例分享。（2002年）
+  - 个人所得税（与企业所得税同）
+  - 资源税：海洋石油企业缴纳的部分归中央政府
+  - 城市维护建设税：铁道部、各银行总行、各保险总公司集中缴纳的部分归中央政府
+  - 印花税：证券交易印花税94%归中央政府
+- 税收返还和转移支付制度
+  - 分设中央、地方两套税务机构，实行分别征税
+
+---
+
+![](why-social-sci_files/Picture8.png)
+---
+
+## 分税制与土地财政
+- 地方政府财政收入增长方式的转变：
+  - 增值税转向营业税（建筑业是营业税第一大户）           
+  - 对土地开发、基础设施投资和扩大地方建设规模的热情高涨
+  - 土地财政
+    - 土地所有权与土地征用：“城市的土地属于国家所有”、
+    “在城市建设中，如果需要使用原有的农村集体土地，必须通过征地改变集体土地原有的产权性质”
+    - 非预算收入：土地出让金
+    - 预算内收入：土地税收、营业税等
+
+
+---
+![](why-social-sci_files/Picture9.png)
+---
+![](why-social-sci_files/Picture10.png)
+---
+![](why-social-sci_files/Picture11.png)
+---
+class: middle
+.pull-left[
+![](why-social-sci_files/Picture12.png)
+]
+.pull-right[
+![](why-social-sci_files/price.png)
+]
+
+
+---
+## 城市是否越大越好
+
+&gt; 县城（小城市）高铁的开通是否是利大于弊还是弊大于利。
+
+- 县城高铁的开通，使得更多人流出，经济发展萎缩，不利于县城经济发展。
+
+---
+## 在集聚中走向平衡
+### 地理对经济发展的影响总结为3D：
+密度带来规模经济，城市是规模经济的集中体现。距离产生贸易成本、基础设施能够降低贸易成本；分割：分割体现了政治，只要存在收入差距，穷地方的人会不断流向富地区，直到两个地区收入相等，穷地不能自由流动没关系，资本可以自由流动即可，富地方的钱资本回报低于穷地方，因此会流向穷地方直到两地的投资回报相等。
+
+--
+
+- 现实中，资本并不是边际收益递减的，生产有规模性，生产要素的集聚可能是的高技术的劳动力和企业知识的外溢，加快技术进步，资本收益就会提高。
+
+--
+
+- 要素（尤其是劳动力）的自由流动，能够带来国家或地区间经济发展水平差距的“收敛”。
+- 对人口流动的正确认知：规模的平衡（经济资源的均匀分布）和人均的平衡。
+  - 并非只有将经济资源往欠发达地区和人口流出地移动才能实现均衡发展。
+
+- 县城的人口流出，流出的那一部分获得了更高的收入，未流出的部分在医疗财政等资源不变下获得更高的占比。
+
+
+---
+#### 城市发展的几座大山
+
+- 户籍制度
+
+“当时中国的办法是搞户籍制：旅行——甚至包括逃荒——要开个介绍信，定居就非拿出户口本不可。没有那张小小的户口卡片，任何人不能移居、定居他处。据说开始时户籍制度仅为选举服务，登记清楚才好准确记录选民。但实际情况——粮食困难和饥荒——需要劝止农民转工进城。劝而不止，措施就必须升级。弄来弄去，户籍与选举无大关系，却发展成为划分城乡居民身份的法律凭证。”（周其仁《城乡中国》）
+
+- 土地制度
+
+“其次是观念转变急。严禁土地转让究竟是为了哪般？从来就没有清楚明白的说明。不行就是不行，连动一动念头也是弥天大罪。突然又允许转让，道理也来不及细讲，反正转让的不是所有权，只是使用权。至于为什么所有权转不得，使用权却可以转，以及到底何谓所有权，何谓使用权，也一概来不及细说，完全顾不得“权利”（rights）要以人们普遍认为正确（right）为基础。”（周其仁《城乡中国》）
+
+- 城市规划
+
+- 政治制度
+  - GDP增长排位赛
+
+---
+
+## 改革仍在进行时...
+
+### 户籍改革
+- 2013，首次中央城镇化会议
+- 2014， 人口落户作为政府工作目标
+- 2015，城乡统一的“居民户口”，常住人口规划公共服务供给
+- 2016，“人地挂钩”
+- 2019，发改委，“城区常住人口100万—300万的II型大城市，要全面取消落户限制;城区常住人口300万—500万的I型大城市，要全面放开放宽落户条件，并全面取消重点群体落户限制; 超大特大城市要调整完善积分落户政策，大幅增加落户规模、精 简积分项目，确保社保缴纳年限和居住年限分数占主要比例，允许租赁房屋的常住人口在城市公共户口落户。”
+
+---
+
+### 土地流转改革
+- 2008，十七届三中全会，集体土地入市的原则 
+- 2009， 重庆“地票”
+- 2015，33个试点县市“三块地”改革
+- 2017，集体建设用地上建设租赁住房试点
+- 2019，《土地管理法》修正案
+- 2020，宅基地改革，“三权分置”
+
+#### 2020年，中央与国务院《关于构建更加完善的要素市场化配置 体制机制的意见》
+
+- 第一条:“推进土地要素市场化配置”、“建立健全城乡统一的建设用地市场”、“探索建立全国性的建设用地、补充耕地指标跨区域交易体制”
+- 第二条:“引导劳动力要素合理畅通有序流动”、“深化户籍制度改革。推动超大、特大城市调整完善积分落户政策，探索推动在长三角、珠三角等城市群率先实现户籍准入年限同城化 累计互认。放开放宽除个别超大城市外的城市落户限制，试行以经常居住地登记户口制度。建立城镇教育、就业创业、医疗卫生等基本公共服务与常住人口挂钩机制，推动公共资源按常住人口规模配置。”
+
+
+
+---
+class: middle, center
+# 在历史中寻找经济学问题
+
+---
+
+### 曾国藩如何利用其个人精英网络组织军队镇压叛乱以及这些网络如何影响了国家的权力分配
+论文标题：“权力之网：精英网络如何塑造中国的战争和政治”[(Web of Power: How Elite Networks Shaped War and Politics in China)](https://academic.oup.com/qje/advance-article-abstract/doi/10.1093/qje/qjac041/6769865?login=true)
+
+晚清时期，朝廷镇压太平天国起义，很大程度依赖曾国藩统领的“湘军”。这篇文章的作者整理曾国藩的社会关系网（同科进士、亲属等等），统计了网里的人都来自哪些县。分析发现，如果一个县有更多人在曾的关系网里，那么，这个县战死的士兵数量也更高，同时，有更多来自这个县的人在战后晋升为中央官员。
+
+作者们的解释是，曾国藩在组建湘军时找了很多熟人，从中选人培植为自己的亲信，熟人又找熟人……个人最终能把持朝政，靠的就是这种关系网。
+
+- 该文章证明曾的个人网络影响了地区士兵的死亡；
+- 与曾氏有更多联系的湖南县在战争期间和战后都有更多的国家级官员；
+- 个人网络(和信任)可以补充脆弱的制度，并可以带来积极的政治和经济结果；
+- 这篇文章是第一篇阐明个人如何通过个人网络塑造国家政治；
+
+
+---
+
+### “上山下乡”运动期间知识青年对农村儿童受教育程度的影响
+
+论文标题：青年才俊的到来：中国上山下乡运动([Arrival of Young Talent: The Send-Down Movement and Rural Education in China](https://www.aeaweb.org/articles?id=10.1257/aer.20191414))
+
+
+**背景**：从1968年开始，至七十年代末，大约有一千六百万城市知识青年响应国家号召到农村插队，接受思想再教育，“意外地”给当地做民办教师。
+
+这篇论文研究发现：知青的到来显著提升了农村儿童受教育年限，尤其提升了初中入学率。该效应在女孩和欠发达地区更强，这表明知青的到来不仅提高农村整体的教育水平，而且还有助于降低教育的不平等水平。当知青大规模“返城”之后，上述效应就迅速下降，但从未消失，这说明“知青效应”具有一定的持续性。
+
+进一步发现，受到知青教育影响的农村小孩在未来更可能上高中，结婚年龄更晚，生育小孩的数量更少，也更可能从事技能密集型的职业。这些证据说明，知青带给农村的不仅仅是人力资本的“数量”，也包括“质量”的提升。
+
+
+
+
+---
+class: center, middle
+# 为何需要社会科学
+
+---
+
+#### 2020年4月14日央行发布工作论文：[**《关于我国人口转型的认识和应对之策》**](http://www.pbc.gov.cn/redianzhuanti/118742/4122386/4122692/4214189/4215394/2021032618473569432.pdf)
+
+&lt;img src="why-social-sci_files/working-paper.png" width="1693" /&gt;
+
+---
+
+## 文科是否是无用的？
+
+2015年日本曾讨论过是否要废除文科学部，引起了较为广泛的讨论，对于我们国内讨论文科也具有一定的参考意义。
+
+&gt; 真正重要的是创造价值尺度的能力，为此需要批判现有的价值，将我们视为不言自明的价值相对化。文科的知识生产，首先其面对的时间跨度更大，其二其研究对象是我们自身，第三是其在根底存在着无目的的游戏性，因此能够从更为普世的视野出发，将同时代的价值相对化，并创造新的价值。（[“废除文科学部”的冲击，[日] 吉见俊哉，上海译文出版社](https://book.douban.com/subject/36019350/?icn=index-latestbook-subject)）
+
+--
+
+- 说的较为抽象……简单来说就是理科的知识能创造价值，而文科的知识能够改变相对价值。
+
+- 钻石恒久远，一颗永流传。(A diamond is forever.)
+
+- 宗教改革之后，“神”是价值的绝对来源这一信仰开始崩塌。
+
+---
+
+
+## [517座谈](http://www.xinhuanet.com/politics/2016-05/18/c_1118891128.htm)
+
+2016年5月17日，习近平总书记主持召开哲学社会科学工作座谈会，提出加快构建中国特色哲学社会科学的重大战略任务。
+
+- 观察当代中国哲学社会科学，需要有一个宽广的视角，需要放到世界和我国发展大历史中去看。
+
+- 中国是一个历史悠久、经历数个学术思想繁荣时期，仍然在学术中有大量值得挖掘的学术思想。
+
+- 总的看，我国哲学社会科学还处于有数量缺质量、有专家缺大师的状况，作用没有充分发挥出来。
+
+- 以人为本：我国哲学社会科学为谁著书、为谁立说，是为少数人服务还是为绝大多数人服务，是必须搞清楚的问题。
+
+
+
+---
+## 经济学/社会科学的现状与未来
+
+- 中国的经济学仍然是在西方经济学理论下进行研究探索，自主理论创新能力较弱。
+
+--
+
+- “21世纪，中国会是世界经济学的研究中心，21世纪会是经济学大师，引领思潮的大师，在中国辈出的世纪。”——林毅夫（北大新结构经济学研究院院长，前世界银行首席经济学家）
+
+
+
+- “展望未来，我国必将成为世界经济大国、强国。目前我国正在经历着一场前所未有的制度变迁，这为广大经济学者提供了一个极其难得的社会科学实验场；我国在发展进程中不可避免地会遇到大量新问题，这又为经济学理论和方法的创新提供了广阔的空间。伟大的实践必将催生伟大的理论，我们有理由相信，中国经济学也必将成为一门既与现代经济学接轨、又能为中国经济改革和全球化实践提供理论指导的科学，形成具有广泛国际学术影响力的中国经济学派。”——洪永淼（国科大经管院院长，厦门大学王亚南经济学院创始院长）
+
+
+- “谁能正确解释中国改革和发展，谁就能获得诺贝尔经济学奖。” ——米尔顿 弗里德曼（经济学诺奖得主，货币学派创始人）
+
+
+---
+class: center, middle
+# 研究（Re Search）
+
+---
+## 把自己作为方法
+
+.pull-left[
+“把个人经验问题化是一个重要方法。**我们关心的是世界，不是自己......关键就是从哪里开始了解这个世界，同时也更好地了解自己，把个人自己的经历问题化，就是一个了解世界的具体的开始。**我对自己不满意，看自己的成长经历，同时也要看自己和这个世界的关系，别人怎么会想到这些事情而自己看不到，这样才能不断地看到很具体的世界。自己的经验都不是自然发生的，都是在一定的情景下发生，有它的历史、来源和局限。问题化的意思不是把它变成了负面意义上的问题，把它割除掉，而是要更好地去拥抱它。”
+——项飙，《把自己作为方法》，2020年
+]
+.pull-right[
+![](why-social-sci_files/xiangbiao.jpeg)
+]
+
+
+---
+#### 南阳高额彩礼现象
+
+- 代际剥削理论
+
+- 代内剥削理论
+
+
+--
+
+#### 彩礼与储蓄
+
+- 魏尚进和张晓波在2011年QJE的论文的“竞争性储蓄理论”研究发现：人们储蓄的原因是为了谋求在婚姻市场上更有利的地位。具体而言，当性别比例上升，那些养儿子的家庭会为应付婚姻市场上增大的竞争压力而提高储蓄率。但相应的，养女儿的家庭却不一定会降低储蓄率。原因在于它们同时拥有影响其储蓄行为的两种动机：其一，未来女婿的高储蓄率和搭其便车的可能性使养女儿的家庭降低了储蓄率；其二，为提高女儿在未来家庭内的地位，养女儿的家庭又会提高储蓄率。二者的作用会在一定程度上互相抵消。
+
+---
+class: center
+#### 年前拍摄于家中
+![](why-social-sci_files/p12.jpg)
+
+
+---
+
+#### 贵州调研图片（来自中央财经大学戴若尘）
+
+![](why-social-sci_files/gui1.png)
+
+---
+class: middle
+.pull-left[
+![](why-social-sci_files/gui2.png)
+]
+.pull-right[
+![](why-social-sci_files/gui3.png)
+]
+
+
+---
+
+![](why-social-sci_files/gui4.png)
+
+---
+# 产业集群
+
+- 基于宗族和乡土文化的强社会纽带
+- 富余劳动力，高人口密度
+- 企业家精神
+
+---
+
+### 产业集群在工业化的作用
+
+- 绝大部分的工业生产都来自于产业集群
+- 中国有上千个产业集群
+- 河北省有480多个
+
+---
+
+![](why-social-sci_files/clu1.png)
+
+---
+
+### 义务小商品市场
+- Largest small commodity market in the world (20,000 shops, 0.7 million local residents + one million migrant workers).
+
+- In the 1970s, it was a rather isolated place in Zhejiang.
+
+- For each commodity, there are hundreds of shops.
+
+- Most of the shops do not own production facilities.
+
+---
+
+![](why-social-sci_files/clu2.png)
+---
+
+![](why-social-sci_files/clu3.png)
+
+
+---
+
+### 濮院的羊绒衫集群
+
+![](why-social-sci_files/clu4.png)
+
+
+---
+
+![](why-social-sci_files/clu5.png)
+
+---
+
+![](why-social-sci_files/clu6.png)
+
+
+---
+![](why-social-sci_files/clu7.png)
+
+
+---
+
+![](why-social-sci_files/clu8.png)
+---
+
+### 产业集群的作用
+
+1. 降低初始投资
+1. 商业信用:流动资金
+1. 社会网络对于正式制度的补充
+
+
+
+---
+
+#### 上学期课程论文：[《建筑业的乡缘集聚与建筑资质》](https://www.jianqihuang.com/papers/certificate-cluster-arch-2301.pdf)
+
+&lt;img src="why-social-sci_files/papers.png" width="1557" style="display: block; margin: auto;" /&gt;
+
+
+---
+### 核心问题
+为何建筑企业会来自同一个家乡，而集聚经营在另一个城市，而同时为何会选择一个建筑行业以及其中的细分领域钢结构。
+
+
+---
+
+## 宗族关系
+
+一些学者发现，宗族关系能够促进私人部门的发展；还有学者 研究发现地区的宗族关系越显著，民营企业所面临的融资约束越小。这个主要是信任和信息交互以及道德规范中起作用。对于在当地拥有较大宗族势力 以及在本地经营的企业家而言，宗族文化的影响更为明显，而人口流动带来的人口结构变迁会削弱宗族文化的影响。
+
+
+---
+### 建筑资质
+- 参与市场的方式主要有两种：通过社会关系（企业与企业、个人与企业等）承接；通过公开招投标承接。
+
+- 资质将不同的建筑企业进行划分，提升市场效率，但市场更加完善时候反而会降低市场效率。
+  - 在非市场竞争中，建筑承包企业通过个人社会网络可获得相应的机会，而这种机会在中小企业中的重要性会高于市场竞争。
+  
+
+
+---
+
+## 资质共享
+
+- 资质的不可逆性：在宗族之间的强社会网络关系中，能够帮助人们消除彼此之间的不信任，即将企业资质共享给在宗族关系之内的成员。
+- 承包工程项目，之后逐渐扩张能够获得相应的建筑资质，团体内部人员以个人的社会网络等方式获取项目的机会，以公司的名义承揽项目。
+- 企业不断扩大，企业内部同乡人员在异地成立该企业的子公司，仍然能够使用母公司建筑资质。另一种方式是同乡人员跳出原企业，选择成立自己公司，而自创公司仍然在可能使用原有公司的资质进行承包工程项目。
+
+
+---
+
+## 案例分析
+从福建上杭到广东省东莞市的同乡企业集聚：
+- A公司，从成立至今有47家分公司（包括存续和注销），2017年至2022年参与招投标5445次。
+- B公司，下属成员企业8家，涵盖科技、物业、建材、物流等领域。核心企业为旗下的建筑公司，主要拥有市政工程总承包二级，建筑工程施工总承包一级资质。建筑公司的分公司有 13 家，主要的设立点仍然在福建和广东地区。
+
+
+
+---
+### 钢结构
+
+- 东莞市，地方工业规模以上企业数量和产值与同期在全国范围内都是较高的水平。
+
+&lt;img src="why-social-sci_files/table1.png" width="50%" height="50%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+![](why-social-sci_files/gra1.png)
+
+
+
+---
+### 内部执业资格
+
+选择A企业内部人员的执业资格进行统计：
+- 总观测数量为71名，其中来自于上杭县的注册人员数达32个，占据总观测数的45.7%，其均为二级注册建造师和一级注册建造师；
+
+- 二级注册建造师占68.75%。而二级注册建造师在所有的注册人员占比为39.44%。其余6名注册监理师均为非上杭县本籍贯人员。一级建造师中上杭籍占有比例为28.57%。
+
+- 上杭籍在一级建造师执业资格占比**远低于**非上杭籍，从而通过企业平台的方式，达到企业的建造师数量要求，而实际的参与项目者并非需要依靠于高质量执业资质。
+
+&lt;img src="why-social-sci_files/table2.png" width="70%" height="70%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+### 结论
+
+- 资质对于建筑企业来说是一个附加价值，而对于个人是一个能够进入市场的准入门槛，乡缘作为一项消除双方不信任的润滑剂，能够通过建筑资质共享来降低个人进入市场的门槛；
+- 在具体行业的所选细分领域中主要与地方的产业政策与地方产业结构密切相关；
+- 同乡会在现如今的市场体制加快的乡缘集聚的建筑企业所起愈发重要的作用。
+
+---
+#### 高中毕业后的暑假
+.pull-left[
+![](why-social-sci_files/p1.jpg)
+]
+
+
+.pull-right[
+![](why-social-sci_files/p2.jpg)
+]
+
+
+
+
+---
+
+
+.pull-left[
+![](why-social-sci_files/p3.jpg)
+]
+
+.pull-right[
+![](why-social-sci_files/p11.jpg)
+]
+
+---
+### 大一暑假社会调查实践
+
+.pull-left[
+![](why-social-sci_files/p4.jpg)
+]
+
+.pull-right[
+![](why-social-sci_files/p5.jpg)
+]
+
+---
+
+.pull-left[
+![](why-social-sci_files/p6.jpg)
+]
+
+.pull-right[
+![](why-social-sci_files/p7.jpg)
+]
+
+---
+
+.pull-left[
+![](why-social-sci_files/p8.jpg)
+]
+
+.pull-right[
+![](why-social-sci_files/p10.jpg)
+]
+
+
+
+
+---
+### 从认识问题到解决问题
+
+- 社会科学实际上在做的是与自然科学家类似，自然科学家帮助于我们认识自然世界；而社会科学家是在帮助我们认识这个社会。
+
+--
+
+#### 观念的水位
+
+.pull-left[
+我心中理想的社会变革应当是一个“水涨船高”的过程：政治制度的变革源于公众政治观念的变化，而政治观念的变化又植根于人们生活观念的变化。水涨起来，船自然浮起来了。……**观念水位变化的一个重要标志就是：以前在人们眼中不是问题的问题，开始变成问题了。**（刘瑜，[《观念的水位》](https://book.douban.com/subject/20463108/)，浙江大学出版社）
+]
+.pull-right[
+![](why-social-sci_files/liuyu.jpeg)
+]
+
+
+---
+class: center, middle
+# 仅当作开拓视野，不构成任何专业选择建议
+
+---
+class: middle
+《逃避自由》中有这样的一句话：
+“‘认识你自己’是人获得力量和幸福的根本要求之一。”
+
+---
+## 推荐阅读书目
+- 《叫魂》
+- 《万历十五年》
+- 《激荡30年》
+- 《乡土中国》
+- 《以利为利》
+- 《公正：该如何是好？》
+- 《魔鬼经济学》
+- 《经济学原理（曼昆）》
+- 《大国大城》
+- **《置身事内》**
+- 《邓小平时代》
+- 《礼物的流动》
+- 《女士品茶》
+- ......
+
+
+
+---
+class: center, middle
+## The End
+
+
+
+
+
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,241 @@
+---
+title: "聚类"
+subtitle: "以中国各省份经济数据为例"
+author:
+  - 黄建祺
+output:
+  rmdformats::robobook:
+    highlight: tango
+    lightbox: true
+    self_contained: true
+date: 2022-11-25
+katex: true
+---
+
+```{r,echo=FALSE}
+knitr::opts_chunk$set(warning = F,message = F)
+```
+
+# 介绍
+为反映中国各地区的生活水平，我们收集了2021年的中国省份及直辖市的国民经济数据。具体包括人均生产总值，年均人口、城镇居民平均消费支出，农村居民家庭人均生活消费支出和各地区居民消费价格指数。现希望通过聚类，将这些省份归为若干类别，将其更好的展示各省之间的差异。
+
+
+# 聚类方法
+
+聚类就是经典的一个无监督学习的方法，试图去基于某种规则去挖掘特征背后的关系。
+
+将物理上的莫总集合划分为类似的对象，这种类似，是某种相似性的抽象过程。当我们定义一个集合时候，往往会选择对集合的元素的特征进行描述，这种描述可能是枚举的方法，而另外也可以找到集合的共有的特征。使用一个简单的符号（统计量）将其进行进行概括。
+
+$$
+聚类统计量 \left\{\begin{aligned}
+&相识系数\left\{\begin{aligned}
+夹角余弦\\相关系数\end{aligned}
+\right.\\
+&距离\left\{\begin{aligned}
+欧式距离\\马氏距离\\兰氏距离
+\end{aligned}\right.
+\end{aligned}
+\right.
+$$
+
+
+
+# 数据
+
+其中包含了面板的全国宏观数据，以及地方的宏观数据，我们在这里就仅使用2021年的地方的宏观数据作为主要的数据。数据来源为《中国统计年鉴》
+
+## 数据处理
+```{r,message=FALSE}
+setwd("/Users/a182501/data-mining/data")
+library(data.table)
+library(factoextra)
+library(FactoMineR)
+rm(list=ls())
+df1<-readxl::read_xls("/Users/a182501/data-mining/data/农村.xls")
+df2<-readxl::read_xls("/Users/a182501/data-mining/data/城镇.xls")
+df3<-readxl::read_xls("/Users/a182501/data-mining/data/pop.xls")
+df4<-readxl::read_xls("/Users/a182501/data-mining/data/price_index.xls")
+df5<-readxl::read_xls("/Users/a182501/data-mining/data/mean_gdp_2021.xls")
+df6<-merge(df1,df2,by="地区")
+df7<-merge(df6,df3,by="地区")
+df8<-merge(df7,df4,by="地区")
+df<-merge(df8,df5,by="地区")
+df<-as.data.frame(df)
+row.names(df)<-c(df$region)
+df9<-df[-3,c(-1,-3)]
+colnames(df9)<-c("农村消费","城镇消费","人口数","消费价格指数","人均GDP")
+df10<-scale(df9)
+
+DT::datatable(df9)
+```
+
+## 统计性描述
+```{r}
+knitr::kable(summary(df9))
+```
+其农村消费水平所在的区间范围为`[10577,27205]`之内，城镇消费在`[21966,51295]`之间；我国的人均GDP水平在`[41046,183980]`之间。
+
+
+
+# kmeans聚类
+具体步骤：
+
+- 先得到一个划分：从n个数据对象中随机选择k个对象作为初始聚类中心；
+
+- 寻找以中心原则下的划分：根据每个聚类的均值(中心)，计算每个对象与这些中心对象的距离，并根据距离重新对相应对象进行划分。
+
+- 重新划分：根据存在与第一步求得的相异的中心划分，在根据第一步进行分析的再进行划分。
+
+- 终止条件：最理想的情况是，所得到的每一个划分的中心是中心原则下所得到中心，而若现实不满足，可使用更弱一些的条件：概率收敛或函数收敛的性质进行终止。
+
+## 数学表示
+
+假设在$\mathbb{R}^d$中有$n$个点$x^{(i)},i=1,2,\cdots,n$，将这$n$个点进行距离上分类，假设$C=\{C_1,\cdots,C_k\}$，$C_j$是分到第$j$类中的点的集合。$\mu=\{\mu_1\cdots,\mu_k\}$是各类的中心。
+
+聚类就是求$C$和$\mu$使得
+$$
+f(\mu,C)=\sum_{j=1}^k\sum_{x^{(i)}\in C_j}|| x^{(i)}-\mu_j ||^2
+$$
+最小。
+
+
+## 找出最佳聚类k
+  
+在OLS中我们使用$TSS$去评估总体的变化程度。
+$$
+TSS=\sum_{i=1}^n(y_i-\overline y)^2
+$$
+同样我们可以使用这个方法来计算在每一个簇中的数据点与均值之间的总体距离，我们称其为总体类内距离(total within-cluster sum of squares,TWSS)。
+
+因此我们就可以在绘制一个关于K的`TWSS`的折线图。由此来确定我们想要的超参数。
+
+而事实上最终的超参数的确定是根据我们对$k$的理解，$k$在图中的若下降的斜率平缓即可以将其认定为最终的$k$，也即出现一个下降的拐点。
+
+
+```{r,message=FALSE,fig.align='center',out.height='60%',out.width='60%'}
+fviz_nbclust(df10, kmeans, method = "wss")+ geom_vline(xintercept = 2, linetype = 2)+geom_vline(xintercept = 5, linetype = 2)
+```
+
+我们通过图像可观测发现在`k=2`时其下降较为平缓，因此我们选择`k=2`作为分类的总数。
+
+
+```{r}
+set.seed(123)
+km <- kmeans(df10,centers = 2, nstart = 25)
+hierarchy<-c("类别 1","类别 2","类别 3")
+cdes<-cbind(hierarchy,km$centers)
+colnames(cdes)<-c("类别","农村消费","城镇消费","人口数","消费价格指数","人均GDP")
+knitr::kable(cdes,caption = "生成的类别及特征均值")
+```
+
+
+
+
+
+## 可视化
+我们先将生成的类别在坐标中进行可视化。
+```{r,fig.align='center',out.height='70%',out.width='70%'}
+fviz_cluster(km, data = df10,ellipse.type = "convex")
+```
+
+基于质心的K-means聚类：
+```{r,fig.align='center',out.height='70%',out.width='70%'}
+d <- dist(df10, method = "euclidean")
+fit2 <- hclust(d, method="centroid")
+plot(fit2) 
+groups <- cutree(fit2, k=2) # 设定聚类个数为3
+rect.hclust(fit2, k=2, border="red")
+```
+
+根据我们上述的$TSS$公式，我们可以看出对于一个离群点K均值往往为了降低TSS的总体大小，使用的划分策略是将离群点或一群相近的离群点划分为一个簇。因此**Kmeans**是对于离群点较为敏感。解铃还须系铃人，我们可以将目标进行修正
+$$
+E=\sum_{i=1}^k\sum_{p\in C_j}dist(p,o_i)
+$$
+其中$E$表示的是所有对象$p$与$C_i$的代表对象$o_i$的绝对误差之和。这个就是k-中心点法。聚类通过最小化该绝对误差，把n个对象划分到k个簇中。
+
+围绕中心点划分(Partitioning Around Medics,PAM)算法。因此根据我们的算法对于于k-均值法，这个方法显然更具有稳定性。
+
+其缺陷在于不能很好的运用于大数据集。
+
+
+
+
+### 基于PAM的k-medoids算法
+
+k-means算法取得是均值，那么对于异常点其实对其的影响非常大，很可能这种孤立的点就聚为一类，一个改进的方法就是PAM算法，也叫k-medoids clustering
+
+- 从散点图中选择k个数据点作为聚类中心的起点。
+- 计算它们与散点图中所有点的距离。
+- 将每个点分类到最接近中心的聚类中。
+- 在每个群集中选择一个新点，以使该群集中所有点与自身的距离之和最小。
+- 重复步骤2，直到中心停止变化。
+
+```{r,fig.align='center',out.height='70%',out.width='70%'}
+library(fpc)
+library(cluster)
+pamk.best <- pamk(df9)
+pamk.best$nc
+kp<-pam(df10,k=2,metric="euclidean")
+fviz_cluster(kp, data = df9,palette = "jco",ggtheme = theme_minimal())
+```
+
+
+
+
+### 地图可视化
+我们所使用的是全国的省市，因此我们可以进一步将其放入国家地图中进行可视化。
+
+```{r,fig.align='center'}
+library(leaflet)
+library(leafletCN) # 提供 geojsonMap 函数
+dat<-readxl::read_xlsx("/Users/a182501/data-mining/data/name-class.xlsx")
+dat<-as.data.frame(dat)
+# 还有很多其他参数设置，类似 leaflet::leaflet
+m<-geojsonMap(dat, mapName = "china", palette = "RdYlBu", colorMethod = "bin")
+m
+```
+我们这里使用的是聚为3类。通过地图可视化，我们会发现：类别1和类别2主要集中在东部沿海地区，少数在中部地区；大部分中西部地区被归类到类别3。
+
+
+
+# 层次聚类
+层次方法是基于我们对组群层次的需要而提出，将数据对象组成层次结构或簇的“树”。
+
+1、定义每一个观测量为一类
+
+2、计算每一类与其他各类的距离
+
+3、把距离最短的两类合为一类
+
+4、重复步骤2和3，直到包含所有的观测量合并成单类时
+
+对数据汇总以及可视化，层次方法是较为有效的。
+
+$ESS=\sum_{i=1}^n x_i^2 - \frac{1}{n}\left ( \sum_{i=1}^n x_i \right ) ^2$
+
+$Var(X)=\frac{1}{n}\sum_{i=1}^{n} x_i^2 - \left ( \frac{\sum_{i=1}^{n} x_i}{n} \right )^2$
+
+
+$TD_{c_1 \cup c_2} = \sum_{x \in c_1 \cup c_2 } D(x,\mu_{c_1 \cup c_2 })^2$
+
+
+任意两个cluster之间的距离就是这两个cluster合并后新cluster的ESS。
+
+
+### Ward聚类
+```{r,fig.align='center',out.height='70%',out.width='70%'}
+d <- dist(df9, method = "euclidean")
+fit2 <- hclust(d, method="ward.D")
+plot(fit2) 
+groups <- cutree(fit2, k=2) # 设定聚类个数为2
+rect.hclust(fit2, k=2, border="red")
+```
+
+
+
+## Source
+- https://xiangyun.rbind.io/2022/02/draw-china-maps/
+
+- https://www.cnblogs.com/alex-bn-lee/p/14768727.html
+
+- https://blog.csdn.net/hfutxiaoguozhi/article/details/78828047

@@ -1,0 +1,52 @@
+---
+title: Blox
+date: '2022-10-19'
+author: Jianqi Huang
+---
+
+
+`Blox` is a simple visualization package in Python, that helps you display infomation in an attractive way.
+
+
+```{python}
+from bloxs import B
+```
+
+
+```{python}
+B(1234, "Bloxs in notebook!")
+```
+
+
+
+
+```{python}
+B(1999, "Percent change!", percent_change=10)
+```
+
+
+
+```{python}
+B("123", "图表", points=[1,4,2,3,5,6], chart_type="bar")
+```
+
+
+More over, `B` could used to combine and embed with `B` function just like the array
+
+
+```{python}
+B([
+    B("123", "chart", points=[1,4,2,3,5,6], chart_type="bar"),
+    B("123", "chart", points=[1,4,2,3,5,6], chart_type="line",color="red"),
+    B("10000","the great number",points=[2,3,3,4,10],fill_color="green",border_color="green")
+])
+```
+
+### Input some emoji
+
+
+```{python}
+B("🐛")
+```
+
+

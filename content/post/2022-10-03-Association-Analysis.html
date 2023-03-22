@@ -1,0 +1,138 @@
+---
+title: "Association Analysis in R"
+author: "Jianqi Huang"
+date: '2022-10-03'
+output: html_document
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/datatables-binding/datatables.js"></script>
+<script src="/rmarkdown-libs/jquery/jquery-3.6.0.min.js"></script>
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/dt-core/js/jquery.dataTables.min.js"></script>
+<link href="/rmarkdown-libs/nouislider/jquery.nouislider.min.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/nouislider/jquery.nouislider.min.js"></script>
+<link href="/rmarkdown-libs/selectize/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/selectize/selectize.min.js"></script>
+<link href="/rmarkdown-libs/crosstalk/css/crosstalk.min.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+<link href="/rmarkdown-libs/vis/vis-network.min.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/vis/vis-network.min.js"></script>
+<script src="/rmarkdown-libs/visNetwork-binding/visNetwork.js"></script>
+
+
+<div id="loading-packages" class="section level3">
+<h3>loading packages</h3>
+<pre class="r"><code>rm(list = ls())
+library(&quot;RColorBrewer&quot;)
+library(&quot;arules&quot;)</code></pre>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## 
+## Attaching package: &#39;arules&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     recode</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     abbreviate, write</code></pre>
+<pre class="r"><code>library(&quot;arulesViz&quot;)</code></pre>
+</div>
+<div id="create-transaction-data-and-mine-association-rules" class="section level3">
+<h3>Create transaction data and mine association rules</h3>
+<pre class="r"><code>a_list &lt;- list(
+  c(&quot;m&quot;,&quot;o&quot;,&quot;n&quot;,&quot;k&quot;,&quot;e&quot;,&quot;y&quot;),
+  c(&quot;d&quot;,&quot;o&quot;,&quot;n&quot;,&quot;k&quot;,&quot;e&quot;,&quot;y&quot;),
+  c(&quot;m&quot;,&quot;a&quot;,&quot;k&quot;,&quot;e&quot;),
+  c(&quot;m&quot;,&quot;u&quot;,&quot;c&quot;,&quot;k&quot;,&quot;y&quot;),
+  c(&quot;c&quot;,&quot;o&quot;,&quot;o&quot;,&quot;k&quot;,&quot;i&quot;,&quot;e&quot;)
+)</code></pre>
+</div>
+<div id="set-transaction-names" class="section level3">
+<h3>Set transaction names</h3>
+<pre class="r"><code>names(a_list) &lt;- paste(&quot;Tr&quot;,c(1:5), sep = &quot;&quot;)
+a_list</code></pre>
+<pre><code>## $Tr1
+## [1] &quot;m&quot; &quot;o&quot; &quot;n&quot; &quot;k&quot; &quot;e&quot; &quot;y&quot;
+## 
+## $Tr2
+## [1] &quot;d&quot; &quot;o&quot; &quot;n&quot; &quot;k&quot; &quot;e&quot; &quot;y&quot;
+## 
+## $Tr3
+## [1] &quot;m&quot; &quot;a&quot; &quot;k&quot; &quot;e&quot;
+## 
+## $Tr4
+## [1] &quot;m&quot; &quot;u&quot; &quot;c&quot; &quot;k&quot; &quot;y&quot;
+## 
+## $Tr5
+## [1] &quot;c&quot; &quot;o&quot; &quot;o&quot; &quot;k&quot; &quot;i&quot; &quot;e&quot;</code></pre>
+</div>
+<div id="use-the-constructor-to-create-transactions" class="section level3">
+<h3>Use the constructor to create transactions</h3>
+<pre class="r"><code>trans1 &lt;- transactions(a_list)</code></pre>
+<pre><code>## Warning in asMethod(object): removing duplicated items in transactions</code></pre>
+<pre class="r"><code>trans1</code></pre>
+<pre><code>## transactions in sparse format with
+##  5 transactions (rows) and
+##  11 items (columns)</code></pre>
+</div>
+<div id="set-the-parameterincludes-support-and-confidence-but-not-lift-to-find-out-the-frequency-itemset-and-rule" class="section level3">
+<h3>set the parameter(includes support and confidence but not lift) to find out the frequency itemset and rule</h3>
+<pre class="r"><code>frequency_rules&lt;-apriori(trans1,parameter = list(supp = 0.6, target = &quot;rules&quot;))
+
+rules &lt;- apriori(trans1,parameter = list(supp = 0.6, conf = 0.8, target = &quot;rules&quot;,minlen=2))</code></pre>
+</div>
+<div id="frequency-itemset-table-outputnot-strictly" class="section level3">
+<h3>frequency itemset table output(not strictly)</h3>
+<pre class="r"><code>inspectDT(frequency_rules)</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td><\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;{}&quot;,&quot;{m}&quot;,&quot;{o}&quot;,&quot;{y}&quot;,&quot;{e}&quot;,&quot;{k}&quot;,&quot;{e,o}&quot;,&quot;{k,o}&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;{e}&quot;,&quot;{k}&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.6\" data-max=\"1\" data-scale=\"1\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.8\" data-max=\"1\" data-scale=\"1\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.6\" data-max=\"1\" data-scale=\"1\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"1\" data-max=\"1.25\" data-scale=\"2\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"3\" data-max=\"5\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","data":[["[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","[10]"],["{}","{}","{m}","{o}","{o}","{y}","{e}","{k}","{e,o}","{k,o}"],["{e}","{k}","{k}","{e}","{k}","{k}","{k}","{e}","{k}","{e}"],[0.8,1,0.6,0.6,0.6,0.6,0.8,0.8,0.6,0.6],[0.8,1,1,1,1,1,1,0.8,1,1],[1,1,0.6,0.6,0.6,0.6,0.8,1,0.6,0.6],[1,1,1,1.25,1,1,1,1,1,1.25],[4,5,3,3,3,3,4,4,3,3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>LHS<\/th>\n      <th>RHS<\/th>\n      <th>support<\/th>\n      <th>confidence<\/th>\n      <th>coverage<\/th>\n      <th>lift<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":7,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render"],"jsHooks":[]}</script>
+<pre class="r"><code>arules::itemFrequencyPlot(trans1, topN = 20,
+                          main = &#39;Relative Item Frequency Plot&#39;,
+                          col = brewer.pal(8,&#39;Pastel2&#39;),
+                          type =&quot;absolute&quot;,
+                          ylab = &quot;Item Frequency (Relative)&quot;)</code></pre>
+<p><img src="/en/blog/2022-10-03-Association-Analysis_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
+</div>
+<div id="rule-table-output" class="section level3">
+<h3>rule table output</h3>
+<pre class="r"><code>inspectDT(rules)</code></pre>
+<div id="htmlwidget-2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td><\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;{m}&quot;,&quot;{o}&quot;,&quot;{y}&quot;,&quot;{e}&quot;,&quot;{k}&quot;,&quot;{e,o}&quot;,&quot;{k,o}&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;{k}&quot;,&quot;{e}&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.6\" data-max=\"0.8\" data-scale=\"1\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.8\" data-max=\"1\" data-scale=\"1\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.6\" data-max=\"1\" data-scale=\"1\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"1\" data-max=\"1.25\" data-scale=\"2\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"integer\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"3\" data-max=\"4\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","data":[["[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]"],["{m}","{o}","{o}","{y}","{e}","{k}","{e,o}","{k,o}"],["{k}","{e}","{k}","{k}","{k}","{e}","{k}","{e}"],[0.6,0.6,0.6,0.6,0.8,0.8,0.6,0.6],[1,1,1,1,1,0.8,1,1],[0.6,0.6,0.6,0.6,0.8,1,0.6,0.6],[1,1.25,1,1,1,1,1,1.25],[3,3,3,3,4,4,3,3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>LHS<\/th>\n      <th>RHS<\/th>\n      <th>support<\/th>\n      <th>confidence<\/th>\n      <th>coverage<\/th>\n      <th>lift<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"targets":7,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\", null);\n  }"},{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render"],"jsHooks":[]}</script>
+</div>
+<div id="data-visualization" class="section level3">
+<h3>data visualization</h3>
+<pre class="r"><code>plot(rules, method = &quot;graph&quot;,  engine = &quot;htmlwidget&quot;)</code></pre>
+<div id="htmlwidget-3" style="width:672px;height:480px;" class="visNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"nodes":{"id":[1,2,3,4,5,6,7,8,9,10,11,12,13],"label":["e","k","m","o","y","rule 1","rule 2","rule 3","rule 4","rule 5","rule 6","rule 7","rule 8"],"group":[1,1,1,1,1,2,2,2,2,2,2,2,2],"value":[1,1,1,1,1,1,1,1,1,100,100,1,1],"color":["#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#EEDCDC","#EE1B1B","#EEDCDC","#EEDCDC","#EEDCDC","#EEDCDC","#EEDCDC","#EE1B1B"],"title":["e","k","m","o","y","<B>[1]<\/B><BR><B>{m}<\/B><BR>&nbsp;&nbsp; => <B>{k}<\/B><BR><BR>support = 0.6<BR>confidence = 1<BR>coverage = 0.6<BR>lift = 1<BR>count = 3<BR>order = 2<BR>id = 1","<B>[2]<\/B><BR><B>{o}<\/B><BR>&nbsp;&nbsp; => <B>{e}<\/B><BR><BR>support = 0.6<BR>confidence = 1<BR>coverage = 0.6<BR>lift = 1.25<BR>count = 3<BR>order = 2<BR>id = 2","<B>[3]<\/B><BR><B>{o}<\/B><BR>&nbsp;&nbsp; => <B>{k}<\/B><BR><BR>support = 0.6<BR>confidence = 1<BR>coverage = 0.6<BR>lift = 1<BR>count = 3<BR>order = 2<BR>id = 3","<B>[4]<\/B><BR><B>{y}<\/B><BR>&nbsp;&nbsp; => <B>{k}<\/B><BR><BR>support = 0.6<BR>confidence = 1<BR>coverage = 0.6<BR>lift = 1<BR>count = 3<BR>order = 2<BR>id = 4","<B>[5]<\/B><BR><B>{e}<\/B><BR>&nbsp;&nbsp; => <B>{k}<\/B><BR><BR>support = 0.8<BR>confidence = 1<BR>coverage = 0.8<BR>lift = 1<BR>count = 4<BR>order = 2<BR>id = 5","<B>[6]<\/B><BR><B>{k}<\/B><BR>&nbsp;&nbsp; => <B>{e}<\/B><BR><BR>support = 0.8<BR>confidence = 0.8<BR>coverage = 1<BR>lift = 1<BR>count = 4<BR>order = 2<BR>id = 6","<B>[7]<\/B><BR><B>{e,<BR>&nbsp;&nbsp;o}<\/B><BR>&nbsp;&nbsp; => <B>{k}<\/B><BR><BR>support = 0.6<BR>confidence = 1<BR>coverage = 0.6<BR>lift = 1<BR>count = 3<BR>order = 3<BR>id = 7","<B>[8]<\/B><BR><B>{k,<BR>&nbsp;&nbsp;o}<\/B><BR>&nbsp;&nbsp; => <B>{e}<\/B><BR><BR>support = 0.6<BR>confidence = 1<BR>coverage = 0.6<BR>lift = 1.25<BR>count = 3<BR>order = 3<BR>id = 8"],"shape":["box","box","box","box","box","circle","circle","circle","circle","circle","circle","circle","circle"],"x":[-0.598997682218179,0.0526212662444285,1,-0.648535744403506,0.993753569450014,0.595809760812119,-1,-0.202273839030119,0.593258620422591,-0.336396681504001,-0.142867867038035,-0.485367974538405,-0.331499066508638],"y":[-0.269945898048647,-0.00230969159750838,-1,0.571960519257282,1,-0.566924141035257,0.165886196479195,0.723166625375395,0.560942305345013,-0.644401880944365,-0.513582248288621,0.103230011850505,0.254420253439105]},"edges":{"from":[3,4,4,5,1,2,1,4,2,4,6,7,8,9,10,11,12,13],"to":[6,7,8,9,10,11,12,12,13,13,2,1,2,2,2,1,2,1],"arrows":["to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":false},"physics":{"stabilization":false},"interaction":{"hover":true,"zoomSpeed":1}},"groups":["1","2"],"width":null,"height":null,"idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);","highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>plot(rules, method=&quot;paracoord&quot;)</code></pre>
+<p><img src="/en/blog/2022-10-03-Association-Analysis_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+</div>
+<div id="summary-for-the-rules-and-conclusion" class="section level3">
+<h3>summary for the rules and conclusion</h3>
+<pre class="r"><code>summary(rules)</code></pre>
+<pre><code>## set of 8 rules
+## 
+## rule length distribution (lhs + rhs):sizes
+## 2 3 
+## 6 2 
+## 
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    2.00    2.00    2.00    2.25    2.25    3.00 
+## 
+## summary of quality measures:
+##     support       confidence       coverage          lift           count     
+##  Min.   :0.60   Min.   :0.800   Min.   :0.600   Min.   :1.000   Min.   :3.00  
+##  1st Qu.:0.60   1st Qu.:1.000   1st Qu.:0.600   1st Qu.:1.000   1st Qu.:3.00  
+##  Median :0.60   Median :1.000   Median :0.600   Median :1.000   Median :3.00  
+##  Mean   :0.65   Mean   :0.975   Mean   :0.675   Mean   :1.062   Mean   :3.25  
+##  3rd Qu.:0.65   3rd Qu.:1.000   3rd Qu.:0.650   3rd Qu.:1.062   3rd Qu.:3.25  
+##  Max.   :0.80   Max.   :1.000   Max.   :1.000   Max.   :1.250   Max.   :4.00  
+## 
+## mining info:
+##    data ntransactions support confidence
+##  trans1             5     0.6        0.8
+##                                                                                            call
+##  apriori(data = trans1, parameter = list(supp = 0.6, conf = 0.8, target = &quot;rules&quot;, minlen = 2))</code></pre>
+</div>

@@ -1,0 +1,288 @@
+---
+title: "DEA 方法"
+author: "Jianqi Huang"
+date: '2022-11-16'
+toc: true
+---
+
+
+<div id="TOC">
+
+</div>
+
+<div id="dea方法" class="section level2">
+<h2>DEA方法</h2>
+<p>DEA(Data ),数据包络分析，是具有处理多投入多产出指标的复杂问题，以及无需知道生产函数的具体形式等优点。根据规模报酬是否变化，DEA模型又可分为CCR模型和BCC模型，其中CCR模型可用于规模报酬不变前提下的决策单元（DMU）相对有效评价。BCC模型用于规模报酬可变前提下的决策单元相对有效评价。</p>
+<div id="基本原理" class="section level3">
+<h3>基本原理</h3>
+<p>保持决策单元的输入或者输出不变，借助我们的线性规划和统计数据确定相对有效的生产前沿面，通过比较决策单元偏离前沿面的程度来判断相对有效性。</p>
+</div>
+</div>
+<div id="ccr模型" class="section level2">
+<h2>CCR模型</h2>
+<div id="步骤" class="section level3">
+<h3>步骤</h3>
+<ol style="list-style-type: decimal">
+<li><p>选择决策单元</p></li>
+<li><p>找出指标，写出对偶模型，</p></li>
+<li><p>计算lambda和theta，进一步判断是否有效。</p></li>
+</ol>
+</div>
+<div id="基本概念" class="section level3">
+<h3>基本概念</h3>
+<ul>
+<li><p>技术效率：指在保持决策单元投入不变的情况下，实际产出同理想产出的比值。</p></li>
+<li><p>决策单元（Decision Making Units,DMU）就是效率评价的对象，可以理解为一个将一定“投入”转化为一定“产出”的实体。</p></li>
+<li><p>规模报酬：规模报酬是要说明，当生产要素同时增加了一倍，如果产量的增加正好是一倍，称之为规模报酬不变（-），如果产量增加多于一倍，则称之为规模报酬递增（irs），进而，如果产量增加少于一倍，就称为规模报酬递减（drs）。</p></li>
+<li><p>DEA弱有效：无法等比例减少各项投入的数量，除非减少产出的数量；无法等比例增加各项产出的数量，除非增加投入的数量。 这种情况下，虽然不能等比例减少投入或增加产出，但某一项或几项（但不是全部）投入可能减少，所以称为弱有效。</p></li>
+<li><p>生产前沿面：（自己通俗的理解）对于给定的生产要素和产出价格，选择要素投入的最优组合和产出的最优组合，<strong>即投入成本最小、产出收益最大的组合。</strong>（类似于投资组合的有效前沿概念——风险给定收益最大，收益给定风险最小）</p></li>
+</ul>
+<p>对于每一个决策单元(DMU)有对应的效率评价指数：
+<span class="math display">\[
+h_k=\frac{u^Ty_i}{v^Tx_j}=\frac{\sum_{r=1}^nu_ry_{rj}}{\sum_{i=1}^mv_ix_{ij}}
+\]</span></p>
+<p>假设一共有<span class="math inline">\(t\)</span>个决策单元(DMU)，每个决策单元有m个投入变量和n个产出变量，其中：</p>
+<p><span class="math inline">\(\mathcal{x}_j=(x_{1j},x_{2j},\cdots,x_{ij},\cdots,x_{tj})\)</span></p>
+<p><span class="math inline">\(y_j=(y_{1j},\cdots,y_{ij},\cdots,y_{rj})\)</span>为已知数据。</p>
+<p><span class="math inline">\(v_i\)</span>表示第<span class="math inline">\(i\)</span>种输入的一种度量（或称为权）；<span class="math inline">\(u_r\)</span>表示的是输出的一种度量（也或称权）<span class="math inline">\(i=1,2,\cdots,m;r=1,2,\cdots,n\)</span>；</p>
+<p>最后我们取适当的权重<span class="math inline">\(\mu,v\)</span>使得<span class="math inline">\(h_k\leq 1,k=1,2,\cdots,t\)</span>，现在对每一个<span class="math inline">\(h_k\)</span>进行评价，以权系数<span class="math inline">\(v\)</span>和<span class="math inline">\(u\)</span>为变向量。第<span class="math inline">\(k_0\)</span>个DMU的效率为目标，以所有的DMU作为约束。构建以下模型：</p>
+<p><span class="math display">\[
+\max h_k=\sum_{r=1}^su_ry_{rk}\\
+s.t.\left\{
+\begin{align*}
+&amp;\frac{\sum_{r=1}^sy_ry_{rj}}{\sum_{i=1}^mv_ix_{ij}}\le 1,j=1,2,\cdots,n
+\\
+&amp;u\ge 0,v\ge 0
+\end{align*}
+\right.
+\]</span></p>
+<p>对该分式规划进行变换，令：</p>
+<p><span class="math inline">\(s=\frac{1}{v^Tx_0}&gt;0,\omega=sv,\mu=su\)</span>，会有等价的线性规划问题：
+<span class="math display">\[
+\max h_k=\sum_{r=1}^su_ry_{rk}\\
+s.t.\left\{
+\begin{align*}
+&amp;s.t.{\sum_{i=1}^mv_ix_{ik}}=1\\
+&amp;{\sum_{i=1}^mv_ix_{ij}}-\sum_{r=1}^sy_ry_{rj}\ge 0,j=1,2,\cdots,n\\
+&amp;v_i\ge 0,u_i\ge 0
+\end{align*}\right.
+\]</span></p>
+<p>其对偶问题为
+<span class="math display">\[
+\min \theta\\
+s.t.\left\{
+\begin{aligned}
+\sum_{j=1}^t\lambda_jx_j\le \theta x_0\\
+\sum_{j=1}^t\lambda_jy_j\ge y_0\\
+\lambda_j\ge 0,j=1,2,\cdots,t
+\end{aligned}
+\right.
+\]</span>
+引入松弛变量
+<span class="math display">\[
+\min \theta
+s.t.\left\{
+\begin{aligned}
+\sum_{j=1}^t\lambda_jx_j+s^-= \theta x_0\\
+\sum_{j=1}^t\lambda_jy_j-s^+= y_0\\
+s^-,s^+\ge 0\\
+\lambda_j\ge 0,j=1,2,\cdots,t
+\end{aligned}
+\right.
+\]</span>
+其中松弛变量的经济含义是增长产出多少时候达到目标效率，松弛变量<span class="math inline">\(s-\)</span>含义是减少多少投入时候能达到目标效率。</p>
+<p>其中<span class="math inline">\(\theta\)</span>为无约束。<span class="math inline">\(\theta\)</span>为第<span class="math inline">\(i\)</span>个满足决策单元效率的技术效率值。满足<span class="math inline">\(0\le \theta\le 1\)</span>。当<span class="math inline">\(\theta=1\)</span>时，称为DEA有效；当<span class="math inline">\(\theta&lt;1\)</span>时，称为非有效。当无效时，也就是松弛变量<span class="math inline">\(s^-\)</span>大于0，存在资源的冗余，可以在决策单元系统中将投入<span class="math inline">\(x_j&#39;=\theta x_j\)</span>，而产出保持不变。</p>
+</div>
+<div id="有效决策单元构造" class="section level3">
+<h3>有效决策单元构造</h3>
+<p><span class="math inline">\(\hat x_0=x_0-s^{0-}\)</span></p>
+<p>新的投入数据，可以对原有的进行优化。</p>
+<p><span class="math inline">\(y_0=y_0+s^{0+}\)</span></p>
+<p>最终将其变为DEA有效的。</p>
+<p>其具体的过程为<span class="math inline">\(\hat x=(1.5,1.5)^T\)</span></p>
+<p>在数据包络分析中，<span class="math inline">\(\hat y_0=2+0=2\)</span></p>
+<p>无效的在有效面上做出投影，最后变为DEA有效。
+<span class="math display">\[
+DEA有效=\left\{
+\begin{align*}
+&amp;\theta=0\\
+&amp;s^{-},s^+=0，强有效
+\end{align*}
+\right.
+\]</span></p>
+</div>
+<div id="非阿基米德带有无穷小量的模型" class="section level3">
+<h3>非阿基米德——带有无穷小量的模型</h3>
+<p>其对偶规划就为
+<span class="math display">\[
+\max V_{D_\varepsilon}=\theta-\varepsilon(\hat e^Ts^-+e^Ts^+)\\
+s.t.\left\{
+\begin{align*}
+&amp;\sum_{j=1}^nx_j\lambda_j+s^+=\theta x_0\\
+&amp;\sum_{j=1}^ny_j\lambda_j+s^-=y_0\\
+&amp;\theta 无约束\\
+&amp;s^+\ge 0,s^-\ge 0
+\end{align*}\right.
+\]</span>
+对有效面进行投影，找到最优。</p>
+<p>生产前沿面：假设<span class="math inline">\(\omega&gt;0,\mu&gt;0\)</span>，</p>
+</div>
+</div>
+<div id="代码实现" class="section level2">
+<h2>代码实现</h2>
+<pre class="r"><code>library(&#39;deaR&#39;)
+library(readxl)
+data &lt;- readxl::read_xlsx(&#39;/Users/a182501/datas/dea.xlsx&#39;)
+data_basic &lt;- read_data(data,
+                        dmus = 1,
+                        inputs = 2:3,
+                        outputs = 4)
+result_data &lt;- model_basic(data_basic,
+                           dmu_ref = NULL,
+                           orientation = &#39;io&#39;,
+                           compute_target = TRUE,
+                           rts = &#39;crs&#39;)
+s&lt;-summary(result_data)
+s</code></pre>
+<pre><code>##   DMU efficiencies.DMU efficiencies.eff slacks.DMU slacks.slack_input.投入1
+## 1   1                1              1.0          1                        0
+## 2   2                2              1.0          2                        0
+## 3   3                3              1.0          3                        0
+## 4   4                4              0.6          4                        0
+##   slacks.slack_input.投入2 slacks.产出1 lambdas.DMU lambdas.X1 lambdas.X2
+## 1                        0            0           1          1        0.0
+## 2                        0            0           2          0        1.0
+## 3                        0            0           3          0        0.0
+## 4                        0            0           4          0        0.6
+##   lambdas.X3 lambdas.X4 targets.DMU targets.投入1 targets.投入2 targets.产出1
+## 1        0.0          0           1           1.0           3.0             1
+## 2        0.0          0           2           3.0           1.0             1
+## 3        1.0          0           3           3.0           3.0             2
+## 4        0.2          0           4           2.4           1.2             1
+##   returns.DMU returns.lambsum returns.rts references.DMU references.X2
+## 1           1             1.0    Constant              1           0.0
+## 2           2             1.0    Constant              2           1.0
+## 3           3             1.0    Constant              3           0.0
+## 4           4             0.8  Increasing              4           0.6
+##   references.X3
+## 1           0.0
+## 2           0.0
+## 3           1.0
+## 4           0.2</code></pre>
+<p>对于DEA无效的单元，在那些指标上可以减少投入或增加产出来实现，也即是上述所提到的将松弛变量变为0。</p>
+<pre class="r"><code>library(Benchmarking)
+x=matrix(c(2,2,5,10,10,3,12,8,5,4,6,12),ncol=2)
+y=matrix(rep(1,6),ncol=1)
+te=dea.dual(x,y,RTS = &quot;vrs&quot;)##BCC模型的生产可能集是可变规模报酬（variable returns to scale)
+te$eff</code></pre>
+<pre><code>## [1] 1.0000000 1.0000000 1.0000000 1.0000000 0.7500000 0.6666667</code></pre>
+<pre class="r"><code>te$u</code></pre>
+<pre><code>##              u1         u2
+## [1,] 0.50000000 0.00000000
+## [2,] 0.10000000 0.10000000
+## [3,] 0.10000000 0.10000000
+## [4,] 0.03333333 0.16666667
+## [5,] 0.02500000 0.12500000
+## [6,] 0.06666667 0.06666667</code></pre>
+<pre class="r"><code>te$v</code></pre>
+<pre><code>##             v1
+## [1,] 1.0000000
+## [2,] 1.0000000
+## [3,] 1.0000000
+## [4,] 1.0000000
+## [5,] 0.7500000
+## [6,] 0.6666667</code></pre>
+<div id="bcc模型" class="section level3">
+<h3>BCC模型</h3>
+<p>CCR模型是在规模报酬不变的前提下所得到的，但是技术创新的规模报酬是不固定的，现实中存在的不平等竞争也会导致某些决策单元不能以最佳规模运行，于是 Banker，Charnes 和 Cooper 在 1984 年对之前仅讨论固定规模效益的 DEA 分析进行了扩展，提出了 BCC 模型。</p>
+<p><span class="math display">\[
+\min \theta\\
+s.t.\left\{
+\begin{aligned}
+\sum_{j=1}^t\lambda_jx_j+s^-= \theta x_0\\
+\sum_{j=1}^t\lambda_jy_j-s^+= y_0\\
+s^-,s^+\ge 0\\
+\lambda_j\ge 0,j=1,2,\cdots,t
+\end{aligned}
+\right.
+\]</span>
+可看出唯一的差异在于<span class="math inline">\(e\lambda=1\)</span>，这个假设为一个凸性条件。</p>
+<p>对于该凸性假设的一个直观解释为在生产函数线上的点能够满足原先的约束，而当我们加入凸性假设之后，使得原先的约束条件不再满足，松弛变量大于零，最后成为规模上是无效的。</p>
+<p>我们可以对数据同时做 CCR 模型和 BCC 模型的 DEA 分析来评判决策单元的规模效率 (SE)。如果决策单元 CCR 和 BCC 的技术效益存在差异，则表明此决策单元规模无效，并且规模无效效率可以由 BCC 模型的技术效益和 CCR 模型的技术效益之间的差异计算出来。</p>
+<p>BCC是在考虑了可变规模收益的情况下：</p>
+<p>我们对BCC和CCR之间的生产有效集表示：</p>
+<p>CCR:<span class="math inline">\(p_C=\{(x,y)|x\ge X\lambda,y\ge Y\lambda,\lambda\ge 0\}\)</span></p>
+<p>BCC:<span class="math inline">\(p_B=\{(x,y)|x\ge X\lambda,y\ge Y\lambda,e\lambda=1,\lambda\ge0\}\)</span></p>
+</div>
+<div id="dea-malmquit模型" class="section level3">
+<h3>DEA-Malmquit模型</h3>
+<p>传统的DEA模型并没有在时间维度上进行考虑，DEA-Malmquit能在时间维度上测度不同的时期的效率。因此可以用于分析面板效率。具有较为广泛的应用性。综合技术效率：对决策单元DMU的资源配置能力、资源使用效率等多方面的综合衡量评价。</p>
+<p><strong>纯技术效率</strong>是由于管理和技术等因素影响的生产效率</p>
+<p><strong>规模效率</strong>是由于规模因素影响的生产效率。</p>
+<p>Malmquist指数方法通过本期到下期生产率的变动测算Mal全要素生产率。从而实现动态分析。与DEA结合就可以实现胴体分析。</p>
+<p>距离函数来表示
+<span class="math display">\[
+MPI_I^t=\frac{E^t_I(x^{t+1},y^{t+1})}{E^t_I(x^t,y^t)}\\MPI_I^{t+1}=\frac{E^{t+1}_I(x^{t+1},y^{t+1})}{E^{t+1}_I(x^t,y^t)}\\
+\]</span></p>
+<p>为了把两个时期的技术水平都纳入考虑，我们取它们的几何平均值：
+<span class="math display">\[
+MPI_I^G=(MPI_I^tMPI_I^{t+1})^{1/2}=[(E_I^t(x_{t+1},y_{t+1})E_I^t(x_t,y_t))⋅(E_I^t+1(x_{t+1},y_{t+1})E_I^{t+1}(x_t,y_t))]^{1/2}
+\]</span>
+该生产率指数又可以分解为面向输入的效率变化 (EFFCH) 和技术效率(TECHCH) ，技术效率又可以分解为规模效率 (SECH) 和纯技术效率 (PECH) 两部分：</p>
+<div class="figure">
+<img src="https://cheinchi.oss-cn-hangzhou.aliyuncs.com/img/Screen%20Shot%202022-11-20%20at%2018.54.15.png" alt="" />
+<p class="caption">Screen Shot 2022-11-20 at 18.54.15</p>
+</div>
+<p>基于<span class="math inline">\(t\)</span>和<span class="math inline">\(t+1\)</span>期参照技术定义的Malmquist生产率指数的经济含义为对称的，按照Fisher(1922)理想指数思想，定义它们的几何平均综合为综合生产率指数：
+<span class="math display">\[
+M(x^t,y^t,x^{t+1},y^{t+1})=(M_t^o,M_{t+1})^{1/2}=
+\]</span></p>
+</div>
+<div id="径向距离模型" class="section level3">
+<h3>径向距离模型</h3>
+<p>径向效率的命令</p>
+<p>具体的方法</p>
+<ul>
+<li><p>假设有k个DMU对于<span class="math inline">\(DMU_K\)</span>有N种的投入，记为<span class="math inline">\(x_k=(x_{k_1},x_{k_2},\cdots,x_{k_N})\)</span>同时假设一共有M种产出</p></li>
+<li><p>在技术条件T下，投入<span class="math inline">\(x\)</span>和产出<span class="math inline">\(y\)</span>，数学表示为<span class="math inline">\(T=\{(x,y)\}\)</span></p></li>
+<li><p>在技术条件下，生产可能集表示为<span class="math inline">\(P(x)=\{y:(x,y)\in T\}\)</span>。投入的需求集为<span class="math inline">\(P(y)=\{x:(x,y)\in T\}\)</span></p></li>
+</ul>
+<p>最终在技术条件T下的线性规划求解为
+$$</p>
+<p>$$
+命令<code>teddf</code>和<code>ddefff</code>考虑关于非期望产出，假设有<span class="math inline">\(j=1,2,\cdots,N\)</span>个决策单元(DMU)，并假设每一个决策单元的使用投入量为<span class="math inline">\(x\in R_+^M\)</span></p>
+</div>
+<div id="期望产出与非期望产出" class="section level3">
+<h3>期望产出与非期望产出</h3>
+<p>一个产出是否是期望是决策者所决定的。如果决策者希望这个产出越多越好，那么它就是期望产出，反之，则归于非期望(undesirable)产出。</p>
+<p>对于投入是期望还是非期望，这是由其内部生产机制决定的。如果说增加这个投入并不会让期望产出减少，那么这个投入便是期望的。</p>
+<p>根据 Chung 等 (1997) 的研究，在生产理论中，生产可能性集是一个有界集和闭集，且投入和期望产出具有强处置性。此外，为了让 表示环境技术，<strong>我们还需要增加弱可处置性（Weak disposability）和零结合假设（Nulljonitness）这两个额外的公理：</strong></p>
+</div>
+</div>
+<div id="非径向距离模型" class="section level2">
+<h2>非径向距离模型</h2>
+<p>命令 <code>tenonradial</code> 的非径向效率测量方法是 Russell (Färe 和 Lovell，1978；Färe 等，1994a) 法。对于以产出为导向的非径向量度定义为：</p>
+<p><span class="math display">\[
+RM_k^o(y_K;x_K,y,x|CRS)=max(M^{-1}\sum_{m=1}^M\theta_m:(\theta_1y_{k1}))
+\]</span></p>
+<p>线性规划方程定义为：
+<span class="math display">\[
+RM_k^o(y_K,x_K,y,x|CRS)
+\]</span>
+如果假设<span class="math inline">\(H_0\)</span> 被拒绝，则可以进行下述假设检验：</p>
+<p>也是就是说先查看此技术条件下是否是规模报酬不变的，若不是再看是否是 NIRS (NonDecreasing Returns to scale) 的。</p>
+<p>命令<code>teddf</code>和<code>nddfeff</code>：考虑了非期望产出，Zhou 等 (2012) 首先对考虑了非期望产出的 NDDF 给出了如下的正式定义。
+<span class="math display">\[
+ND(x,y,b;g)=sup\{w^T\beta:((x,y,b)+g*diag(\beta))\in T(x)\}
+\]</span></p>
+<p>其中， 为与投入和产出相关的标准化权重向量， 为方向向量， 为尺度因子向量。结合环境生产技术以及 NDDF 的定义，我们可以通过求解下面的 DEA 模型来计算 的值。</p>
+</div>
+<div id="sbm-模型" class="section level2">
+<h2>SBM 模型</h2>
+<p>SBM (Slacks-Based Measure) 效率测量方法是 DEA 效率测量方法中的非径向效率测度，其优点在于，直接度量多余的投入量与不足的产出量，投入与产出到生产前沿面的距离被称作松弛量 (Slacks)，来测算效率。具体原理如下：</p>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://www.lianxh.cn/news/45464d6ce18f3.html" class="uri">https://www.lianxh.cn/news/45464d6ce18f3.html</a></p>
+<p><a href="https://gitee.com/Stata002/StataSX2018/raw/f36f42ca3f2e4f1c21842e8d6f8e20d1189405ef/2019C/%E5%BD%AD%E8%AF%97%E6%95%8F-%E4%B8%AD%E5%A4%A7/Malmquist_Productivity_Index_using_DEA_frontier_in_Stata.pdf" class="uri">https://gitee.com/Stata002/StataSX2018/raw/f36f42ca3f2e4f1c21842e8d6f8e20d1189405ef/2019C/%E5%BD%AD%E8%AF%97%E6%95%8F-%E4%B8%AD%E5%A4%A7/Malmquist_Productivity_Index_using_DEA_frontier_in_Stata.pdf</a></p>
+</div>

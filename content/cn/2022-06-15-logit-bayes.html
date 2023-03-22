@@ -1,0 +1,143 @@
+---
+title: "使用贝叶斯方法构建逻辑回归"
+author: "黄建祺"
+date: "2022-06-15"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+<div id="使用mcmc对参数后验进行抽样" class="section level3">
+<h3>使用MCMC对参数后验进行抽样</h3>
+<pre class="r"><code>library(&quot;coda&quot;)
+library(&quot;ggplot2&quot;)
+library(&quot;dplyr&quot;)
+library(&quot;palmerpenguins&quot;)
+rm(list=ls())
+logit&lt;- function(param,x){
+  pi&lt;- 1/(1+exp(-(x*param[1]+param[2])))
+  return(pi)
+}
+gentoo&lt;-penguins %&gt;%
+  mutate(gender = if_else(sex == &quot;male&quot;, 1, 0))
+data=data.frame(gentoo$body_mass_g,gentoo$gender)
+
+x=data$gentoo.body_mass_g
+y=data$gentoo.gender
+trueA &lt;- 0.2
+trueB &lt;- 0.1
+param=cbind(trueA,trueB)
+
+sampleSize &lt;- nrow(data)
+model_logit &lt;- glm(
+  y ~ 0 + x,
+  data = data,
+  family = binomial(link = &quot;logit&quot;)
+)
+ggplot(data = data)+
+  geom_point(aes(x=gentoo.body_mass_g,y=gentoo.gender))</code></pre>
+<p><img src="/cn/posts/2022-06-15-logit-bayes_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r"><code>likelihood&lt;-function(param){
+  a = param[1:2]
+  li&lt;-sum(y*log(logit(a,x))+(1-y)*log(1-logit(a,x)))
+  return(li)
+}
+prior &lt;- function(param){
+  a = param[1]
+  b = param[2]
+  aprior = dunif(a, min=0, max=5, log = T)
+  bprior = dnorm(b, sd = 2, log = T)
+  return(aprior+bprior)
+}
+
+proposalfunction &lt;- function(param){
+  return(rnorm(2,mean = param, sd= c(0.1,0.1)))
+}</code></pre>
+</div>
+<div id="验证后验是否收敛" class="section level3">
+<h3>验证后验是否收敛</h3>
+<pre class="r"><code>run_metropolis_MCMC &lt;- function(startvalue, iterations){
+  chain = array(dim = c(iterations+1,2))
+  chain[1,] = startvalue
+  for (i in 1:iterations){
+    proposal = proposalfunction(chain[i,])
+    probab = exp(likelihood(proposal)+ prior(proposal) - likelihood(chain[i,])- prior(chain[i,]))
+    probab
+    if (runif(1) &lt; probab&amp;!is.na(probab)){
+      chain[i+1,] = proposal
+    }else{
+      chain[i+1,] = chain[i,]
+    }
+  }
+  par(mfcol=c(1,2))
+  return(mcmc(chain))
+}</code></pre>
+<pre class="r"><code>startvalue = c(0,0)
+sv2=c(1,1)
+chain = run_metropolis_MCMC(startvalue, 10000)
+chain_data=data.frame(chain)
+
+summary(chain)</code></pre>
+<pre><code>## 
+## Iterations = 1:10001
+## Thinning interval = 1 
+## Number of chains = 1 
+## Sample size per chain = 10001 
+## 
+## 1. Empirical mean and standard deviation for each variable,
+##    plus standard error of the mean:
+## 
+##      Mean SD Naive SE Time-series SE
+## [1,]    0  0        0              0
+## [2,]    0  0        0              0
+## 
+## 2. Quantiles for each variable:
+## 
+##      2.5% 25% 50% 75% 97.5%
+## var1    0   0   0   0     0
+## var2    0   0   0   0     0</code></pre>
+<pre class="r"><code>traceplot(chain)</code></pre>
+<p><img src="/cn/posts/2022-06-15-logit-bayes_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="与现成的逻辑回归的r实现比较" class="section level3">
+<h3>与现成的逻辑回归的R实现比较</h3>
+<pre class="r"><code>model_logit &lt;- glm(
+  data$gentoo.gender ~ 0 + data$gentoo.body_mass_g,
+  data = data,
+  family = binomial(link = &quot;logit&quot;)
+)
+summary(model_logit)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = data$gentoo.gender ~ 0 + data$gentoo.body_mass_g, 
+##     family = binomial(link = &quot;logit&quot;), data = data)
+## 
+## Deviance Residuals: 
+##    Min      1Q  Median      3Q     Max  
+## -1.270  -1.242   1.073   1.103   1.121  
+## 
+## Coefficients:
+##                          Estimate Std. Error z value Pr(&gt;|z|)
+## data$gentoo.body_mass_g 4.151e-05  2.570e-05   1.615    0.106
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 461.64  on 333  degrees of freedom
+## Residual deviance: 459.02  on 332  degrees of freedom
+##   (11 observations deleted due to missingness)
+## AIC: 461.02
+## 
+## Number of Fisher Scoring iterations: 3</code></pre>
+</div>
+<div id="使用贝叶斯mcmc方法对模型估计的优势" class="section level3">
+<h3>使用贝叶斯MCMC方法对模型估计的优势</h3>
+<ul>
+<li>可以对于参数估计在参数空间上的展现相对于频率学派；</li>
+<li>MCMC方法可以对于非共轭的分布来进行参数估计，得到广泛的应用在复杂分布上</li>
+<li>两者的结合使得贝叶斯方法在模型估计上得到更为有效的应用，如机器学习、参数估计等；</li>
+</ul>
+</div>

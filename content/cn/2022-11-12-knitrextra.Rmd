@@ -1,0 +1,195 @@
+---
+title: "knitr及knitrextra"
+author: "Jianqi Huang"
+date: "2022-11-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+`kable`是一个能够将输入的类数据框格式的数据快速在输出为表格的形式
+```r
+kable(x, format, digits = getOption("digits"),
+    row.names = NA, col.names = NA, align, caption = NULL,
+    label = NULL, format.args = list(), escape = TRUE,
+    ...)
+```
+需要设定字体的尺寸，可使用`kableExtra`包中的`kable_styling()` 函数。
+```{r}
+grade1<-c(90,88,77,95)
+grade2<-c(8,9.0,10.0,8.5)
+name<-c("小甲","小柄","小顶","晓敏")
+df<-data.frame(name,grade1,grade2)
+knitr::kable(df)
+```
+
+利用kable可输出一些其他样式：但实际上在代码块中编译的时候，并不会输出为pipe格式，而是在console中才会输出为这个格式。
+```r
+knitr::kable(df,"pipe")
+```
+
+|name | grade1| grade2|
+|:----|------:|------:|
+|小甲 |     90|    8.0|
+|小柄 |     88|    9.0|
+|小顶 |     77|   10.0|
+|晓敏 |     95|    8.5|
+
+
+```r
+knitr::kable(df, 'simple')
+```
+
+```
+name    grade1   grade2
+-----  -------  -------
+小甲        90      8.0
+小柄        88      9.0
+小顶        77     10.0
+晓敏        95      8.5
+```
+
+```
+knitr::kable(df, 'html')
+```
+
+```html
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:right;"> grade1 </th>
+   <th style="text-align:right;"> grade2 </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 小甲 </td>
+   <td style="text-align:right;"> 90 </td>
+   <td style="text-align:right;"> 8.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 小柄 </td>
+   <td style="text-align:right;"> 88 </td>
+   <td style="text-align:right;"> 9.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 小顶 </td>
+   <td style="text-align:right;"> 77 </td>
+   <td style="text-align:right;"> 10.0 </td>
+  </tr>
+   <tr>
+   <td style="text-align:left;"> 晓敏 </td>
+   <td style="text-align:right;"> 95 </td>
+   <td style="text-align:right;"> 8.5 </td>
+  </tr>
+</tbody>
+</table>
+```
+  
+  
+```r
+knitr::kable(df, 'latex')
+```
+
+
+```Latex
+\begin{tabular}{l|r|r}
+\hline
+name & grade1 & grade2\\
+\hline
+小甲 & 90 & 8.0\\
+\hline
+小柄 & 88 & 9.0\\
+\hline
+小顶 & 77 & 10.0\\
+\hline
+晓敏 & 95 & 8.5\\
+\hline
+\end{tabular}
+```
+
+
+### 调整表格
+```{r}
+knitr::kable(df,
+  col.names = c("姓名","语文","数学")
+)
+knitr::kable(df,
+             col.names = paste0('The NO.1 group ',colnames(df))
+)
+```
+
+`paste0`是将字符进行连接。`paste`是用于连接字符，默认以空字符来连接即`sep=' '`，而`paste0`不能用sep进行连接。
+
+`col.name`将列名替换为一个新的名称。
+
+
+### 对齐方法
+```{r}
+knitr::kable(df,align = "clr")
+```
+
+### 添加标题
+```{r}
+knitr::kable(df,caption = "examinment grades")
+```
+
+
+### 调整数字尾数
+```{r}
+knitr::kable(df,digits = 4)
+```
+
+
+
+## kableExtra美化
+我们尽管可以使用`kable`对表格进行一些调整，但更多细节上仍然是缺失的。因此引入关于`kableExtra`包来填补这方面的空缺。
+```{r}
+library(knitr)
+library(kableExtra)
+kable(df,caption='the grades')%>%
+  kable_styling(latex_options = "striped")
+```
+
+```{r}
+kable(df, booktabs = TRUE,
+      caption = "字体较小的表格") %>%
+  kable_styling(font_size = 8)
+```
+
+
+### 对行或列分组
+在原有的数据属性下生成一个分类，在表格形式上是在原有的二维表格下在新生成一行，能够将原有属性进行划到该类别下。
+
+```{r}
+grade3 <- data.frame(姓名 = c("张三","李四","王五"),
+                     物理 = c(90,90,85),
+                     化学 = c(86,92,80),
+                     生物 = c(94,85,90),
+                     政治 = c(93,97,95),
+                     历史 = c(92,84,80),
+                     地理 = c(99,89,95),
+                     计算机 = c(92,95,97),
+                     体育 = c(85,99,95))
+kable(grade3, booktabs = TRUE,
+      caption = "对标题列进行分组") %>%
+  add_header_above(c(" " = 1, "理科" = 3,
+                     "文科" = 3, "其它" = 2))
+
+```
+
+
+这使用的是`add_header_above`的方式来实现。
+```{r}
+kable(grade3, booktabs = TRUE,
+      caption = "对行进行折叠") %>%
+  pack_rows(
+  index = c("一班" = 1, "二班" = 2)
+)
+```
+
+
+
+

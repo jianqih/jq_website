@@ -1,0 +1,53 @@
+---
+title: "LDA Method And Realization"
+author: "Jianqi Huang"
+date: "2022-10-18"
+output: html_document
+katex: true
+---
+
+# LDA and dimension reduction
+## what is LDA:the linear discriminant analysis
+
+LDA is a supervised classification technique that is considered a part of crafting competitive machine learning models. 
+
+The original technique was developed in the year 1936 by Ronald A. Fisher and was named Linear Discriminant or Fisher's Discriminant Analysis. The original Linear Discriminant was described as a two-class technique. 
+The multi-class version was later generalized by C.R Rao as Multiple Discriminant Analysis. They are all simply referred to as the Linear Discriminant Analysis.
+
+
+The goal of LDA is to project the feature from a high dimension to a lower-dimensional space so that avoid the dimension catastrophe and also reduce resources and dimensional costs.
+
+## Why dimension reduction
+
+In simple terms, they reduce the dimensions in a particular dataset while retaining most of the data.
+
+In many situation, the feature attributes often show the correlation. So some information is redundant that it is unnecessary to use all of the attributes to forecast or classify. so we can use the DR tech to help us reduce the dimension in classifier.
+
+## loading the data
+
+```{r,message=FALSE}
+library(MASS)
+rm(list=ls())
+data<-read.csv("/Users/a182501/Desktop/大三上/data-mining/read_csv-lda.csv",header=FALSE,as.is = TRUE,encoding = "UTF-8")
+```
+
+
+## Bayes prior probablity
+we use the Bayes theory and set the Priori without information.
+```{r}
+condata<-data[1:20,1:4]
+grpdata<-data[1:20,5]
+(con.sol=lda(condata,grpdata,prior = c(1,1,1)/3))
+ins<-data[21:22,1:4]
+pred<-predict(con.sol,ins)
+predall<-predict(con.sol,data[1:22,1:4])
+df<-cbind(predall$class,predall$x)
+df<-as.data.frame(df)
+df$V1<-as.factor(df$V1)
+ggplot(data = df)+
+  geom_point(aes(x=LD1,y=LD2,color=V1))
+```
+
+Finally we transfer the three-dimension feature into two-dimension feature. And we will have the feature function of $X_1$ and $X_2$
+
+

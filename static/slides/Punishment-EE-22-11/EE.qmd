@@ -1,0 +1,332 @@
+---
+title: "The Punishment in Experimental Economics"
+author: Jianqi Huang
+format: 
+  revealjs:
+    theme: serif
+    menu:
+      side: right
+      width: wide
+      preview-links: auto
+editor: visual
+slide-number: true
+---
+
+## Communication and punishment in voluntary contribution experiments
+
+### background
+
+-   in teams and other group, individuals are encouraged to undertake activities for the common good.
+-   Experimentalists and theorists have studied the free-rider problem in public goods and common pool resource games.
+-   the question: whether chat room or numerical cheap talk would facilitate a N.E. with no contributions.
+
+## The former research
+
+-   free form face-to-face communication in creasing contributions and efficiency(Issac and Walker,1988)
+-   Effectiveness of face-to-face communication may be due to cues from facial expression
+-   the e-mail communications less efficiency than face-to-face meeting(Frohlich and Oppenheimer,1998)
+
+## Experimental design {.smaller}
+
+-   16 subjects from general undergraduate
+
+-   play a 10 period repeated VCM(voluntary contributions mechanism) game
+
+-   Group: four
+
+-   via computer terminals, couldn't communicate each other.
+
+![](EE_files/p1_design.png)
+
+## Baseline treatment (B)
+
+-   10 experimental dollars for each subject and allocate to group account
+
+-   Each subject received 0.4 times the total amount in the group account.
+
+The individual $i$ will receive the payoff: $$(10-C_i)+(0.4)\times \sum_{j=1}^4C_j$$
+
+## Reduction treatment(R)
+
+after the assignment, subject learned the other subject.
+
+Reduce the earning of another subject at a 25 cent $$(10-C_i)+(0.4)\times\sum C_j-(0.25)\sum_{j=1}^4 R_{ij}-\sum_{j=1}^4 R_{ji}$$ The $R_{ij}$ is the number of i reduce j's earning.
+
+## Face-to-Face communication treatment(FF)
+
+-   Before the decision are made, have a change to talk for 5 min.
+
+-   **Note:** The threats and promises are ruled out.
+
+-   after reback to seat they don't know who is who talked.
+
+-   Based on the Reduction treatment ran two **face-to-face sessions with reduction (FFwR)**. The FFwR is the same as its no-communication counterpart R except that group members talk for 5 min
+
+## Chat room treatment(**CR**)
+
+CR is based on B and brought together in an on-line chat room.
+
+CRwR: Chat Room with Reduction treatment
+
+## Numerical cheap talk treatment(**NCT**)
+
+The NCT is the same as **B** except that Communication Stage: type in possible contribution levels.
+
+-   type until the time ran out.
+
+**NCTwR**: the treatment with numerical cheap talk and reductions(NCTWR) the subjects had the opportunity to type in possible punishments and possilbe contributions.
+
+## Results and Analysis {.scrollable}
+
+#### treatment R:
+
+-   higher initial contributions
+
+-   no decline in contributions until the end of the experiment
+
+-   the absence of an overall earnings gain
+
+-   subjects tended to increase their contribution following a punishment, if their contribution had been below the group mean.
+
+    -   In Mann-Whitney test found that ave-contributions over 10 periods taken as a whole were significantly higher
+
+```{r,fig.align='center',out.height='90%',out.width='90%'}
+knitr::include_graphics("EE_files/p1_fig2.png")
+```
+
+## disscussion
+
+the punishment changed the incentives to contribution.
+
+-   the cost of punishing free rider and 22% punishment were at group's higest contributor
+    -   the high contributor were punished to reduce their contribution by 0.5 in period t+1 for every \$1
+
+## Results 2
+
+-   the ave-contribution exceed in both B and R in every period.
+    -   Mann-Whitney test FF significantly more than groups in B and R
+
+## Results 3
+
+-   on-line chat room was more effective in eliciting contributions to the group account.
+
+-   The ave-contribution in CR was 15% less than in FF.
+
+-   contributions in the CR were significantly higher than those in both the B and the R.
+
+-   there is no significantly difference in either contributions or earnings among FF FFwR CRwR.
+
+### discussion
+
+-   member see the punishment as a trap to keep down their earning.
+
+-   the punishment some free riding in the end game.
+
+## results 4
+
+-   the NCTwR has a stability of contributions.
+
+-   the NCTwR were lower than FF,FFwR,CR and CRwR.
+
+### discussion
+
+subjects attempted to use misleading NCT message to generate opportunities to free ride.
+
+## conclusion
+
+-   communication of promises permitted high efficiency levels to be achieved in verbal communication treatments.
+
+# Feedback,punishment and cooperation in public good experiments
+
+## Introduction
+
+how to promote cooperation when private and collective interest are at odds is a recurring theme in economics.
+
+But little is known about whether cooperation established under the threat of peer punishment is robust to institutional changes.
+
+## The experiment {.scrollable}
+
+Subject: 124 student from U of Melbourne
+
+Group: 4 individuals per group.
+
+Endowment: 20dollar
+
+Studied by Fehr and Gachter(2002) and two decision stages.
+
+$$
+\pi_i^1=20-c_i+0.4\sum_{h=1}^4c_h
+$$
+
+The first stage: player must decide simultaneously and without commutation.
+
+$$
+\pi_i^1=20-c_i+0.4\sum_{h=1}^4c_h-\sum_{j=1,j\neq i}^4p_{ij}-2\sum_{j=1,j\neq i}^4p_{ji}
+$$
+
+## Results
+
+## Punishment behavior {.scrollable}
+
+Result 1. The likelihood that punishment will occur is unaffected by the feedback format.
+
+Result 2. Punishment severity is the same in C and E, but is significantly higher in CE.
+
+![](EE_files/bar1.png)
+
+![](EE_files/bar2.png)
+
+## contributions to the public account
+
+Earnings feedback has a negative effect on contribution levels, while contribution feedback has a positive effect. The highest contribution levels are observed in C followed by CE and then E
+
+## convergence of contributions
+
+Result 4. Standard deviation of contributions decreases significantly over time in C and E where feedback is given in only one format, but not in CE where feedback is given in two different formats.
+
+Result 5. Earnings feedback lowers the likelihood that a low contributor will respond to a punishment by raising his contribution in the following period.
+
+Result 6. High contributors in E are more likely to lower their contribution in the following period than high contributors in either C or CE.
+
+## Earning across treatment
+
+Result 7. Earnings are significantly lower in treatments CE and E in which subjects receive earnings feedback compared to C in which subjects receive only contribution feedback.
+
+![](EE_files/feedback_across_treatment.png)
+
+## Alternative explanations
+
+the results support the hypothesis feedback format serves as a coordination device that influences the level of cooperation.
+
+### Confusion
+
+-   Participants do not fully understand the experiment.
+
+earning feedback help subjects discover their strategy.
+
+### Imitation
+
+-   information about earnings allows individuals to imitate the choice of the most successful of their peers.
+
+### Experimenter effect
+
+the subject have the other-regarding preference.
+
+### Rank-based preference
+
+subject have a preference for obtaining a higher number than their peers.
+
+## Conclusion
+
+cooperation sustained under the threat of peer punishment is indeed sensitive to changes in the format used to provide feedback to subject.
+
+# Ownership,punishment and norms in a real-effort bargaining experiment
+
+## Experimental design
+
+-   subject:198 student
+
+-   real effort task: subject must move sliders across the screen before time runs out.
+
+### Advantage
+
+-   not cognitively difficult that will reduces the potantial for differences in potential treatment effect.
+
+-   it is not a fun or exciting: subjects will think the earn it due to his own costly efforts.
+
+## In pairs
+
+-   the surplus was created by joint production. if the subject who completed more sliders received the surplus.
+-   Proposer Surplus treatment (PSt) the proposers received the entire surplus from the real effort task.
+-   The Responder Surplus treatment(RSt) receive the entire surplus xfrom the real effort task.
+
+**the surplus:** \$10 or \$0
+
+## The bargain part
+
+-   Each player was either the proposer or the responder remained the same.
+
+-   The result was randomly select from the four games.
+
+-   (8,2) could be proposed in each game.
+
+-   subjects were told how many sliders they and their partner completed. and the surplus their partner received.
+
+## Rule following task
+
+There is five traffic lights. start walking by pressing botton.
+
+began with 7 and spent 0.07 on each second of walking.
+
+the lost of walking without waiting: $$
+0.07*24=1.68
+$$ The walking waiting all the lights $$
+0.07*24+5*5*0.07=3.43
+$$ This measure is simply capturing the experimental demand effect.
+
+want to capture the individual difference between the follow a given costly or norm.
+
+## Descriptive statistics
+
+![](EE_files/p3_des1.png)
+
+# Theoretical predictions
+
+## social norm model {.smaller}
+
+The individuals may judge an outcome as fair if it is more beneficial for themselves.
+
+-   When there exist multiple potential norms, subjects who exhibit self-serving bias may select or place greater weight on the norm that suggests they should receive a greater share.
+
+$$
+U_i(x_i,x_j,\theta_i)=x_i-\gamma_i\cdot g(\theta_i(h)\cdot X-x_i)\quad if \quad \theta_i(h)\cdot X>x_i\\
+U_i(x_i,x_j,\theta)=x_i,otherwise
+$$
+
+the $\theta_i(h)\in [0,1]$ Represents what the player i believes the norm suggest about the share of the surplus they should receive at the information set $h$
+
+This give a norm-based share of the surplus for player $i$ as $\theta_i(h)\cdot X$
+
+-   weak punishment: responders receive a payoff \$0 and proposers receive a payoff of \$2 if rejected.
+-   strong punishment: both receive a payoff \$0 if rejected
+
+## Alternative models
+
+Both the outcome-based and intention-based models predict that there should be no difference in proposer or responder behavior between the RS and PS treatment.
+
+## Result 1 {.scrollable}
+
+-   with strong punishment, proposers in the Responder Surplus treatment were less likely to offer (8,2) compared with PS treatment
+-   In the Responder Surplus treatment,proposers were more likely to offer (8,2) in Weak Punishment treatment compared with SP treatment
+
+![](EE_files/p3_result1.png)
+
+![](EE_files/p3_reg1.png)
+
+## Result 2
+
+-   SPT(Strong Punishment treatment), rejection rates of (8,2) by responder were similar between the Proposer and RPT.
+
+-   in WPT responder were less likely to reject the (8,2) offer in the PS treatment compared with the RST(Responder Surplus Treatment)
+
+## Result 3
+
+SP(strong Punishment), the subject **in the Proposer Surplus treatment** who conditionally accepted or rejected the (8,2) the **Proposer Surplus treatment(PSt).**
+
+(weak punishment,WP), RPT who conditionally accepted or rejected the (8,2) **PSt**.
+
+## Result 4
+
+-   Proposer follow the rule less likely to offer (8,2) in RS with PS treatment.
+
+-   the Responders follow the rule are less likely to reject the PSt than RSt
+
+-   responder who never waited at the light less likely to conditionally accept/reject the (8,2) offer.
+
+## Conclusion
+
+-   both the strength of enforcement and prior ownership in bargaining can influence the degree of conflict in negotiations.
+
+-   Alternative models rely on social norms may provides a way to model the observed behavior in the experiment.
+
+-   the rule-following task are more likely to respect prior ownership by proposer and responders.

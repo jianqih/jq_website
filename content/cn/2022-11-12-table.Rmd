@@ -1,0 +1,45 @@
+---
+title: "数据可视化"
+author: "Jianqi Huang"
+date: "2022-11-12"
+output: html_document
+---
+
+
+
+对于一个表格的输出来说，往往使用的方式较为简单，除了通过`knitr`以及`kextra`以外，还可以使用的方式包括`formattable`方式进行可视化输出。
+为何需要叠加图形来进行输出，实际上，数据的可视化本身就是一种帮助我们对数据进行更多的信息传递方式之一，表格本身所传递的信息也是类似于可视化所传递的信息，只是所传递呈现出的形式不同。
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library("formattable")
+p <- percent(c(0.1, 0.02, 0.03, 0.12))
+p
+```
+
+
+往往对于一个多维度的数据，我们需要对不同的维度的数据在横向纵向进行比较，绘图能够很好的呈现出这样的信息。
+美化数据输出仅仅是作为呈现的方式进行美化。能够帮助接受者减少信息的干扰。在另一个方面，对数据输出的美化，也能增加对信息接受者的接受程度。
+```{r}
+p <- data.frame(
+  id = c(1, 2, 3, 4, 5),
+  name = c("A1", "A2", "B1", "B2", "C1"),
+  balance = accounting(c(52500, 36150, 25000, 18300, 7600), format = "d"),
+  growth = percent(c(0.3, 0.3, 0.1, 0.15, 0.15), format = "d"),
+  ready = c(TRUE, TRUE, FALSE, FALSE, TRUE))
+knitr::kable(p)
+```
+
+```{r}
+formattable(p,list(
+  balance=color_tile("white","orange"),
+  area(col = growth) ~ normalize_bar("pink", 0.2),
+  ready = formatter("span",
+                    style = x ~ style(color = ifelse(x, "green", "red")),
+                    x ~ icontext(ifelse(x, "ok", "remove"),ifelse(x, "Yes","No")))
+))
+```
+
+

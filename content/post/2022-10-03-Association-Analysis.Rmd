@@ -1,0 +1,79 @@
+---
+title: "Association Analysis in R"
+author: "Jianqi Huang"
+katex: true
+date: '2022-10-03'
+output: html_document
+---
+
+### loading packages
+```{r,echo=TRUE,results='hide'}
+rm(list = ls())
+library("RColorBrewer")
+library("arules")
+library("arulesViz")
+```
+
+### Create transaction data and mine association rules
+
+```{r}
+a_list <- list(
+  c("m","o","n","k","e","y"),
+  c("d","o","n","k","e","y"),
+  c("m","a","k","e"),
+  c("m","u","c","k","y"),
+  c("c","o","o","k","i","e")
+)
+```
+
+### Set transaction names
+
+```{r,echo=TRUE}
+names(a_list) <- paste("Tr",c(1:5), sep = "")
+a_list
+```
+
+### Use the constructor to create transactions
+
+```{r,echo=TRUE,message=FALSE}
+trans1 <- transactions(a_list)
+trans1
+```
+
+### set the parameter(includes support and confidence but not lift) to find out the frequency itemset and rule
+
+```{r,echo=TRUE,results='hide'}
+frequency_rules<-apriori(trans1,parameter = list(supp = 0.6, target = "rules"))
+
+rules <- apriori(trans1,parameter = list(supp = 0.6, conf = 0.8, target = "rules",minlen=2))
+```
+
+### frequency itemset table output(not strictly)
+
+```{r,echo=TRUE}
+inspectDT(frequency_rules)
+arules::itemFrequencyPlot(trans1, topN = 20,
+                          main = 'Relative Item Frequency Plot',
+                          col = brewer.pal(8,'Pastel2'),
+                          type ="absolute",
+                          ylab = "Item Frequency (Relative)")
+```
+
+### rule table output
+
+```{r,echo=TRUE}
+inspectDT(rules)
+```
+
+### data visualization
+
+```{r,echo=TRUE}
+plot(rules, method = "graph",  engine = "htmlwidget")
+plot(rules, method="paracoord")
+```
+
+### summary for the rules and conclusion
+
+```{r,echo=TRUE}
+summary(rules)
+```

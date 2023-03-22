@@ -1,0 +1,239 @@
+---
+title: "flexable"
+author: "Jianqi Huang"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## flextable
+flextable 是一个用于报告和发表提供创建表格的包。
+
+```{r}
+library(flextable)
+```
+
+`flextable()`可以从数据框`data.frame`创建报告表格。只需要在其中填入数据框作为参数即可实现。
+
+
+```{r}
+ft <- flextable(airquality[ sample.int(10),])
+ft
+```
+
+- `set_caption`：设置标题；
+- `color`：设置字体颜色，其中参数`part`可以对表格的不同部分进行设置；
+- `add_footer_lines`：添加脚注；
+- `add_header_row`：添加首行，同时设置参数长宽`colwidths`；
+
+```{r}
+ft <- add_header_row(ft,
+  colwidths = c(4, 2),
+  values = c("Air quality", "Time")
+)
+ft <- theme_vanilla(ft)
+ft <- add_footer_lines(ft, "Daily air quality measurements in New York, May to September 1973.")
+ft <- color(ft, part = "footer", color = "#666666")
+ft <- set_caption(ft, caption = "New York Air Quality Measurements")
+ft
+```
+
+
+其中使用了主题`theme_vanilla`来作为整体的主题，其他的主题还有包括`get_flextable_defaults()`来查看现有的默认主题的参数设置。
+
+```{r}
+get_flextable_defaults()
+flextable(head(cars))
+```
+
+若需要修改，可通过`set_flextable_defaults`来实现。
+
+```{r}
+set_flextable_defaults(
+  font.size = 10, theme_fun = theme_vanilla,
+  padding = 6,
+  background.color = "#EFEFEF")
+get_flextable_defaults()
+flextable(head(cars))
+```
+
+[`theme_alafoli(x)`](https://davidgohel.github.io/flextable/reference/theme_alafoli.html)、[`theme_apa()`](https://davidgohel.github.io/flextable/reference/theme_apa.html)
+、[`theme_booktabs()`](https://davidgohel.github.io/flextable/reference/theme_booktabs.html)、[`theme_box()`](https://davidgohel.github.io/flextable/reference/theme_box.html)
+、[`theme_tron()`](https://davidgohel.github.io/flextable/reference/theme_tron.html)
+等主题可使用。
+
+恢复默认主题可使用`init_flextable_defaults()`实现：
+```{r}
+init_flextable_defaults()
+```
+
+## 更多细节
+flextable对表格有更多的细节上的设置：
+
+```{r}
+myft <- flextable(head(mtcars), 
+  col_keys = c("am", "carb", "gear", "mpg", "drat" ))
+myft
+```
+
+
+
+
+```{r}
+myft <- italic(myft, j = 3)
+myft <- color(myft, ~ drat > 3.5, ~ drat, color = "red")
+myft <- bold(myft, ~ drat > 3.5, ~ drat, bold = TRUE)
+myft
+```
+
+这里的`color`对`drat`属性满足一定条件下则设置其他颜色；同样若`drat`满足条件下则加粗。
+
+
+### 设置字体
+```{r}
+dat <- data.frame(
+  wool = c("A", "B"),
+  L = c(44.56, 28.22), 
+  M = c(24, 28.77), 
+  H = c(24.56, 18.78)
+)
+flextable(dat) |> 
+  font(part = "all", fontname = "Inconsolata")
+```
+
+
+```{r}
+set_flextable_defaults(
+  font.family="Inconsolata", 
+  cs.family = "Symbol", 
+  eastasia.family = "仿宋")
+df = data.frame(
+  `标题Title`='微软MS',
+  `内容Content`='无题lorem',
+  stringsAsFactors = FALSE)
+ft = df %>% 
+  flextable %>% 
+  autofit %>% 
+  width(width=1) %>% 
+  theme_box()
+ft
+```
+
+
+
+一个flextable是由三部分组成：
+
+- header: 默认下只有一个header行包括数据框行名；
+- body: body部分是包含数据框的数据；
+- footer: footer没有默认，但可以包括任何内容。
+
+
+![](/Users/a182501/Rproject/my_website/static/media/flextable_layout.png)
+
+```{r}
+ft <- flextable(head(airquality))
+ft
+```
+## Selectors
+
+选择器（Selectors）可用于某行某列对其进行操作。很多的`flextable`函数有选择器`i`和`j`包括：`bg()`,`bold()`,`hline()`,`color()`,`align()`等。
+
+
+```{r}
+# data prep ----
+library(DT)
+library(data.table)
+dat <- head(ggplot2::diamonds, n = 10)
+qflextable(dat) %>% 
+  color(~ price < 330, color = "orange", ~ price + x + y + z ) %>% 
+  color(~ carat > .24, ~ cut, color = "red")
+```
+默认下的`i`和`j`为空值（NULL），`NULL`可认为是所有的行和所有的列都可实现。
+
+`i`用于行，`j`用于列的调整；
+
+使用`i = ~ col %in% "xxx"`选择所有的行中的列`col`是`xxx`的。其中的变量表达式为`~`。若需要使用多重条件，可以使用`&`和`|`来实现。
+
+- 运算符`+`可用于多重列。
+
+```{r}
+ft <- qflextable(dat)
+
+color(
+  ft, i = ~ cut %in% "Premium", 
+  j = ~ x + y, color = "red")
+```
+
+
+变量`j`支持使用所有的`col_key`组成的向量进行操作。
+
+
+
+```{r}
+ft %>% 
+  color(j = c("x", "y"), color = "orange", part = "body") %>% 
+  bold(j = c("price", "x"), bold = TRUE,part = "all")
+```
+
+
+同样也通过一个`col_key`数字实现：
+```{r}
+color(ft, i = 2:3, j = 2:5, color = "red")
+```
+
+逻辑运算
+```{r}
+color(ft, i = rep(c(TRUE, FALSE), 5), color = "blue")
+```
+
+
+#### 背景设置
+
+
+```{r}
+bg(ft, i = ~ price < 335, 
+  j = c('x', 'y', 'z'), 
+  bg = "orange", part = "body")
+```
+
+
+
+
+### 边框
+
+```{r}
+library(officer)
+big_border = fp_border(color="red", width = 2)
+small_border = fp_border(color="gray", width = 1)
+
+myft <- flextable(head(airquality))
+myft <- border_remove(x = myft)
+myft <- border_outer(myft, part="all", border = big_border )
+myft <- border_inner_h(myft, part="all", border = small_border )
+myft <- border_inner_v(myft, part="all", border = small_border )
+myft
+```
+
+
+## 输出
+flextable支持多种输出格式，包括html、docx、ppt、pdf。在Rstudio中默认为html的输出格式。
+
+- `save_as_html()`
+- `save_as_pptx()`
+- `save_as_docx()`
+- `save_as_image()`
+
+
+若需要进行提前预览，可使用`print(ft,previed=)`实现。
+
+```r
+print(ft, preview = "docx")
+```
+
+仍然有更多的内容可以得到探索。
+可参考flextable的官方指南 https://ardata-fr.github.io/flextable-book/index.html
+
+

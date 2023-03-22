@@ -1,0 +1,87 @@
+baseURL: "https://www.jianqihuang.com/"
+languageCode: "en-us"
+title: "Jianqi's Website"
+theme: "TeXtLite"
+disqusShortname: "disqus-shortname-here"
+footnoteReturnLinkContents: "↩"
+
+permalinks:
+  cn: /cn/:year/:month/:day/:slug/
+
+outputFormats:
+  RSS:
+    baseName: feed
+    mediaType: application/rss
+
+summaryLength: 80
+
+menu:
+  main:
+    - name: "Home"
+      url: "/"
+      weight: 1
+    - name: "Posts"
+      url: "/post/"
+      weight: 2
+    - name: "Contact"
+      url: "/about/"
+      weight: 4
+    - name: "Vitae"
+      url: "/cv/"
+      weight: 3
+    - name: "中文博客"
+      url: "/cn/"
+      weight: 5
+
+params:
+  description: "About Learning"
+  social: 
+    email: "jqh@jianqihuang.com"
+    github: "https://github.com/jianqih"
+    facebook: "https://www.facebook.com/jianqih"
+    twitter: "https://twitter.com/jiaqih"
+  icon:
+    logo: "/themes/TeXtLite/static/logo.svg"
+    email: "/themes/TeXtLite/static/social/email.svg"
+    twitter: "/themes/TeXtLite/static/social/twitter.svg"
+    github: "/themes/TeXtLite/static/social/github.svg"
+    facebook: "/themes/TeXtLite/static/social/facebook.svg"
+  comments:
+    #utterances: "jianqi/comments"
+    disqus: "y-f-liao-s-page"
+    # Comment systems to include by default
+    default:
+      - utterances
+
+markup:
+  highlight:
+    anchorLineNos: false
+    codeFences: true
+    guessSyntax: false
+    hl_Lines: ""
+    lineAnchors: ""
+    lineNoStart: 1
+    lineNos: true
+    lineNumbersInTable: false
+    noClasses: true
+    style: monokai
+    tabWidth: 4
+  goldmark:
+    extensions:
+      definitionList: true
+      footnote: true
+      linkify: true
+      strikethrough: true
+      table: true
+      taskList: true
+      typographer: true
+    parser:
+      attribute:
+        block: false
+        title: true
+      autoHeadingID: true
+      autoHeadingIDType: github
+    renderer:
+      hardWraps: false
+      unsafe: true
+      xhtml: false

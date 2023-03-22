@@ -1,0 +1,202 @@
+---
+title: "数据可视化"
+author: "Jianqi Huang"
+date: "2022-11-12"
+output: html_document
+---
+
+
+
+<p>对于一个表格的输出来说，往往使用的方式较为简单，除了通过<code>knitr</code>以及<code>kextra</code>以外，还可以使用的方式包括<code>formattable</code>方式进行可视化输出。
+为何需要叠加图形来进行输出，实际上，数据的可视化本身就是一种帮助我们对数据进行更多的信息传递方式之一，表格本身所传递的信息也是类似于可视化所传递的信息，只是所传递呈现出的形式不同。</p>
+<pre class="r"><code>library(&quot;formattable&quot;)
+p &lt;- percent(c(0.1, 0.02, 0.03, 0.12))
+p</code></pre>
+<pre><code>## [1] 10.00% 2.00%  3.00%  12.00%</code></pre>
+<p>往往对于一个多维度的数据，我们需要对不同的维度的数据在横向纵向进行比较，绘图能够很好的呈现出这样的信息。
+美化数据输出仅仅是作为呈现的方式进行美化。能够帮助接受者减少信息的干扰。在另一个方面，对数据输出的美化，也能增加对信息接受者的接受程度。</p>
+<pre class="r"><code>p &lt;- data.frame(
+  id = c(1, 2, 3, 4, 5),
+  name = c(&quot;A1&quot;, &quot;A2&quot;, &quot;B1&quot;, &quot;B2&quot;, &quot;C1&quot;),
+  balance = accounting(c(52500, 36150, 25000, 18300, 7600), format = &quot;d&quot;),
+  growth = percent(c(0.3, 0.3, 0.1, 0.15, 0.15), format = &quot;d&quot;),
+  ready = c(TRUE, TRUE, FALSE, FALSE, TRUE))
+knitr::kable(p)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">id</th>
+<th align="left">name</th>
+<th align="right">balance</th>
+<th align="right">growth</th>
+<th align="left">ready</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">A1</td>
+<td align="right">52,500</td>
+<td align="right">30%</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">A2</td>
+<td align="right">36,150</td>
+<td align="right">30%</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">B1</td>
+<td align="right">25,000</td>
+<td align="right">10%</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">B2</td>
+<td align="right">18,300</td>
+<td align="right">15%</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">C1</td>
+<td align="right">7,600</td>
+<td align="right">15%</td>
+<td align="left">TRUE</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>formattable(p,list(
+  balance=color_tile(&quot;white&quot;,&quot;orange&quot;),
+  area(col = growth) ~ normalize_bar(&quot;pink&quot;, 0.2),
+  ready = formatter(&quot;span&quot;,
+                    style = x ~ style(color = ifelse(x, &quot;green&quot;, &quot;red&quot;)),
+                    x ~ icontext(ifelse(x, &quot;ok&quot;, &quot;remove&quot;),ifelse(x, &quot;Yes&quot;,&quot;No&quot;)))
+))</code></pre>
+<table class="table table-condensed">
+<thead>
+<tr>
+<th style="text-align:right;">
+id
+</th>
+<th style="text-align:right;">
+name
+</th>
+<th style="text-align:right;">
+balance
+</th>
+<th style="text-align:right;">
+growth
+</th>
+<th style="text-align:right;">
+ready
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+A1
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffa500">52,500</span>
+</td>
+<td style="text-align:right;">
+<span style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: pink; width: 100.00%"> 30%</span>
+</td>
+<td style="text-align:right;">
+<span style="color: green">
+<i class="glyphicon glyphicon-ok"></i>
+Yes
+</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+A2
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffc55c">36,150</span>
+</td>
+<td style="text-align:right;">
+<span style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: pink; width: 100.00%"> 30%</span>
+</td>
+<td style="text-align:right;">
+<span style="color: green">
+<i class="glyphicon glyphicon-ok"></i>
+Yes
+</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+B1
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffdc9c">25,000</span>
+</td>
+<td style="text-align:right;">
+<span style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: pink; width: 20.00%"> 10%</span>
+</td>
+<td style="text-align:right;">
+<span style="color: red">
+<i class="glyphicon glyphicon-remove"></i>
+No
+</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+B2
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffe9c2">18,300</span>
+</td>
+<td style="text-align:right;">
+<span style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: pink; width: 40.00%"> 15%</span>
+</td>
+<td style="text-align:right;">
+<span style="color: red">
+<i class="glyphicon glyphicon-remove"></i>
+No
+</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+C1
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #ffffff">7,600</span>
+</td>
+<td style="text-align:right;">
+<span style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: pink; width: 40.00%"> 15%</span>
+</td>
+<td style="text-align:right;">
+<span style="color: green">
+<i class="glyphicon glyphicon-ok"></i>
+Yes
+</span>
+</td>
+</tr>
+</tbody>
+</table>

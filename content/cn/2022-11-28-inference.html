@@ -1,0 +1,121 @@
+---
+title: "推理过程"
+author: "Jianqi Huang"
+date: "2022-11-28"
+output: html_document
+
+---
+
+
+
+<div id="推理过程" class="section level2">
+<h2>推理过程</h2>
+<div id="证据的不确定性" class="section level3">
+<h3>证据的不确定性</h3>
+<p>几率函数(odds):通常以一个事件发生的概率比上一个事件不发生的概率的比值，以一个<span class="math inline">\(O(\cdot)\)</span>来表示。我们设一个事件A发生的概率为<span class="math inline">\(P(A)\)</span>，不发生的概率即为<span class="math inline">\(1-P(A)\)</span>，由此</p>
+<p><span class="math display">\[O(A)=\frac{P(A)}{1-P(A)}\]</span>
+在这里，odds与概率经常会混淆，在古典概论下，概率是指一个事件在概率空间<span class="math inline">\(\Omega\)</span>下发生的概率，因此其分母是以总体事件来衡量。
+<span class="math display">\[P(A)=\frac{\Omega(A)}{\Omega}\]</span></p>
+<p><img src="oddsRatioExcel0.png" /></p>
+<p>一个证据A可能并不能完全的说明出现
+<span class="math display">\[
+O(A)=\frac{P(A)}{1-P(A)}=\left\{\begin{array}
+（0 &amp; 当A为假\\
+\infty&amp;当A为真\\
+(0,\infty)&amp;一般情况下
+\end{array}\right.
+\]</span>
+<span class="math display">\[
+P(A)=0,O(A)=0\\
+P(A)=0.5,O(A)=1\\
+P(A)=1,O(A)=\infty
+\]</span>
+几率函数是用概率函数所定义的，因此在推断过程中需要经过几率函数来计算函数值。</p>
+<p>而在日常的口语中或一个主观判断下，往往会考虑一件事件的发生与不发生的比值，最后实际上并没有给出一个事件发生的可能性。因此可以将odds转换为概率。
+<span class="math display">\[
+P(A)=\frac{O(A)}{1+O(A)}
+\]</span></p>
+</div>
+<div id="规则ato-b的不确定度量" class="section level3">
+<h3>规则<span class="math inline">\(A\to B\)</span>的不确定度量</h3>
+<p>以因子<span class="math inline">\((LS,LN)\)</span>来刻画：</p>
+<ul>
+<li>LS表示的是A真对B的影响，即规则成立的充分性，数学表达为
+<span class="math display">\[LS=\frac{P(A|B)}{P(A|\sim B)}\]</span></li>
+<li>LN表示的是A假对B的影响，即规则成立的必要性
+<span class="math display">\[LN(A\to B)=\frac{P(\sim A|B)}{P(\sim A|\sim B)}=\frac{O(B|\sim A)}{O(B)}\]</span></li>
+<li><span class="math inline">\(LS、LN\geq 0\)</span>，不独立</li>
+<li>LS,LN不能同时大于1或小于1</li>
+<li>LS，LN可同时等于1
+<span class="math display">\[
+LS=\left\{
+\begin{array}
+(1&amp;O(B|A)=O(B),A对B没有影响\\
+&gt;1&amp;当O(B|A)&gt;O(B),即A支持B\\
+&lt;1&amp;当O(B|A)&lt;O(B),即A不支持B
+\end{array}
+\right.
+\]</span>
+<span class="math display">\[
+LN=\left\{
+\begin{array}
+(1&amp;O(B|\sim A)=O(B),\sim A对B没有影响\\
+&gt;1&amp;当O(B|\sim A)&gt;O(B),即\sim A支持B\\
+&lt;1&amp;当O(B|\sim A)&lt;O(B),即\sim A不支持B
+\end{array}
+\right.
+\]</span></li>
+</ul>
+</div>
+<div id="不确定的传递关系ato-b_1to-b_2" class="section level3">
+<h3>不确定的传递关系<span class="math inline">\(A\to B_1\to B_2\)</span></h3>
+<div id="从ato-b_1" class="section level4">
+<h4>从<span class="math inline">\(A\to B_1\)</span></h4>
+<p>A必然出现时候，即<span class="math inline">\(P(A)=1\)</span>
+此时的几率函数。
+而这里所谓的P实际上并不能等同于概率理论中的P，需要在LN、LS置信度下的P。
+<span class="math display">\[
+O(B_1|A)=LS\cdot O(B_1)\\
+O(B_1|\sim A)=LN\cdot O(B_1)
+\]</span></p>
+</div>
+<div id="从b_1to-b_2" class="section level4">
+<h4>从<span class="math inline">\(B_1\to B_2\)</span></h4>
+<p>在这里我们由上文假定A是必然发生的，而对于<span class="math inline">\(B_1\)</span>我们需要进行分类讨论，不确定是否会发生，即<span class="math inline">\(P\neq 0，P\neq 1\)</span>的情况。
+我们需要考虑使用全概率来刻画概率的传递关系。
+<span class="math display">\[
+P(B_2|A)=P(B_2|B_1)P(B_1|A)+P(B_2|\sim B_1)P(\sim B_1|A)
+\]</span></p>
+</div>
+</div>
+<div id="为何要支持度" class="section level3">
+<h3>为何要支持度</h3>
+<p>对于这个问题，实际上还是利用主观概率作为先验概率，即认为有多大的可能性从一个事件和另一个事件的同时发生能说明其规则（因果关系）而我们所谓的条件概率并不能完全说明这种所谓的因果关系。
+接下来解释在因果关系中为何不能实现。</p>
+<div id="潜在结果模型" class="section level4">
+<h4>潜在结果模型</h4>
+<p>因果作用定义为相同个体的潜在结果的比较
+个体i的因果作用 (individual causal effect, ICE) 定义为：
+<span class="math display">\[ICE(i)=Y_1(i)-Y_0(i)\]</span>
+而在日常生活中，我们很难真正的观察到一个个体同时有两个事件在同一时间发生。也就是不可能既观察到<span class="math inline">\(Y_1(i)\)</span>也观察到<span class="math inline">\(Y_0(i)\)</span>。
+若这个问题没能很好的解决，因此我们就将一个个体的研究转向多个个体的研究，也即总体的平均的因果作用期望
+<span class="math display">\[ACE=E(ICE)=E(Y_1-Y_0)=E(Y_1)-E(Y_0)\]</span>
+平均因果作用为假若每一个人接受了<span class="math inline">\(X=1\)</span>的处理得到了<span class="math inline">\(E(Y_1)\)</span>与不处理<span class="math inline">\(X=0\)</span>得到的结果为<span class="math inline">\(E(Y_0)\)</span>之差。在这个定义之下，同样会很难识别出其中的因果效应，因为先让每一个个体处理<span class="math inline">\(X=1\)</span>后<span class="math inline">\(X=0\)</span>的效果与先<span class="math inline">\(X=0\)</span>后<span class="math inline">\(X=1\)</span>的潜在结果可能不一致。
+因此，这个对于我们要解决这个问题，实际上就自然考虑到自然科学中的对照组和控制组的方式。对于一个子总体，令V为协变量，定义<span class="math inline">\(V=v\)</span>为子总体的平均因果作用为<span class="math inline">\(E(Y_1-Y_0|V=v)\)</span>
+RA.Fisher给出了识别平均因果作用的方式：随机化试验设计。随机化处理实验组和对照组，保证其他控制变量与协变量之间无关。即<span class="math inline">\((Y_1,Y_0)\perp X\)</span>
+进而
+<span class="math display">\[
+E(Y_x)=E(Y|X=x)
+\\ACE=E(Y|X=x)-E(Y|X=0)
+\]</span>
+在现实中，随机化实验在非实验室环境中很难得到，因此需要采用一些更多的方法来辅助实现因果识别。</p>
+</div>
+</div>
+<div id="插值法" class="section level3">
+<h3>插值法</h3>
+<p>对于一个事件的后验概率的刻画，需要考虑的是
+根据上述的公式，若将<span class="math inline">\(P(B_1|A)\)</span>作为自变量<span class="math inline">\(X\)</span>，<span class="math inline">\(P(B_2|A)\)</span>为因变量<span class="math inline">\(Y\)</span>，则<span class="math inline">\(P(\sim B_1|A)\)</span>在数值上等价于<span class="math inline">\(1-X\)</span>。
+因此原公式可转换为
+<span class="math display">\[Y=P(B_2|B_1)X+P(B_2|\sim B_1)(1-X)\]</span></p>
+</div>
+</div>

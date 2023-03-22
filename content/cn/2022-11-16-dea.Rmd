@@ -1,0 +1,297 @@
+---
+title: "DEA 方法"
+author: "Jianqi Huang"
+date: '2022-11-16'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T,message = F)
+```
+
+## DEA方法
+
+DEA(Data Envelopment Analysis),数据包络分析，是具有处理多投入多产出指标的复杂问题，以及无需知道生产函数的具体形式等优点。根据规模报酬是否变化，DEA模型又可分为CCR模型和BCC模型，其中CCR模型可用于规模报酬不变前提下的决策单元（DMU）相对有效评价。BCC模型用于规模报酬可变前提下的决策单元相对有效评价。
+
+### 基本原理
+保持决策单元的输入或者输出不变，借助我们的线性规划和统计数据确定相对有效的生产前沿面，通过比较决策单元偏离前沿面的程度来判断相对有效性。
+
+## CCR模型
+
+### 步骤
+
+1. 选择决策单元
+2. 找出指标，写出对偶模型，
+3. 计算lambda和theta，进一步判断是否有效。
+
+### 基本概念
+
+- 技术效率：指在保持决策单元投入不变的情况下，实际产出同理想产出的比值。
+
+- 决策单元（Decision Making Units,DMU）就是效率评价的对象，可以理解为一个将一定“投入”转化为一定“产出”的实体。
+
+- 规模报酬：规模报酬是要说明，当生产要素同时增加了一倍，如果产量的增加正好是一倍，称之为规模报酬不变（-），如果产量增加多于一倍，则称之为规模报酬递增（irs），进而，如果产量增加少于一倍，就称为规模报酬递减（drs）。
+
+- DEA弱有效：无法等比例减少各项投入的数量，除非减少产出的数量；无法等比例增加各项产出的数量，除非增加投入的数量。 这种情况下，虽然不能等比例减少投入或增加产出，但某一项或几项（但不是全部）投入可能减少，所以称为弱有效。
+
+- 生产前沿面：（自己通俗的理解）对于给定的生产要素和产出价格，选择要素投入的最优组合和产出的最优组合，**即投入成本最小、产出收益最大的组合。**（类似于投资组合的有效前沿概念——风险给定收益最大，收益给定风险最小）
+
+对于每一个决策单元(DMU)有对应的效率评价指数：
+$$
+h_k=\frac{u^Ty_i}{v^Tx_j}=\frac{\sum_{r=1}^nu_ry_{rj}}{\sum_{i=1}^mv_ix_{ij}}
+$$
+
+
+假设一共有$t$个决策单元(DMU)，每个决策单元有m个投入变量和n个产出变量，其中：
+
+$\mathcal{x}_j=(x_{1j},x_{2j},\cdots,x_{ij},\cdots,x_{tj})$
+
+$y_j=(y_{1j},\cdots,y_{ij},\cdots,y_{rj})$为已知数据。
+
+$v_i$表示第$i$种输入的一种度量（或称为权）；$u_r$表示的是输出的一种度量（也或称权）$i=1,2,\cdots,m;r=1,2,\cdots,n$；
+
+
+
+最后我们取适当的权重$\mu,v$使得$h_k\leq 1,k=1,2,\cdots,t$，现在对每一个$h_k$进行评价，以权系数$v$和$u$为变向量。第$k_0$个DMU的效率为目标，以所有的DMU作为约束。构建以下模型：
+
+$$
+\max h_k=\sum_{r=1}^su_ry_{rk}\\
+s.t.\left\{
+\begin{align*}
+&\frac{\sum_{r=1}^sy_ry_{rj}}{\sum_{i=1}^mv_ix_{ij}}\le 1,j=1,2,\cdots,n
+\\
+&u\ge 0,v\ge 0
+\end{align*}
+\right.
+$$
+
+对该分式规划进行变换，令：
+
+$s=\frac{1}{v^Tx_0}>0,\omega=sv,\mu=su$，会有等价的线性规划问题：
+$$
+\max h_k=\sum_{r=1}^su_ry_{rk}\\
+s.t.\left\{
+\begin{align*}
+&s.t.{\sum_{i=1}^mv_ix_{ik}}=1\\
+&{\sum_{i=1}^mv_ix_{ij}}-\sum_{r=1}^sy_ry_{rj}\ge 0,j=1,2,\cdots,n\\
+&v_i\ge 0,u_i\ge 0
+\end{align*}\right.
+$$
+
+其对偶问题为
+$$
+\min \theta\\
+s.t.\left\{
+\begin{aligned}
+\sum_{j=1}^t\lambda_jx_j\le \theta x_0\\
+\sum_{j=1}^t\lambda_jy_j\ge y_0\\
+\lambda_j\ge 0,j=1,2,\cdots,t
+\end{aligned}
+\right.
+$$
+引入松弛变量
+$$
+\min \theta\\
+s.t.\left\{
+\begin{aligned}
+\sum_{j=1}^t\lambda_jx_j+s^-= \theta x_0\\
+\sum_{j=1}^t\lambda_jy_j-s^+= y_0\\
+s^-,s^+\ge 0\\
+\lambda_j\ge 0,j=1,2,\cdots,t
+\end{aligned}
+\right.
+$$
+其中松弛变量的经济含义是增长产出多少时候达到目标效率，松弛变量$s-$含义是减少多少投入时候能达到目标效率。
+
+其中$\theta$为无约束。$\theta$为第$i$个满足决策单元效率的技术效率值。满足$0\le \theta\le 1$。当$\theta=1$时，称为DEA有效；当$\theta<1$时，称为非有效。当无效时，也就是松弛变量$s^-$大于0，存在资源的冗余，可以在决策单元系统中将投入$x_j'=\theta x_j$，而产出保持不变。
+
+
+
+### 有效决策单元构造
+
+$\hat x_0=x_0-s^{0-}$
+
+新的投入数据，可以对原有的进行优化。
+
+$y_0=y_0+s^{0+}$
+
+最终将其变为DEA有效的。
+
+其具体的过程为$\hat x=(1.5,1.5)^T$
+
+在数据包络分析中，$\hat y_0=2+0=2$
+
+无效的在有效面上做出投影，最后变为DEA有效。
+$$
+DEA有效=\left\{
+\begin{align*}
+&\theta=0\\
+&s^{-},s^+=0，强有效
+\end{align*}
+\right.
+$$
+
+
+### 非阿基米德——带有无穷小量的模型
+
+其对偶规划就为
+$$
+\max V_{D_\varepsilon}=\theta-\varepsilon(\hat e^Ts^-+e^Ts^+)\\
+s.t.\left\{
+\begin{align*}
+&\sum_{j=1}^nx_j\lambda_j+s^+=\theta x_0\\
+&\sum_{j=1}^ny_j\lambda_j+s^-=y_0\\
+&\theta 无约束\\
+&s^+\ge 0,s^-\ge 0
+\end{align*}\right.
+$$
+对有效面进行投影，找到最优。
+
+生产前沿面：假设$\omega>0,\mu>0$，
+
+
+
+
+
+
+
+## 代码实现
+
+```{r}
+library('deaR')
+library(readxl)
+data <- readxl::read_xlsx('/Users/a182501/datas/dea.xlsx')
+data_basic <- read_data(data,
+                        dmus = 1,
+                        inputs = 2:3,
+                        outputs = 4)
+result_data <- model_basic(data_basic,
+                           dmu_ref = NULL,
+                           orientation = 'io',
+                           compute_target = TRUE,
+                           rts = 'crs')
+s<-summary(result_data)
+s
+```
+
+
+对于DEA无效的单元，在那些指标上可以减少投入或增加产出来实现，也即是上述所提到的将松弛变量变为0。
+
+
+
+```{r}
+library(Benchmarking)
+x=matrix(c(2,2,5,10,10,3,12,8,5,4,6,12),ncol=2)
+y=matrix(rep(1,6),ncol=1)
+te=dea.dual(x,y,RTS = "vrs")##BCC模型的生产可能集是可变规模报酬（variable returns to scale)
+te$eff
+te$u
+te$v
+```
+
+
+### BCC模型
+
+CCR模型是在规模报酬不变的前提下所得到的，但是技术创新的规模报酬是不固定的，现实中存在的不平等竞争也会导致某些决策单元不能以最佳规模运行，于是 Banker，Charnes 和 Cooper 在 1984 年对之前仅讨论固定规模效益的 DEA 分析进行了扩展，提出了 BCC 模型。
+
+
+$$
+\min \theta\\
+s.t.\left\{
+\begin{aligned}
+\sum_{j=1}^t\lambda_jx_j+s^-= \theta x_0\\
+\sum_{j=1}^t\lambda_jy_j-s^+= y_0\\
+s^-,s^+\ge 0\\
+\lambda_j\ge 0,j=1,2,\cdots,t
+\end{aligned}
+\right.
+$$
+可看出唯一的差异在于$e\lambda=1$，这个假设为一个凸性条件。
+
+对于该凸性假设的一个直观解释为在生产函数线上的点能够满足原先的约束，而当我们加入凸性假设之后，使得原先的约束条件不再满足，松弛变量大于零，最后成为规模上是无效的。
+
+我们可以对数据同时做 CCR 模型和 BCC 模型的 DEA 分析来评判决策单元的规模效率 (SE)。如果决策单元 CCR 和 BCC 的技术效益存在差异，则表明此决策单元规模无效，并且规模无效效率可以由 BCC 模型的技术效益和 CCR 模型的技术效益之间的差异计算出来。
+
+BCC是在考虑了可变规模收益的情况下：
+
+我们对BCC和CCR之间的生产有效集表示：
+
+CCR:$p_C=\{(x,y)|x\ge X\lambda,y\ge Y\lambda,\lambda\ge 0\}$
+
+BCC:$p_B=\{(x,y)|x\ge X\lambda,y\ge Y\lambda,e\lambda=1,\lambda\ge0\}$
+
+
+
+### DEA-Malmquit模型
+
+传统的DEA模型并没有在时间维度上进行考虑，DEA-Malmquit能在时间维度上测度不同的时期的效率。因此可以用于分析面板效率。具有较为广泛的应用性。综合技术效率：对决策单元DMU的资源配置能力、资源使用效率等多方面的综合衡量评价。
+
+**纯技术效率**是由于管理和技术等因素影响的生产效率
+
+**规模效率**是由于规模因素影响的生产效率。
+
+Malmquist指数方法通过本期到下期生产率的变动测算Mal全要素生产率。从而实现动态分析。与DEA结合就可以实现胴体分析。
+
+距离函数来表示
+$$
+MPI_I^t=\frac{E^t_I(x^{t+1},y^{t+1})}{E^t_I(x^t,y^t)}\\MPI_I^{t+1}=\frac{E^{t+1}_I(x^{t+1},y^{t+1})}{E^{t+1}_I(x^t,y^t)}\\
+$$
+
+
+为了把两个时期的技术水平都纳入考虑，我们取它们的几何平均值：
+$$
+MPI_I^G=(MPI_I^tMPI_I^{t+1})^{1/2}=[(E_I^t(x_{t+1},y_{t+1})E_I^t(x_t,y_t))⋅(E_I^t+1(x_{t+1},y_{t+1})E_I^{t+1}(x_t,y_t))]^{1/2}
+$$
+该生产率指数又可以分解为面向输入的效率变化 (EFFCH) 和技术效率(TECHCH) ，技术效率又可以分解为规模效率 (SECH) 和纯技术效率 (PECH) 两部分：
+
+![Screen Shot 2022-11-20 at 18.54.15](https://cheinchi.oss-cn-hangzhou.aliyuncs.com/img/Screen%20Shot%202022-11-20%20at%2018.54.15.png)
+
+
+
+基于$t$和$t+1$期参照技术定义的Malmquist生产率指数的经济含义为对称的，按照Fisher(1922)理想指数思想，定义它们的几何平均综合为综合生产率指数：
+$$
+M(x^t,y^t,x^{t+1},y^{t+1})=(M_t^o,M_{t+1})^{1/2}=
+$$
+
+
+
+
+
+
+## DEA数据需要标准化吗
+这个问题的答案是不需要进行标准化处理。
+
+- 指标的所有数据都除以指标的最大值：这种变换与改变数据测量单位性质相同，绝大多数DEA模型与数据的测量单位无关(unit-invariant),因此这种变换之后，DEA分析结果保持不变。
+
+- 离差标准化，0-1标准化(0-1 normalization)：是对原始数据的线性变换，使变换后的数据在[0,1]区间。数据变换之后，DEA分析结果通常会发生改变。只有个别DEA模型在数据进行线性变换之后结果保持不变或部分结果（例如DMU是否有序的定性结果）保持不变（unit-invariant and translationinvariant）
+
+
+## Source
+
+https://www.lianxh.cn/news/45464d6ce18f3.html
+
+https://gitee.com/Stata002/StataSX2018/raw/f36f42ca3f2e4f1c21842e8d6f8e20d1189405ef/2019C/%E5%BD%AD%E8%AF%97%E6%95%8F-%E4%B8%AD%E5%A4%A7/Malmquist_Productivity_Index_using_DEA_frontier_in_Stata.pdf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

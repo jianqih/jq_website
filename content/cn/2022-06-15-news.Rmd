@@ -1,0 +1,22 @@
+---
+title: "抓取新浪财经新闻数据"
+author: "Jianqi Huang"
+date: "2022-06-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library('rvest')
+library('xml2')
+url<-paste('http://finance.sina.com.cn/roll/index.d.html?cid=56589&page=1')
+webpage<-read_html(url,encoding = 'utf-8') 
+news_html<-html_nodes(webpage,'.list_009 a')
+news<-html_text(news_html)
+df<-as.data.frame(news)
+knitr::kable(df)
+```
+

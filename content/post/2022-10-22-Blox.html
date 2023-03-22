@@ -1,0 +1,317 @@
+---
+title: Blox
+date: '2022-10-19'
+author: Jianqi Huang
+---
+
+
+
+<p><code>Blox</code> is a simple visualization package in Python, that helps you display infomation in an attractive way.</p>
+<pre class="python"><code>from bloxs import B</code></pre>
+<pre class="python"><code>B(1234, &quot;Bloxs in notebook!&quot;)</code></pre>
+
+<div style="text-align: center; width: 34%; border: 1px solid #e5e5e5; margin: 10px; padding-top: 40px; padding-bottom: 40px; background: white; border-radius:5px">
+  <span style="font-size: 4em; color: #5a5a5a; font-family: monospace; ">1,234</span>
+  
+  <span style="font-size: 2em; color: gray; display: block; padding-top: 20px; font-family: monospace; line-height: 1.3em;">Bloxs in notebook!</span>
+  
+  
+  
+</div>
+  
+<pre class="python"><code>B(1999, &quot;Percent change!&quot;, percent_change=10)</code></pre>
+
+<div style="text-align: center; width: 34%; border: 1px solid #e5e5e5; margin: 10px; padding-top: 40px; padding-bottom: 40px; background: white; border-radius:5px">
+  <span style="font-size: 4em; color: #5a5a5a; font-family: monospace; ">1,999</span>
+  
+                <span style="font-size: 1.3em; color: #00B275; font-family: monospace;"> + 10%</span>
+                
+  <span style="font-size: 2em; color: gray; display: block; padding-top: 20px; font-family: monospace; line-height: 1.3em;">Percent change!</span>
+  
+  
+  
+</div>
+  
+<pre class="python"><code>B(&quot;123&quot;, &quot;图表&quot;, points=[1,4,2,3,5,6], chart_type=&quot;bar&quot;)</code></pre>
+
+<div style="text-align: center; width: 34%; border: 1px solid #e5e5e5; margin: 10px; padding-top: 40px; padding-bottom: 0px; background: white; border-radius:5px">
+  <span style="font-size: 4em; color: #5a5a5a; font-family: monospace; ">123</span>
+  
+  <span style="font-size: 2em; color: gray; display: block; padding-top: 20px; font-family: monospace; line-height: 1.3em;">图表</span>
+  
+  <canvas id="id-图表-0fd59d89a84b74cfe8427bf42237d7657" style="width: 100%; border: 0px"></canvas>
+  
+            <script src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script>
+            <script>
+            require.config({
+                paths: {
+                    chartjs: 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min'
+                }
+            });
+            
+
+  const labels0fd59d89a84b74cfe8427bf42237d7657 = Array(6).fill('');
+
+  const data0fd59d89a84b74cfe8427bf42237d7657 = {
+    labels: labels0fd59d89a84b74cfe8427bf42237d7657,
+    datasets: [{
+      label: '图表',
+      backgroundColor: 'rgba(0, 177, 228, 0.5)',
+      borderColor: '#00B1E4',
+      data: [1,4,2,3,5,6],
+      fill: true,
+      
+    }]
+  };
+        
+  const config0fd59d89a84b74cfe8427bf42237d7657 = {
+    type: 'bar',
+    data: data0fd59d89a84b74cfe8427bf42237d7657,
+    options: { 
+     elements: {
+       point: {
+         radius: 0,
+       }
+     },
+     plugins: {
+       legend: {
+         display: false
+       }
+     },
+     layout: {
+       autoPadding: false
+     },
+     scales: {
+       x: {
+         display: false
+       },
+       y: {
+         display: false
+         
+       }
+     }
+    },
+  };
+        
+        require(['chartjs'], function(Chart) {
+            const ctx = document.getElementById('id-图表-0fd59d89a84b74cfe8427bf42237d7657').getContext('2d');
+            new Chart(ctx, config0fd59d89a84b74cfe8427bf42237d7657);
+        });
+
+        </script>
+
+        
+</div>
+  
+<p>More over, <code>B</code> could used to combine and embed with <code>B</code> function just like the array</p>
+<pre class="python"><code>B([
+    B(&quot;123&quot;, &quot;chart&quot;, points=[1,4,2,3,5,6], chart_type=&quot;bar&quot;),
+    B(&quot;123&quot;, &quot;chart&quot;, points=[1,4,2,3,5,6], chart_type=&quot;line&quot;,color=&quot;red&quot;),
+    B(&quot;10000&quot;,&quot;the great number&quot;,points=[2,3,3,4,10],fill_color=&quot;green&quot;,border_color=&quot;green&quot;)
+])</code></pre>
+<div style="display: flex; background: #fff">
+<div style="text-align: center; width: 34%; border: 1px solid #e5e5e5; margin: 10px; padding-top: 40px; padding-bottom: 0px; background: white; border-radius:5px">
+  <span style="font-size: 4em; color: #5a5a5a; font-family: monospace; ">123</span>
+  
+  <span style="font-size: 2em; color: gray; display: block; padding-top: 20px; font-family: monospace; line-height: 1.3em;">chart</span>
+  
+  <canvas id="id-chart-07b049476e0894957bc86e3275b51d8c8" style="width: 100%; border: 0px"></canvas>
+  
+            <script src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script>
+            <script>
+            require.config({
+                paths: {
+                    chartjs: 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min'
+                }
+            });
+            
+
+  const labels07b049476e0894957bc86e3275b51d8c8 = Array(6).fill('');
+
+  const data07b049476e0894957bc86e3275b51d8c8 = {
+    labels: labels07b049476e0894957bc86e3275b51d8c8,
+    datasets: [{
+      label: 'chart',
+      backgroundColor: 'rgba(0, 177, 228, 0.5)',
+      borderColor: '#00B1E4',
+      data: [1,4,2,3,5,6],
+      fill: true,
+      
+    }]
+  };
+        
+  const config07b049476e0894957bc86e3275b51d8c8 = {
+    type: 'bar',
+    data: data07b049476e0894957bc86e3275b51d8c8,
+    options: { 
+     elements: {
+       point: {
+         radius: 0,
+       }
+     },
+     plugins: {
+       legend: {
+         display: false
+       }
+     },
+     layout: {
+       autoPadding: false
+     },
+     scales: {
+       x: {
+         display: false
+       },
+       y: {
+         display: false
+         
+       }
+     }
+    },
+  };
+        
+        require(['chartjs'], function(Chart) {
+            const ctx = document.getElementById('id-chart-07b049476e0894957bc86e3275b51d8c8').getContext('2d');
+            new Chart(ctx, config07b049476e0894957bc86e3275b51d8c8);
+        });
+
+        </script>
+
+        
+</div>
+  
+<div style="text-align: center; width: 34%; border: 1px solid #e5e5e5; margin: 10px; padding-top: 40px; padding-bottom: 0px; background: white; border-radius:5px">
+  <span style="font-size: 4em; color: #5a5a5a; font-family: monospace; ">123</span>
+  
+  <span style="font-size: 2em; color: gray; display: block; padding-top: 20px; font-family: monospace; line-height: 1.3em;">chart</span>
+  
+  <canvas id="id-chart-14a98d19109b84c26bb1b6da654807eac" style="width: 100%; border: 0px"></canvas>
+  <script>
+
+  const labels14a98d19109b84c26bb1b6da654807eac = Array(6).fill('');
+
+  const data14a98d19109b84c26bb1b6da654807eac = {
+    labels: labels14a98d19109b84c26bb1b6da654807eac,
+    datasets: [{
+      label: 'chart',
+      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      borderColor: '#FF6384',
+      data: [1,4,2,3,5,6],
+      fill: true,
+      
+    }]
+  };
+        
+  const config14a98d19109b84c26bb1b6da654807eac = {
+    type: 'line',
+    data: data14a98d19109b84c26bb1b6da654807eac,
+    options: { 
+     elements: {
+       point: {
+         radius: 0,
+       }
+     },
+     plugins: {
+       legend: {
+         display: false
+       }
+     },
+     layout: {
+       autoPadding: false
+     },
+     scales: {
+       x: {
+         display: false
+       },
+       y: {
+         display: false
+         
+       }
+     }
+    },
+  };
+        
+        require(['chartjs'], function(Chart) {
+            const ctx = document.getElementById('id-chart-14a98d19109b84c26bb1b6da654807eac').getContext('2d');
+            new Chart(ctx, config14a98d19109b84c26bb1b6da654807eac);
+        });
+
+        </script>
+
+        
+</div>
+  
+<div style="text-align: center; width: 34%; border: 1px solid #e5e5e5; margin: 10px; padding-top: 40px; padding-bottom: 0px; background: white; border-radius:5px">
+  <span style="font-size: 4em; color: #5a5a5a; font-family: monospace; ">10000</span>
+  
+  <span style="font-size: 2em; color: gray; display: block; padding-top: 20px; font-family: monospace; line-height: 1.3em;">the great number</span>
+  
+  <canvas id="id-the great number-20f7b1cf12d91433d95a65cb40c774ab0" style="width: 100%; border: 0px"></canvas>
+  <script>
+
+  const labels20f7b1cf12d91433d95a65cb40c774ab0 = Array(5).fill('');
+
+  const data20f7b1cf12d91433d95a65cb40c774ab0 = {
+    labels: labels20f7b1cf12d91433d95a65cb40c774ab0,
+    datasets: [{
+      label: 'the great number',
+      backgroundColor: 'green',
+      borderColor: 'green',
+      data: [2,3,3,4,10],
+      fill: true,
+      
+    }]
+  };
+        
+  const config20f7b1cf12d91433d95a65cb40c774ab0 = {
+    type: 'line',
+    data: data20f7b1cf12d91433d95a65cb40c774ab0,
+    options: { 
+     elements: {
+       point: {
+         radius: 0,
+       }
+     },
+     plugins: {
+       legend: {
+         display: false
+       }
+     },
+     layout: {
+       autoPadding: false
+     },
+     scales: {
+       x: {
+         display: false
+       },
+       y: {
+         display: false
+         
+       }
+     }
+    },
+  };
+        
+        require(['chartjs'], function(Chart) {
+            const ctx = document.getElementById('id-the great number-20f7b1cf12d91433d95a65cb40c774ab0').getContext('2d');
+            new Chart(ctx, config20f7b1cf12d91433d95a65cb40c774ab0);
+        });
+
+        </script>
+
+        
+</div>
+  </div>
+<div id="input-some-emoji" class="section level3">
+<h3>Input some emoji</h3>
+<pre class="python"><code>B(&quot;🐛&quot;)</code></pre>
+
+<div style="text-align: center; width: 34%; border: 1px solid #e5e5e5; margin: 10px; padding-top: 40px; padding-bottom: 40px; background: white; border-radius:5px">
+  <span style="font-size: 4em; color: #5a5a5a; font-family: monospace; ">🐛</span>
+  
+  
+  
+  
+  
+</div>
+  
+</div>

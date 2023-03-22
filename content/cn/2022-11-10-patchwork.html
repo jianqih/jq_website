@@ -1,0 +1,91 @@
+---
+title: "R调整图像输出，一个更加简易方式"
+author: "Jianqi Huang"
+date: "2022-11-10"
+output: html_document
+---
+
+
+
+<p>当我们用R绘制一些图形的时候，尤其是在使用<code>Rmd</code>进行文学性编程，code chunk内的ggplot图像的输出，很多情况下的排版方式会选择在<code>option</code>中调整<code>fig.xxx</code>或者调用<code>include_graphics</code>实现。</p>
+<pre class="r"><code>#加载包
+library(ggplot2)
+library(patchwork)
+data(package = &quot;ggplot2&quot;)#查看数据的方法</code></pre>
+<p>其他一些常用的包的数据<code>require(graphics)</code>中还有一些数据</p>
+<div id="查看数据" class="section level2">
+<h2>查看数据</h2>
+<pre class="r"><code>unique(mpg$class)</code></pre>
+<pre><code>## [1] &quot;compact&quot;    &quot;midsize&quot;    &quot;suv&quot;        &quot;2seater&quot;    &quot;minivan&quot;   
+## [6] &quot;pickup&quot;     &quot;subcompact&quot;</code></pre>
+<pre class="r"><code>summary(mpg)</code></pre>
+<pre><code>##  manufacturer          model               displ            year     
+##  Length:234         Length:234         Min.   :1.600   Min.   :1999  
+##  Class :character   Class :character   1st Qu.:2.400   1st Qu.:1999  
+##  Mode  :character   Mode  :character   Median :3.300   Median :2004  
+##                                        Mean   :3.472   Mean   :2004  
+##                                        3rd Qu.:4.600   3rd Qu.:2008  
+##                                        Max.   :7.000   Max.   :2008  
+##       cyl           trans               drv                 cty       
+##  Min.   :4.000   Length:234         Length:234         Min.   : 9.00  
+##  1st Qu.:4.000   Class :character   Class :character   1st Qu.:14.00  
+##  Median :6.000   Mode  :character   Mode  :character   Median :17.00  
+##  Mean   :5.889                                         Mean   :16.86  
+##  3rd Qu.:8.000                                         3rd Qu.:19.00  
+##  Max.   :8.000                                         Max.   :35.00  
+##       hwy             fl               class          
+##  Min.   :12.00   Length:234         Length:234        
+##  1st Qu.:18.00   Class :character   Class :character  
+##  Median :24.00   Mode  :character   Mode  :character  
+##  Mean   :23.44                                        
+##  3rd Qu.:27.00                                        
+##  Max.   :44.00</code></pre>
+<pre class="r"><code>p1 &lt;- ggplot(mpg) + 
+  geom_point(aes(displ, cty)) + 
+  ggtitle(&#39;Plot 1&#39;)
+
+p2 &lt;- ggplot(mpg) + 
+  geom_boxplot(aes(cyl, hwy, group = trans)) + 
+  ggtitle(&#39;Plot 2&#39;)
+
+p3 &lt;- ggplot(mpg) + 
+  geom_point(aes(cty, hwy, colour = displ)) + 
+  ggtitle(&#39;Plot 3&#39;)
+
+p4 &lt;- ggplot(mpg) + 
+  geom_bar(aes(year)) + 
+  facet_wrap(~cyl) + 
+  ggtitle(&#39;Plot 4&#39;)
+p1+p2</code></pre>
+<p><img src="/cn/2022-11-10-patchwork_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>默认的拼接是从左至右。但当要拼接的图像的量增加时候，也会从新的一列开始拼接图像。</p>
+<pre class="r"><code>p1+p2+p3+p4</code></pre>
+<p><img src="/cn/2022-11-10-patchwork_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>进一步可以通过<code>plot_layout()</code>来控制输出，<code>nrow</code>约束了输出的行，<code>byrow</code>控制按行还是按列拼接。<code>byrow</code>默认是<code>by_row=TRUE</code>也就是在达到边界之前按行先填。</p>
+<pre class="r"><code>p1+p2+p3+p4+plot_layout(nrow = 3,byrow = FALSE)</code></pre>
+<p><img src="/cn/2022-11-10-patchwork_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="叠加图片" class="section level2">
+<h2>叠加图片</h2>
+<p>一个在使用列输出更为简洁的方式是通过<code>/</code>方式，将<code>p1</code>与<code>p2</code>之间进行叠加。</p>
+<pre class="r"><code>p1 / p2 |p3</code></pre>
+<p><img src="/cn/2022-11-10-patchwork_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+在图像之间仍然满足运算定律：也即加括号可使运算顺序发生变化。</p>
+<pre class="r"><code>p1 / (p2 |p3)</code></pre>
+<p><img src="/cn/2022-11-10-patchwork_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>max_dims &lt;- get_max_dim(p1, p2, p3, p4)
+set_dim(p4, max_dims)</code></pre>
+<p><img src="/cn/2022-11-10-patchwork_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="图例" class="section level2">
+<h2>图例</h2>
+<pre class="r"><code>p1 + p2 + p3 + p4 +
+  plot_layout(guides = &#39;collect&#39;)</code></pre>
+<p><img src="/cn/2022-11-10-patchwork_files/figure-html/unnamed-chunk-9-1.png" width="672" />
+调整<code>guide</code>中文释义为图例，默认的方式是<code>keep</code>，也就是保持原有的<code>guide</code>。而使用<code>collect</code>时候就是将所有的图例收集放在右侧。</p>
+<pre class="r"><code>p1 + p2 + p3 + guide_area() + 
+  plot_layout(guides = &#39;collect&#39;)</code></pre>
+<p><img src="/cn/2022-11-10-patchwork_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+使用<code>guide_area()</code>使得留出一块空地来填充<code>guide</code>。值得一提的是，若这里的<code>guides</code>使用的是<code>keep</code>。</p>
+<p>很多关于<code>patchwork</code>的调整可参考<a href="https://patchwork.data-imaginist.com/">官方文档</a>。</p>
+</div>

@@ -1,0 +1,193 @@
+---
+title: "博弈论"
+author: "Jianqi Huang"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 博弈论
+
+```r
+# install.packages("remotes")
+remotes::install_github("yukiyanai/rgamer")
+```
+
+
+```r
+devtools::install_github("yukiyanai/rgamer")
+```
+
+
+```{r}
+library(rgamer)
+```
+
+
+新建立一个博弈：
+
+```{r}
+game1 <- normal_form(
+  players = c("Kamijo", "Yanai"),
+  s1 = c("Stays silent", "Betrays"), 
+  s2 = c("Stays silent", "Betrays"), 
+  payoffs1 = c(-1,  0, -3, -2), 
+  payoffs2 = c(-1, -3,  0, -2))
+```
+
+
+之后通过`sovle_nfg()`来解这个博弈，得到博弈方的最优解。
+
+```{r}
+s_game1 <- solve_nfg(game1, show_table = FALSE)
+s_game1$table
+```
+
+通过表格可看出，该博弈属于纳什均衡位于(Betrays,Betrays)。
+
+
+
+```{r}
+game2 <- normal_form(
+  players = c("Kamijo", "Yanai"),
+  s1 = c("Stag", "Hare"), 
+  s2 = c("Stag", "Hare"), 
+  payoffs1 = c(10, 8, 0, 7), 
+  payoffs2 = c(10, 0, 8, 7))
+```
+
+
+```{r}
+s_game2 <- solve_nfg(game2, mixed = TRUE, show_table = FALSE)
+```
+
+
+```{r}
+s_game2$br_plot
+```
+
+
+
+```{r}
+game3 <- normal_form(
+  players = c("A", "B"),
+  payoffs1 = "-x^2 + (28 - y) * x",
+  payoffs2 = "-y^2 + (28 - x) * y",
+  par1_lim = c(0, 30),
+  par2_lim = c(0, 30),
+  pars = c("x", "y"))
+```
+
+
+
+```{r}
+s_game3 <- solve_nfg(game3)
+```
+
+
+```{r}
+f_x <- function(x, y, a, b) {
+  -x^a + (b - y) * x
+}
+f_y <- function(x, y, s, t) {
+  -y^s + (t - x) * y
+}
+game4 <- normal_form(
+  players = c("A", "B"),
+  payoffs1 = f_x,
+  payoffs2 = f_y,
+  par1_lim = c(0, 30),
+  par2_lim = c(0, 30),
+  pars = c("x", "y"))
+```
+
+
+
+```{r}
+s_game4 <- solve_nfg(
+  game = game4,
+  cons1 = list(a = 2, b = 28),
+  cons2 = list(s = 2, t = 28),
+  plot = FALSE)
+```
+
+
+
+```{r}
+s_game4b <- solve_nfg(
+  game = game4,
+  cons1 = list(a = 2, b = 28),
+  cons2 = list(s = 2, t = 28),
+  precision = 3)
+```
+
+```{r}
+s_game4b$br_plot_NE
+```
+
+## 重复博弈
+
+
+```{r}
+func_price1 <- function(p, q) {
+  if (p < q) {
+    profit <- p
+  } else if (p == q) {
+    profit <- 0.5 * p
+  } else {
+    profit <- 0
+  }
+  profit
+}
+
+func_price2 <- function(p, q){
+  if (p > q) {
+    profit <- q
+  } else if (p == q) {
+    profit <- 0.5 * q
+  } else {
+    profit <- 0
+  }
+  profit
+}
+
+game5 <- normal_form(
+  payoffs1 = func_price1,
+  payoffs2 = func_price2,
+  pars = c("p", "q"),
+  par1_lim = c(0, 10),
+  par2_lim = c(0, 10),
+  discretize = TRUE)
+```
+
+
+```{r}
+s_game5 <- solve_nfg(game5, mark_br = FALSE)
+```
+
+
+```{r}
+game6 <- extensive_form(
+  players = list("Yanai", 
+                 rep("Kamijo", 2),
+                 rep(NA, 4)),
+  actions = list(c("stat", "game"),
+                  c("stat", "game"), c("stat", "game")),
+  payoffs = list(Yanai = c(2, 0, 0, 1),
+                 Kamijo = c(1, 0, 0, 2)),
+  direction = "right")
+```
+
+```{r}
+s_game6 <- solve_efg(game6)
+show_path(s_game6)
+
+```
+
+
+
+## Resource
+- https://yukiyanai.github.io/rgamer/

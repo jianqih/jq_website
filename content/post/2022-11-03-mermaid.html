@@ -1,0 +1,149 @@
+---
+title: "How to use mermaid in Rmd"
+date: 2022-11-03
+author: Jianqi Huang
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/d3/d3.min.js"></script>
+<script src="/rmarkdown-libs/dagre/dagre-d3.min.js"></script>
+<link href="/rmarkdown-libs/mermaid/dist/mermaid.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/mermaid/dist/mermaid.slim.min.js"></script>
+<link href="/rmarkdown-libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/chromatography/chromatography.js"></script>
+<script src="/rmarkdown-libs/DiagrammeR-binding/DiagrammeR.js"></script>
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p><code>mermaid</code> is a useful plugin in diagramming and charting tool in markdown to create and modify diagrams dynamically based on JavaScript.</p>
+<pre class="r"><code>library(DiagrammeR)
+g  &lt;- mermaid(&quot;
+graph LR
+    A--&gt;B;B--&gt;C;C--&gt;F;F--&gt;A&quot;)
+g</code></pre>
+<div class="DiagrammeR html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-1" style="width:4800px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"\ngraph LR\n    A-->B;B-->C;C-->F;F-->A"},"evals":[],"jsHooks":[]}</script>
+<p>some is different with mermaid in markdown that we need to construct the relationship from ‘A’ to ‘B’ to ‘C’ by the program with two lines.But we could complete in <code>markdown</code> in one line
+<code>a--&gt;b--&gt;c</code></p>
+<pre class="r"><code>g&lt;-DiagrammeR(&quot;
+graph LR
+  a==&gt;b{that me think}
+  a==&gt;d
+  b==&gt;text
+  text==&gt;c
+&quot;)
+g</code></pre>
+<div class="DiagrammeR html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-2" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"diagram":"\ngraph LR\n  a==>b{that me think}\n  a==>d\n  b==>text\n  text==>c\n"},"evals":[],"jsHooks":[]}</script>
+<ul>
+<li>Note:we use the function <code>DiagrammeR</code> or <code>mermaid</code> is the same</li>
+</ul>
+</div>
+<div id="node-shape-and-text" class="section level2">
+<h2>Node Shape and Text</h2>
+<p>the basic grammar is <code>[ID][opening brace][label][closing brace]</code></p>
+<ul>
+<li><p><code>id1{rhomb}</code></p></li>
+<li><p><code>id2(round retangle)</code></p></li>
+<li><p><code>id3[retangle]</code></p></li>
+<li><p><code>id4((circular))</code></p></li>
+<li><p><code>id5&gt;flag]</code></p></li>
+</ul>
+<pre class="r"><code>mermaid(&quot;
+graph TD
+  A{node text1}
+  B(node text2)
+  C((note text3))
+  D[note text4]
+  E&gt;note text5]
+&quot;)</code></pre>
+<div class="DiagrammeR html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-3" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"diagram":"\ngraph TD\n  A{node text1}\n  B(node text2)\n  C((note text3))\n  D[note text4]\n  E>note text5]\n"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="defining-a-graph" class="section level2">
+<h2>Defining a graph</h2>
+<ul>
+<li><code>graph LR</code>: left to right</li>
+<li><code>graph RL</code>: right to left</li>
+<li><code>graph TB</code>: top to bottom</li>
+<li><code>graph BT</code>: bottom to top</li>
+<li><code>graph TD</code>: top down (same as TB)</li>
+</ul>
+</div>
+<div id="other-setting" class="section level2">
+<h2>Other setting</h2>
+<ul>
+<li>arrow and no arrow:‘–&gt;’ and ‘—’ ,the no arrow is different from mermaid in markdown that ‘–’.</li>
+<li>dotted line: <code>-.-</code></li>
+<li>adding text: just add a dot <code>.</code> before the text</li>
+<li>bold arrow: <code>==&gt;</code></li>
+</ul>
+<pre class="r"><code>DiagrammeR(&quot;
+  graph TB
+    a-.-&gt;b
+    b---tx
+    tx==&gt;c
+  &quot;)</code></pre>
+<div class="DiagrammeR html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-4" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-4">{"x":{"diagram":"\n  graph TB\n    a-.->b\n    b---tx\n    tx==>c\n  "},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="adding-color-and-border" class="section level2">
+<h2>adding color and border</h2>
+<p><code>stlye [ID] fill:[color_numver],stroke:[border_number]</code></p>
+<pre class="r"><code>DiagrammeR(&quot;
+graph LR
+  A(Rounded)--&gt;B[Squared];
+  B--&gt;C{A Decision};
+  C--&gt;D[Square One];
+  C--&gt;E[Square Two];
+  style A fill:#E5E25F,stroke:#334;
+  style B fill:#87AB51,stroke:#333; 
+  style C fill:#3C8937;
+  style D fill:#23772C; 
+  style E fill:#B6E6E6;&quot;
+)</code></pre>
+<div class="DiagrammeR html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-5" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-5">{"x":{"diagram":"\ngraph LR\n  A(Rounded)-->B[Squared];\n  B-->C{A Decision};\n  C-->D[Square One];\n  C-->E[Square Two];\n  style A fill:#E5E25F,stroke:#334;\n  style B fill:#87AB51,stroke:#333; \n  style C fill:#3C8937;\n  style D fill:#23772C; \n  style E fill:#B6E6E6;"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="text-in-the-arrow" class="section level2">
+<h2>Text in the arrow</h2>
+<pre class="r"><code>mermaid(
+&quot;   graph LR
+    A[Hard edge] --&gt;|Link text| B(Round edge)
+    B --&gt; C{Decision} 
+    C --&gt;|One| D[Result one]
+    C --&gt;|Two| E[Result two]
+    &quot;)</code></pre>
+<div class="DiagrammeR html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-6" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-6">{"x":{"diagram":"   graph LR\n    A[Hard edge] -->|Link text| B(Round edge)\n    B --> C{Decision} \n    C -->|One| D[Result one]\n    C -->|Two| E[Result two]\n    "},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="mermaid-sequence-diagrams" class="section level2">
+<h2>Mermaid sequence diagrams</h2>
+<p>we could draw a sequence diagram using ‘sequenceDiagram’. Next to describe the relationship from an attribute to another.</p>
+<pre class="r"><code>DiagrammeR(&quot;
+ sequenceDiagram;
+    customer-&gt;&gt;ticket seller: ask for a ticket;
+    ticket seller-&gt;&gt;database: seats;
+    alt tickets available
+      database-&gt;&gt;ticket seller: ok;
+      ticket seller-&gt;&gt;customer: confirm;
+      customer-&gt;&gt;ticket seller: ok;
+      ticket seller-&gt;&gt;database: book a seat;
+      ticket seller-&gt;&gt;printer: print a ticket;
+    else sold out
+      database-&gt;&gt;ticket seller: none left;
+      ticket seller-&gt;&gt;customer: sorry;
+    end
+&quot;)</code></pre>
+<div class="DiagrammeR html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-7" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-7">{"x":{"diagram":"\n sequenceDiagram;\n    customer->>ticket seller: ask for a ticket;\n    ticket seller->>database: seats;\n    alt tickets available\n      database->>ticket seller: ok;\n      ticket seller->>customer: confirm;\n      customer->>ticket seller: ok;\n      ticket seller->>database: book a seat;\n      ticket seller->>printer: print a ticket;\n    else sold out\n      database->>ticket seller: none left;\n      ticket seller->>customer: sorry;\n    end\n"},"evals":[],"jsHooks":[]}</script>
+<p>That may be useful when doing project management</p>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<ul>
+<li><a href="https://mermaid-js.github.io/mermaid/#/" class="uri">https://mermaid-js.github.io/mermaid/#/</a></li>
+<li><a href="https://rich-iannone.github.io/DiagrammeR/graphviz_and_mermaid.html" class="uri">https://rich-iannone.github.io/DiagrammeR/graphviz_and_mermaid.html</a></li>
+</ul>
+</div>

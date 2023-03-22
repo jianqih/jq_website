@@ -1,0 +1,128 @@
+---
+title: "EMH检验与R实现"
+date: "2022-11-24"
+author: Jianqi Huang
+output:
+  rmdformats::robobook:
+    highlight: kate
+---
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+
+
+## EMH
+
+EMH是Fama提出，用于检验市场的有效性的一个方式。EMH理论主要认为市场是有效的，换言之，所有人无法通过市场预测而获利。一份收益自然会有一份风险。此时市场的股票价格是一个随机波动的形态(RWH)。
+
+同时EMH也区分了弱有效市场和半强有效市场和强有效市场。
+
+弱有效市场是从所有的历史信息中进行反映；半强式有效市场是从所有的公开信息中进行反映到当前的价格；而强有效市场是从所有的信息（包括内部人）的信息到现有的证券价格。
+
+## RWH
+
+随机游走假设是一个关于对股票价格的刻画，就像一个随机漫步一样。特别是一个下鞅随机过程。
+
+结合之前的EMH的弱有效市场假说，市场价格的改变是对历史信息的反映，因此可理解为是一个对股票历史价格的反映。因此对于一个随机检验可用于检验weak-form EMH
+
+为什么股票价格还是在上升？以美国道琼斯指数为例，在过去的200年，价格是一个总体上升的趋势。这是主要来自于对风险资产的持有而导致的风险溢价，对于一个投资者来说，总是会期望股票价格会上升的。
+
+
+
+
+### 独立性检验
+
+Abraham Wald 和 Jacob Wolfowitz对非参数检验的贡献，也称为是Wald-Wolfowitz检验。
+$$
+\mu=\frac{2(N_+)(N_-)}{N}-1
+\\\sigma^2=\frac{(\mu-1)(\mu-2)}{N-1}
+$$
+其中的$N$为一个随机变量，存在一个由$N_+$和$N_-$构成的条件分布，$N=N_++N_-$
+
+显然对于一个随机变量在独立同分布的假设下，$N_-$的数量会等于$N_+$的数量。
+
+因此用此来可以对参数$\hat\mu$和$\hat\sigma$与实际的$\mu$和$\sigma$进行检验。
+
+
+
+
+
+### DURBIN-WATSON 检验
+
+$$
+d=\frac{\sum_{t=2}^\tau(e_t-e_{t-1})^2}{\sum_{t=1}^\tau e_t^2}
+$$
+
+其中的$e_t$表示第$t$期的残差$e_t=\rho e_{t-1}+v_t$。$\tau$表示期数。对于一个较大的$\tau$，能够得到d的估计量$d=2(1-\hat\rho)$。其中的$\rho$表示的是残差的自相关性$\rho\in[-1,1]$由此$d\in[0,4]$。
+
+- 若$d=2$表示残差没有相关性。也就是对股票价格属于随机游走
+
+- 若$d<2$表示有相关的可能
+- 若$d>2$，表示的是残差的负相关性，回归中会对估计值低估。
+
+在一个显著性水平$\alpha$下，我们去使用这个统计检测量比较$d_{L,\alpha}$和$d_{U,\alpha}$的大小，就能够在显著性水平$\alpha$下接受还是拒绝原假设。
+
+在R中的`lmtest`中也有相应的函数这个包中还包括了其余的一些检验如`gqtest()`用于Goldfel-Quandt、`bqtest()`用于Breusch-Pagan。
+
+```{r}
+library(lmtest)
+err1 <- rnorm(100)
+x <- rep(c(-1,1), 50)
+y1 <- 1 + x + err1
+dwtest(y1~x)
+err2 <- filter(err1, 0.9, method="recursive")
+
+y2 <- 1 + x + err2
+dwtest(y2 ~ x)
+```
+- 这里的p值为0.6532，显然无法拒绝原假设，也就是认为不相关的。
+- 在第二个中，p值几乎接近于0，拒绝原假设，选择备择假设，也就是存在相关的。
+
+### LJUN-BOX检验
+
+$$
+Q=\tau(\tau+2)\sum_{k=1}^h\frac{\hat p_k^2}{\tau-k}
+$$
+
+其中$\hat p_k^2$表示k期的自相关系数。
+
+$\hat \rho_k$为k期的自相关系数。h为总期数。$Q$渐近服从$\chi_{(h)}^2$分布。在置信水平$\alpha$下，拒绝域为
+$$
+Q>\chi^2_{1-\alpha,h}
+$$
+在这个检验通常适用于ARIMA模型。
+
+诸如这类的统计量还有很多包括Bartell Rank-based Variance Ratio Test,Lo-MacKinlay Heteroscedastic Variance RT etc.
+
+### R中实现
+```{r}
+library("IntroCompFinR")
+smpl = "2002-09::2012-10" 
+data(sp500DailyPrices)
+sp500DailyPrices = sp500DailyPrices[smpl]
+sp.daily = to.daily(sp500DailyPrices, OHLC=FALSE) 
+plot(sp.daily, multi.panel=TRUE, yaxis.same=FALSE,
+     main="", col="blue")
+```
+
+
+```{r,message=FALSE}
+library(emh)
+p<-emh::is_random(sp.daily)
+knitr::kable(summary(p))
+```
+
+
+在所有的统计量中，对非随机的拒绝的有92个（也即随机），而认为是非随机的10个，也就是总体上可认为是一个随机的过程。
+
+## Source
+
+- http://www.turingfinance.com/testing-the-efficient-market-hypothesis-with-r/
+
+- https://github.com/StuartGordonReid/emh
+
+- https://en.wikipedia.org/wiki/Wald%E2%80%93Wolfowitz_runs_test
+- https://en.wikipedia.org/wiki/Ljung%E2%80%93Box_test

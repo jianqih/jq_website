@@ -1,0 +1,164 @@
+---
+title: "抓取新浪财经新闻数据"
+author: "Jianqi Huang"
+date: "2022-06-10"
+output: html_document
+---
+
+
+
+<pre class="r"><code>library(&#39;rvest&#39;)
+library(&#39;xml2&#39;)
+url&lt;-paste(&#39;http://finance.sina.com.cn/roll/index.d.html?cid=56589&amp;page=1&#39;)
+webpage&lt;-read_html(url,encoding = &#39;utf-8&#39;) 
+news_html&lt;-html_nodes(webpage,&#39;.list_009 a&#39;)
+news&lt;-html_text(news_html)
+df&lt;-as.data.frame(news)
+knitr::kable(df)</code></pre>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">news</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">五大博客看后市：下周大盘将开启补缺之旅</td>
+</tr>
+<tr class="even">
+<td align="left">11月11日复盘：下周大盘将开启补缺之旅 地产行业获38亿主力资金青睐</td>
+</tr>
+<tr class="odd">
+<td align="left">涨停板复盘：三大指数全天放量大涨 两市成交额突破1.2万亿</td>
+</tr>
+<tr class="even">
+<td align="left">11月11日沪深两市涨停分析：天鹅股份走出10连板 威奥股份收获4连板</td>
+</tr>
+<tr class="odd">
+<td align="left">收评：三大指数全天放量大涨 两市成交额突破1.2万亿</td>
+</tr>
+<tr class="even">
+<td align="left">超重磅：优化防疫20条措施来了！取消中风险次密接、取消入境航班熔断！股市狂飙</td>
+</tr>
+<tr class="odd">
+<td align="left">快讯：三大指数午后再度拉升 沪指重回3100点</td>
+</tr>
+<tr class="even">
+<td align="left">沪指大涨1.5%！巨量资金涌入，歌尔股份瞬间打开跌停！底部确定？外资正在抄底房地产</td>
+</tr>
+<tr class="odd">
+<td align="left">刚刚，罕见全线暴涨！这指数逼近“涨停”，腾讯9%，美团13%！一赛道掀起涨停潮，最牛飙近30%！</td>
+</tr>
+<tr class="even">
+<td align="left">午评：三大指数早间强势反弹 两市成交额达七千亿</td>
+</tr>
+<tr class="odd">
+<td align="left">快讯：三大指数小幅回落涨幅收窄 医药医疗股拉升走高</td>
+</tr>
+<tr class="even">
+<td align="left">快讯：指数早间高开高走 两市超4200股飘红</td>
+</tr>
+<tr class="odd">
+<td align="left">A股三大股指高开逾2%：申万行业全线飘红 超4700股上涨</td>
+</tr>
+<tr class="even">
+<td align="left">开盘：三大指数大幅高开 web3.0板块涨幅居前</td>
+</tr>
+<tr class="odd">
+<td align="left">全球资产狂欢！日韩大幅高开，美股暴力反弹，纳指暴涨7.35%，人民币大涨1200点，中概股狂拉8%</td>
+</tr>
+<tr class="even">
+<td align="left">火上浇油！疫苗巨头又发重磅利好，股价半个月已大涨一倍</td>
+</tr>
+<tr class="odd">
+<td align="left">11月11日盘前策略提示：市场底部已经确认 未来股指预计将维持震荡</td>
+</tr>
+<tr class="even">
+<td align="left">11月11日操盘必读：影响股市利好与利空消息</td>
+</tr>
+<tr class="odd">
+<td align="left">史诗级大涨，欧美股市集体“狂欢”！MSCI最新季调名单出炉，新增28只A股标的！币圈走向“雷曼时刻”？</td>
+</tr>
+<tr class="even">
+<td align="left">股海导航 11月11日沪深股市公告提示</td>
+</tr>
+<tr class="odd">
+<td align="left">卫健委印发重磅规划，提出8项主要任务！医疗信息化未来复合增速有望超28%，概念股逆市大涨</td>
+</tr>
+<tr class="even">
+<td align="left">9天9板大涨135%！供销社概念股紧急提示风险</td>
+</tr>
+<tr class="odd">
+<td align="left">A股迎来关键时刻！沪指险守3000点，盘后两大重磅数据公布</td>
+</tr>
+<tr class="even">
+<td align="left">11月10日复盘：技术指标提示准确 酿酒板块获资金青睐</td>
+</tr>
+<tr class="odd">
+<td align="left">六大博客看后市：跳空放量小阴 酝酿强劲反弹</td>
+</tr>
+<tr class="even">
+<td align="left">涨停板复盘：大盘全天调整指数宽幅震荡 供销社概念股持续强势</td>
+</tr>
+<tr class="odd">
+<td align="left">11月10日沪深两市涨停分析：天鹅股份收获9连板 西安饮食实现6连板</td>
+</tr>
+<tr class="even">
+<td align="left">收评：大盘全天调整指数宽幅震荡 供销社概念股持续强势</td>
+</tr>
+<tr class="odd">
+<td align="left">快讯：午后指数跌幅扩大创指盘中跌2% 光伏板块震荡走低</td>
+</tr>
+<tr class="even">
+<td align="left">2000亿白马突发大跳水！多股涨停，这板块又火了！马斯克也要搞“余额宝”，网友：疯狂学习中国…</td>
+</tr>
+<tr class="odd">
+<td align="left">什么情况？越南股指突然重挫超3%！A股供销社概念再大涨，有股票连续9涨停！千亿钢铁龙头狂涨9%</td>
+</tr>
+<tr class="even">
+<td align="left">罕见暴跌，两天股价跌七成！这只股怎么了？“红衣大炮”：基本不碰用户数据</td>
+</tr>
+<tr class="odd">
+<td align="left">午评：大盘早间低开低走沪指盘中上行后回落 供销社板块持续强势</td>
+</tr>
+<tr class="even">
+<td align="left">彻底懵了！700亿白马封死跌停，三机构紧急出逃！WEB3.0、供销社大爆发，狂掀涨停潮！</td>
+</tr>
+<tr class="odd">
+<td align="left">快讯：大盘早间集体调整创指跌超1% web3.0板块逆势走高</td>
+</tr>
+<tr class="even">
+<td align="left">快讯：指数早间震荡下行沪指低位盘整 贵金属板块陷入回调</td>
+</tr>
+<tr class="odd">
+<td align="left">抄底！抄底！赵诣、林乐峰、谢书英等大举出手！1200亿新“子弹”来了</td>
+</tr>
+<tr class="even">
+<td align="left">开盘：三大指数集体低开 DRG/DIP板块涨幅居前</td>
+</tr>
+<tr class="odd">
+<td align="left">11月10日盘前策略提示：储能放量元年 户储大储两翼齐飞</td>
+</tr>
+<tr class="even">
+<td align="left">11月10日操盘必读：影响股市利好与利空消息</td>
+</tr>
+<tr class="odd">
+<td align="left">股海导航 11月10日沪深股市公告提示</td>
+</tr>
+<tr class="even">
+<td align="left">新冠药概念反复活跃 舒泰神本月以来累计上涨超40%，众生药业9月27日以来累计涨幅达170%</td>
+</tr>
+<tr class="odd">
+<td align="left">道达投资手记：高标龙头竞业达跌停 市场调整或未结束</td>
+</tr>
+<tr class="even">
+<td align="left">11月9日复盘：洗盘基本结束静待转强 236亿主力资金继续撤离</td>
+</tr>
+<tr class="odd">
+<td align="left">五大博客看后市：洗盘基本结束静待转强</td>
+</tr>
+</tbody>
+</table>
