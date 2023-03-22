@@ -19,4 +19,4 @@ type : list-single
 - R, STATA, LaTeX, Python, Julia, C#/C++
 
 ## More
-- The complete curriculum vitae in [here](https://www.jianqihuang.com/jianqihuang_cv_2302.pdf)
+- The complete curriculum vitae in [here](https://www.jianqihuang.com/jianqihuang_cv_2302.pdf).
