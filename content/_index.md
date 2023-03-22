@@ -1,8 +1,8 @@
 ---
-avatar: /person-image/jianqi-0307.jpeg
+avatar: /person-image/jq-mar-20.jpeg
 name: "Huang Jianqi"
 position: "B.A. Student"
-institute: "Central University of Finance and Econmics"
+institute: "Central University of Finance and Economics"
 interests:
     title: "Interests" 
     items: ["Programming", "Economics", "Agricultural Economics","Applied Econometrics"]
@@ -17,13 +17,13 @@ projects:
         - name: "The Literature Replication: Based on R"
           tags: ['R','replication','Linguistics']
           about: "This book based on Chinese Micro-Datasets like CHFS,CFPS and CHARLS using R to replicate. It also replicates some famous paper. It will help to get a deeper understand for the economic data processing and the econometric methods."
-          url: https://cheinchi.github.io/rrp3/
+          url: https://jianqih.github.io/rrp3/
           img: '/project/rpp2.png'
         - name: "Statistics, Machine learning and Data mining(in Chinese)"
           tags: ['R',  'Linguistics', 'Statistics','ML']
           about: "This book based on daily learning about Data Mining, Machine Learning and Statistics. Not just for theory but the practice based on mainly R language."
           url: "http://stats-dm-ml-r.jianqihuang.com/"
-          img: /project/stat-ml-dm.png
+          img: /project/stat-ml-dm-r.png
         - name: "CUFE Beamer Template"
           tags: ['Beamer', 'Template']
           about: "It is a Beamer theme used in presentation especially at academic presentation. It mixes some element of Central University of Finance and Economics helps demonstrator show a more personalized slides."
@@ -31,7 +31,7 @@ projects:
           img: /project/beamer.png
         - name: "About Econ"
           tags: ['economics']
-          img: /project/about-econs.png
+          img: /project/ab-econ.png
           url: "https://about-econ.jianqihuang.com"
           about: "It consists of two modules, one is the collection of postgraduate economic applying information and another is a collection of economic online resources. The aim is to help undergraduate who would apply econ master or PhD to get some useful information."
         - name: "Program Chunk"
@@ -51,7 +51,7 @@ sections:
         [lnk2]: https://www.jianqihuang.com/slides/CF-model_hjq_11-18.pdf
         [lnk3]: https://www.jianqihuang.com/slides/Punishment-EE-22-11/ee/#/title-slide
         [lnk4]: https://www.jianqihuang.com/slides/why-social-sci-23-02/why-social-sci#1
-    - title: "Toturial"
+    - title: "Tutorial"
       about: |
         - [Gauss Distribution: From Specially to Generally(in Chinese)](https://www.jianqihuang.com/tutorials/guass22-10-27.pdf)
         - [Using TikZ to Draw a Picture in Latex](https://www.jianqihuang.com/tutorials/tikz_10-27.pdf)
@@ -60,17 +60,17 @@ sections:
         - [From LaTeX to Quarto(in Chinese)](https://www.jianqihuang.com/tutorials/quarto-0318.pdf)
     - title: "Notes"
       about: |
-        - [Machine Learning(in Chinese)](https://www.jianqihuang.com/tutorials/ml-12-19.pdf) : It's about the Machine Learning included the linear model, clustering, SVM, GD, Decision Tree etc. 
-        - [Stochastic Calculus(in Chinese)](https://www.jianqihuang.com/tutorials/sc-12-19.pdf): It's a note introducing the basic concept in Stochastic Calculus such as Martingale, conditional expectation.
-        - [Statistics and Probability(in Chinese)](https://www.jianqihuang.com/tutorials/probablity-statstics-230217.pdf): It contains the core concepts in Statistics and Probability. Moreover, it has rich cases in economics and finance helps learners understand the economic or financial reality more accurate.
-        - [Bayesian Statistics(in Chinese)](https://www.jianqihuang.com/tutorials/Bayes0304.pdf): It's about the Bayesian Statistics and how we using the prior distribution to calculate the posterior distribution.
+        - [Machine Learning(in Chinese)](https://www.jianqihuang.com/notes/ml-12-19.pdf) : It's about the Machine Learning included the linear model, clustering, SVM, GD, Decision Tree etc. 
+        - [Stochastic Calculus(in Chinese)](https://www.jianqihuang.com/notes/sc-12-19.pdf): It's a note introducing the basic concept in Stochastic Calculus such as Martingale, conditional expectation.
+        - [Statistics and Probability(in Chinese)](https://www.jianqihuang.com/notes/probablity-statstics-0217.pdf): It contains the core concepts in Statistics and Probability. Moreover, it has rich cases in economics and finance helps learners understand the economic or financial reality more accurate.
+        - [Bayesian Statistics(in Chinese)](https://www.jianqihuang.com/notes/Bayes0304.pdf): It's about the Bayesian Statistics and how we using the prior distribution to calculate the posterior distribution.
 
 
 ---
 
 ## Biography
 
-My name is Huang Jianqi, an undergraduate college student from central university of fiancne and economics. I have great interest in learning programming especially R and Julia. I like economics.
+My name is Huang Jianqi, an undergraduate college student from central university of finance and economics. I have great interest in programming especially in the field of economics and finance. 
 
 
 
