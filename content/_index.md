@@ -57,7 +57,10 @@ sections:
         - [Using TikZ to Draw a Picture in Latex](https://www.jianqihuang.com/tutorials/tikz_10-27.pdf)
         - [Mean-Variance Model(in Chinese)](https://www.jianqihuang.com/tutorials/2022-11-10-mean-var.pdf)
         - [Multiple-Regression: Based on a Income Forecast(in Chinese)](https://www.jianqihuang.com/tutorials/mutil-reg-income-11-07.pdf)
-        - [From LaTeX to Quarto(in Chinese)](https://www.jianqihuang.com/tutorials/quarto-0318.pdf)
+        - [Writing with Quarto(in Chinese)](https://www.jianqihuang.com/tutorials/quarto-0318.pdf)
+        - [LaTeX Environment](https://www.jianqihuang.com/tutorials/latex-env.pdf)
+        - [The Basics of LaTeX](https://www.jianqihuang.com/tutorials/latex-basics0228.pdf)
+        - [Classification(in Chinese)](https://www.jianqihuang.com/tutorials/classify_22-11-16.pdf)
     - title: "Notes"
       about: |
         - [Machine Learning(in Chinese)](https://www.jianqihuang.com/notes/ml-12-19.pdf) : It's about the Machine Learning included the linear model, clustering, SVM, GD, Decision Tree etc. 

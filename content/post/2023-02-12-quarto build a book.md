@@ -13,5 +13,5 @@ And when you haven’t publish before, the publish command will prompt you to au
 
 The final published book will be showed like this.
 
-![netlify-control-panel](../../../static/media/netlify-control-panel.png)
+![netlify-control-panel](/post/netlify-control-panel.png)
 

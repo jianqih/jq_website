@@ -1,0 +1,351 @@
+---
+title: "用Quarto写作"
+subtitle: "从LaTeX到Rmarkdown再到Quarto"
+author: Jianqi Huang
+date: "2023-03-24"
+number-sections: true
+format:
+  pdf:
+    include-in-header: 
+      text: |
+        \usepackage{ctex}
+    toc: true
+    citecolor: "blue"
+    indent: true
+    bibliography: references.bib
+    cite-method: citeproc
+    link-citations: yes
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = F,message = F)
+```
+
+
+# 被迫转变
+
+在原先的LaTeX中，发现自己对于原有的系统的支持程度较差，同时在 LaTeX 中所花费的时间较多，因此决定开始舍弃使用 LaTeX ，试图去转变使用其他的编译方式。
+
+
+一开始对于 LaTeX 的使用，实际上就是被两点所吸引，一是减少不必要的格式布局，二是减少了不必要的格式之间的互通，比如 LaTeX 对于markdown语言的支持和转换基本为零，几乎只能在pdf之间两互相转。而Quarto就基于Pandoc而支持多种格式的不同组合。
+
+实际上自己接触Quarto的时间还是比较长了，但在此之前，仍然会选择使用Latex和作为自己的首选使用工具。
+
+综合上述，发现 LaTeX 对于目前和未来的工作有诸多不便之后，开始下定决心半脱坑 LaTeX 。
+
+
+## Quarto对于中文的支持
+
+需要在`YML`中的`format`添加
+
+```yaml
+format:
+  pdf:
+    include-in-header: 
+      text: |
+        \usepackage{ctex}
+```
+
+实际上，在Pandoc中有关于该类问题的说明。
+
+
+
+
+## 其他字体
+
+原先的字体格式仍然并非自己想要的，
+
+## 运行程序
+
+```{r}
+#| label: fig-airquality
+#| fig-cap: the relation between mpg and qsec
+#| warning: false
+
+library(ggplot2)
+ggplot(data = mtcars)+
+  geom_point(mapping = aes(x = mpg, y= qsec))
+```
+
+引用图片的方法和 \LaTeX 中大差不差。@fig-airquality
+
+```r
+![Caption](file.ext){#fig:label}
+```
+
+
+
+
+# 数学公式
+
+对于数学公式，在VScode中能够很好的得到支持，因为能够继承原先 \LaTeX 环境所配置得到的数学snippets，对一些公式的输入得到较为快速的响应。即使不能也能够帮助。
+
+$$ a^2+b^2=c^2 $${#eq-gg}
+
+引用数学公式的方法：
+@eq-gg
+
+
+\begin{equation}
+Y_{it} = X_{it}+D_{it}+\epsilon_{it}
+\label{eq-reg}
+\end{equation}
+
+同样支持原有的 \LaTeX 格式下的`\label` 再`\ref`或`\eqref`进行引用\eqref{eq-reg}
+
+引用的时候还是推荐使用第一种方法，同时可以直接使用`$$...$$`从而不用写一些复杂的`\begin{env}\end{env}`
+
+
+# 表格
+
+## md格式
+
+在Quarto中使用表格最基础的是使用markdown格式的表格。
+
+a   b   c
+--- --- ---
+1   2   3
+4   5   6
+
+: Caption {#tbl-2}
+
+在引入标签的时候存在一个小问题，即若没有引用，标签就会一直存在，只有引用才能写入一个标签。`@tbl-2` 比如只有在引用的时候才会有显示 @tbl-2。同时写label也需要注意的是格式以`tbl-label`会更好。
+
+| fruit  | price  |
+|--------|--------|
+| apple  | 2.05   |
+| pear   | 1.37   |
+| orange | 3.09   |
+
+: Fruit prices {#tbl-fruit}
+
+
+```{r}
+#| label: tbl-t1
+#| tbl-cap: "Descriptive table"
+library(knitr)
+kable(head(mtcars),caption = "Table of mtcars")
+```
+
+
+
+> 注意：@tbl-t1 在`kable`中输入`caption`只会得到子图的caption，而只有在`#|`之后才会得到的总体的caption。而只有一个图的话，只会输出`#|`之后的`tbl-caption`
+
+同样我们可以试图去插入一个 LaTeX 格式的表格。像下面这样的一个回归，我们去获得回归结果，以非常“经济学”的方法来展现：
+
+```{r}
+#| warning: false
+#| label: reg
+reg <- lm(data = mtcars,mpg~hp+drat)
+```
+
+
+## stargazer
+
+我们用这么一句代码，报告回归结果，`stargazer` 就会将回归模型`reg`的结果以 LaTeX 格式展示（default）
+
+```{r model,results='asis'}
+#| tbl-cap: "the report of regression"
+#| label: tbl-reg-mt
+stargazer::stargazer(reg,header = F,type = 'latex')
+```
+
+同样也可输出 @tbl-cor
+
+```{r,results='asis'}
+#| label: tbl-cor
+#| tbl-cap: "the correlation of matrix"
+correlation.matrix <- cor(attitude)
+stargazer::stargazer(correlation.matrix, type="latex",header = F)
+```
+
+
+
+## others
+
+但好像对于stargazer来，若输出为html的格式，交叉引用在quarto中较难实现。因此，我们可以考虑其他的表格输出包，比如[这里](https://www.danieldsjoberg.com/gtsummary/articles/rmarkdown.html)对其他的表格输出进行了一定的总结。
+
+比如`huxreg`的实现较为便捷：不需要设置格式就可以直接输出。
+
+```{r,results='asis'}
+#| tbl-cap: "the report of regression"
+#| label: tbl-myregtbl
+lm1 <- lm(mpg ~ cyl, mtcars)
+lm2 <- lm(mpg ~ hp, mtcars)
+lm3 <- lm(mpg ~ cyl + hp, mtcars)
+library(huxtable)
+huxreg(lm1, lm2, lm3)
+```
+
+
+It works! 这个 @tbl-myregtbl 还是非常好看的，主要星星多。当然在R中输出回归表格的方式还有其他一些。比如在通过自己设立一个函数，这样就可以对输出的表格进行引用，如： @tbl-reg3
+
+
+
+```{r}
+#| label: tbl-reg3
+#| tbl-cap: "regression report"
+library(knitr)
+source('/Users/a182501/Programming/R/reg.R', encoding = 'UTF-8')
+xs = list(c("hp","drat"))
+ys = c("mpg")
+fit <- lmWithMultipleXY(ys,xs,mtcars)
+kable(lmFitToPaperTable(fit[[1]]))
+```
+
+
+
+## kableExtra
+
+kableExtra 是一个对于LaTeX格式输出支持程度较高的一个包，输出为 @tbl-kbl。
+
+```{r}
+#| label: tbl-kbl
+#| tbl-cap: "mtcars"
+
+library(kableExtra)
+dt <- mtcars[1:5, 1:6]
+kbl(dt, booktabs = T)
+```
+
+
+
+## 小结
+
+- 对于经济学论文，可以考虑使用`stargazer`输出回归表格；
+- 对于描述性统计，使用`kable`和`kableExtra`进行嵌套；
+- 风格统一的话，直接考虑`stargazer`即可；
+- 输出结果非pdf话，使用`huxreg`是一个比较好的选择。
+
+
+
+
+# 引用 {#sec-cite}
+只要在 `format:pdf` 下设置`bibliography`就可以简单实现，引用格式和`RMarkdown`中一般，只要使用`[@ref]`即可实现。
+
+
+```md
+# Conclusions
+
+Quarto is very cool.
+
+# References {-}
+
+::: {#refs}
+:::
+
+# Appendix A
+```
+
+
+
+在Quarto中一次对多篇文献进行引用，可使用`[@ref1;@ref2]` 加入分号即可实现。比如像这样的：
+[@RiDongFeng;@Zivot]
+
+还有一个问题是如何设置引用的link，能够帮助快速定位文献位置。
+
+
+使用 `\ref{#label-sec}` 就可以进行引用，比如我将引用这一个section设置为`{#cite}`当我输入到文稿中的时候就会有相关的引用链接出现。第 \ref{sec-cite} 部分主要讲述如何进行引用。 @sec-cite
+
+
+
+## 交叉引用
+
+交叉引用部分已经在上半部分即进行了详尽的介绍。
+
+## 文献条目
+
+```yaml
+---
+nocite: |
+  @item1, @item2
+---
+```
+
+或者我们将所有即使未在正文中出现的进行引用：
+
+```yaml
+---
+nocite: '@*'
+---
+```
+
+## 插入文献
+
+一个传统方式是在已命名好的`.bib`文件中插入所需要的参考文献，这些bib参考文献可以是从google学术中拷贝得来，或者从zotero中使用Better BibTex来复制得到。
+
+
+一个快速便捷的方法是可以使用R中的一个RBBT包，能够在Addins中直接与Zotero相连，可以通过关键词或在zotero目录中选择，基本上和word中的zotero插件方法类似。
+
+```r
+remotes::install_github("paleolimbot/rbbt")
+```
+
+
+
+## 引用-链接
+
+在默认格式下，Quarto的引用并没有一个链接的跳转。
+
+```yaml
+pdf_document:
+  link-citations: yes
+```
+
+
+# other tricks
+
+- 在一个R project下，`getwd()`可以获得当前的工作路径；若quarto文件在一个子路径，使用`here::here()`来生成相应的相对路径。
+
+- 通常我们想要在正文部分输出代码内的结果，一个不好的方法是直接对结果进行复制黏贴，若之后在数据、代码、模型等处进行更新，结果也会被得到更新，这样对于我们的工作来说就大大增加了，甚至还可能遗忘了修改。因此可以使用行内代码进行输出
+
+```{r,eval=FALSE}
+Seven times six is `r 7 * 6`
+```
+
+Seven times six is `r 7 * 6`
+
+或者实现英文输出
+
+```{r,eval=FALSE}
+`r english::Words(7 * 6)` is the answer to seven times six.
+```
+
+
+`r english::Words(7 * 6)` is the answer to seven times six.
+
+
+- 在[quarto](https://github.com/biostats-r/quartothesis)中有很多的论文模版，包括一些知名期刊，可以从github中下载下来。或者在终端使用如下命令行：
+
+```shell
+quarto use template quarto-journals/plos
+```
+
+更多内容可以看[Quarto guide](https://quarto.org/docs/journals/)
+
+
+
+
+
+
+# 总结 {#conclu}
+
+本质上，Quarto是一个用markdown中嵌入一些编程语言的方法。从一个常用的使用软件到另一个较为陌生的语言之间的转换是会比较困难的，总体来说，从Latex转到Quarto并没有特别的困难，可以说是非常的顺利。进一步可以扩展如何使用quarto的不同格式之间的转换，比如说制作Beamer（Beamer也是 \LaTeX 一大重要特性）。
+
+当然在写作模版上，自然会少于一些市面上已经存有的 LaTeX 模版，尝试去下载一些模版进行修改，可能也许下一次就可以使用上。
+
+当然也发现了一些缺陷：比如从`R`程序输出的图，再去引用的时候会显示为`Figure`，而从 LaTeX 代码中引用的表格或图片，只有简单的数字输出，无法使用 `@ref` 的格式，这样会对于文章的格式造成的一定的影响，因此一个较为有效的解决方法是统一输出输入格式，从代码中就从代码中。
+
+
+# Reference and Resource{-}
+
+- https://www.math.pku.edu.cn/teachers/lidf/docs/Rbook/html/_Rbook/quarto.html
+- https://quarto.org/docs/reference/formats/pdf.html#title-author
+- pandoc官方文档 https://pandoc.org/MANUAL.html
+- 关于如何进行引用：https://quarto.org/docs/authoring/cross-references.html
+- https://nrennie.rbind.io/blog/making-pretty-pdf-quarto/
+- 一些内容参考于这里：https://biostats-r.github.io/biostats/quarto/
+
+
+

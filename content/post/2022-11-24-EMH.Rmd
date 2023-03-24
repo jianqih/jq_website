@@ -98,6 +98,7 @@ $$
 诸如这类的统计量还有很多包括Bartell Rank-based Variance Ratio Test,Lo-MacKinlay Heteroscedastic Variance RT etc.
 
 ### R中实现
+
 ```{r}
 library("IntroCompFinR")
 smpl = "2002-09::2012-10" 
