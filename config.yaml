@@ -6,7 +6,7 @@ disqusShortname: "disqus-shortname-here"
 footnoteReturnLinkContents: "↩"
 
 permalinks:
-  cn: /cn/:year/:month/:day/:slug/
+  post: /:year/:month/:day/:filename/
 
 outputFormats:
   RSS:
@@ -26,7 +26,7 @@ menu:
     - name: "Vitae"
       url: "/cv/"
       weight: 2
-    - name: "中文博客"
+    - name: "cn"
       url: "/cn/"
       weight: 4
 

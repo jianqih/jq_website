@@ -1,5 +1,5 @@
 ---
-title: "reading mastering metrics chapter 2"
+title: "Reading Mastering Metrics Chapter 2"
 date: 2023-03-10
 katex: true
 ---
