@@ -1,0 +1,623 @@
+---
+title: "金融时间序列数据获取"
+author: "Jianqi Huang"
+date: "2023-03-25"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,message = FALSE,cache = T)
+```
+
+
+
+
+## 生成时间序列数据
+
+```{r}
+library(Quandl)
+library(tidyverse)
+library(knitr)
+```
+
+
+### POSIXt 类
+
+`POSIXt`是base包内的数据类型，其中包括了日期、时间和时区信息。
+创建一个`POSIXt`类可以通过字符串的时间序列数据来创建。`as.POSIXct`来作为将字符串转换为`POSIXt`对象类型。
+
+
+```{r}
+myDateTimeStr = "2013-12-19 10:17:07" 
+class(myDateTimeStr)
+myPOSIXct = as.POSIXct(myDateTimeStr) 
+class(myPOSIXct)
+```
+
+默认的是日期-时间格式为“YYYY-mm-dd hh:mm:ss”/“YYYY/mm/dd hh:mm:ss” 
+在这里，我们可以设置所使用时间的时区`tz`。
+
+```{r}
+as.numeric(myPOSIXct) 
+Sys.timezone() 
+```
+
+
+可以将时间数据再转换为数值型数据。
+
+```{r}
+attributes(myPOSIXct) 
+numDate = 0
+myPOSIXct2 = as.POSIXct(0,origin = "1970-01-01")
+myPOSIXct2
+as.numeric(myPOSIXct2) 
+```
+
+
+#### 运算
+```{r}
+dt1 = as.POSIXct("2022-12-23 00:00:00") 
+dt2 = as.POSIXct("2022-12-23 05:00:00") 
+dft = dt2 - dt1
+class(dft)
+units(dft)
+as.numeric(dft)
+```
+
+设置单位：
+
+```{r}
+units(dft) = "secs" 
+as.numeric(dft)
+```
+
+
+
+
+
+
+### lubridate
+
+[lubridate](https://lubridate.tidyverse.org/)也是一个强大的用于处理日期时间数据的包，
+
+
+```{r}
+library(lubridate)
+ymd("20131219")
+```
+
+
+这个函数实际上就是对应于`POSXIt`上的`as.POSIXt`函数。不过对于不同的format，可通过`y-m-d`这几个字母进行组合而改变读取格式。
+
+```{r}
+ymd(20170629);myd(06201729);dmy(29062017)
+```
+
+同样可以对时区`tz`进行调整
+```{r}
+test_date <- ymd_hms("2017-06-29-12-01-30", tz = "Asia/Shanghai")
+test_date
+```
+
+不过中国的时区默认是`Asia/Shanghai`。并非beijing时区。
+
+#### 计算时间区间
+
+```{r}
+begins <- ymd_hms("20200919,12:00:00")
+ends <- ymd_hms("20230311,12:00:00")
+ints <- lubridate::interval(begins,ends)
+class(ints)
+```
+
+获取时间点之间的间隔，可以使用`interval`函数，最后返回的数据类型也是`Interval`。
+若需要计算间隔长度，使用`time_length`即可实现：
+
+```{r}
+time_length(ints,'day')#这个时间是我大学生活开始到目前的过去的时间
+time_length(ints,'year')
+time_length(ints,'month')
+```
+
+
+#### 时间跨度
+```{r}
+minutes(1)   
+dminutes(1)  
+```
+
+
+```{r}
+leap_year(2016)
+```
+
+```{r}
+ymd(20160101)+years(1)
+ymd(20160101)+dyears(1)
+```
+
+
+这些运算有点类似于在累积概率分布和概率密度之间的关系。
+
+
+### `zoo`类型
+
+R中有比ts数据类型更为灵活的类型。
+```r
+zoo(x, order.by)
+```
+
+```{r}
+set.seed(1)
+z.1 <- zoo(sample(3:6, size=12, replace=TRUE), 
+           make_date(2018, 1, 1) + ddays(0:11)); z.1
+```
+
+
+
+
+### xts类型数据
+
+`xts`是`zoo`类的扩展，`zoo`包的`rollapply`函数是对时间序列进行滚动计算的一个常用方法。
+
+其格式为：
+
+```r
+xts(x,date)
+```
+
+
+```{r}
+library(xts)
+d <- read_table2(
+  "/Users/a182501/project_set/fts/ftsdata/d-ibm-0110.txt", col_types=cols(
+    .default=col_double(),
+    date=col_date(format="%Y%m%d")))
+d
+```
+
+`d`为一个数据框格式的时间序列数据。转换为`xts`类别数据需要分别导入对应的列值。
+
+```{r}
+ibmrtn <- xts(d[["return"]], d[["date"]])
+plot(ibmrtn, 
+  main="IBM Log Return Daily",
+  major.ticks="years", minor.ticks=NULL, 
+  grid.ticks.on="years",
+  format.labels="%Y",
+  col="red")
+```
+
+
+可直接使用`plot`进行绘制收益率曲线。
+
+
+和`ts`对象一样，`xts`的时间索引也是隐式的，可以使用`index()`提取索引，使用`coredata()`提取观测序列：
+
+```{r}
+library(TSstudio)
+library(xts)
+data(Michigan_CS)
+Mi_data<-coredata(Michigan_CS) 
+head(Mi_data)
+#Mi_index<-index()
+#head(Mi_index)
+```
+
+
+使用`as.xts()`可将非xts的时间序列数据转换为xts类型的时间序列数据。而使用`xts`可以将一般的向量转换为时间序列数据，
+```{r}
+data = runif(5)
+time<-as.Date(paste("2023-01-0",1:5,sep=""))
+exam<-xts(x=data,order.by=time)
+ts_info(exam)
+```
+
+
+### `ts`类型数据
+
+`ts`是R中对时间序列数据的支持。是在stats包内的，也是R中较为常用的包用于对时间序列数据进行操作的数据类型。
+
+```{r}
+yd <- ts(
+  c(4, 8, 7, 7, 3, 1, 8, 9, 8, 6, 3, 5,
+    5, 8, 2, 5, 9, 2, 5, 2, 3, 2, 2, 4), 
+  frequency=1, start=2001); yd
+```
+
+默认的时间频率为以年为单位，同样也可以调整为12，即为月为单位。
+
+```{r}
+ym <- ts(
+  c(9, 6, 3, 5, 4, 8, 2, 5, 8, 4, 6, 3,
+    2, 2, 6, 4, 1, 4, 2, 1, 8, 9, 4, 6), 
+  frequency=12, start=c(2001,1)); ym
+```
+
+
+
+```{r}
+library(tidyverse)
+library(lubridate)
+d <- read_table(
+  "/Users/a182501/project_set/fts/ftsdata/d-ibm-0110.txt", col_types=cols(
+    .default=col_double(),
+    date=col_date(format="%Y%m%d")))
+d
+x <- scan("/Users/a182501/project_set/fts/bp500-2691.txt",skip = 1)
+ts(x, start=c(2001, 1), frequency=12)
+```
+
+```{r}
+d <- read.table(
+  "/Users/a182501/project_set/fts/ftsdata/m-unrate.txt", header=TRUE,
+  colClasses=rep("numeric", 4))
+unrate <- ts(d[["rate"]], start=c(1948,1), frequency=12)
+class(unrate)
+```
+
+```{r}
+plot(unrate)
+```
+
+
+
+
+
+
+
+### `tsibble`类型
+
+tsibble包提供了tsibble数据类型，是从tidyverse宇宙中扩展出来的一种时间序列处理方法。
+
+一个简单的创建方法：
+
+```{r}
+library(tsibble)
+t1<-tsibble(date=as.Date("2023-03-01")+1:5,value=rnorm(5))
+t1
+```
+
+
+
+```{r}
+library(readr)
+d <- read_table2(
+  "/Users/a182501/project_set/fts/ftsdata/m-ibmsp-2611.txt",
+  col_types=cols(.default=col_double(),
+                 date=col_date(format="%Y%m%d")))
+tsb <- as_tsibble(d, index="date")
+class(tsb)
+head(tsb)
+```
+
+其中tsibble的一大特点是引入tibble数据框到时序数据中。
+
+```{r}
+# install.packages("nycflights13")
+library(nycflights13)
+data(weather)
+weather_tsbl<-weather%>%
+             select(origin, time_hour, temp, humid, precip)%>%
+             as_tsibble(index=time_hour,key=origin)
+head(weather_tsbl)
+```
+
+
+同时我们可以看到这里有索引(index)、键(key)，每个观测值都是与键进行唯一识别。若间隔是有规律的，那么每一个观测单元共用一个区间进行测量。
+
+
+#### 处理`tsibble`对象
+
+`tsibble`有一个关键函数`index_by()`对应于`dplyr`中的`group_by()`，按照索引进行划分组别。
+
+
+
+```{r}
+precipavg_week<-weather_tsbl %>%
+  group_by_key() %>%
+  index_by(year_week = ~ yearweek(.)) %>%
+  summarise(precip_avg = mean(precip,na.rm=T))
+```
+
+```{r}
+precipavg_week%>%
+ggplot(aes(x=year_week,y=precip_avg))+
+geom_point()+
+geom_line()+
+facet_grid(origin ~ .)
+```
+
+
+
+
+
+## 金融数据获取
+
+### `quantmod`
+
+quantmod包的目的是为量化投资者提供方便的原型开发测试工具， 而不是提供新的统计方法。 quantmod包提供了金融时间序列数据的一些方便功能， 比如从公开数据源载入数据， 作股票行情图、时间序列图。
+
+`getSymbols`函数能够帮助我们从多个公开数据源下载金融数据（需要使用VPN）。
+
+
+```{r}
+pacman::p_load(quantmod)
+MSFT <- getSymbols("MSFT", src="yahoo", auto.assign = FALSE)
+head(MSFT)
+```
+
+获取失业率数据：
+
+```{r}
+UNRATE <- getSymbols("UNRATE", src="FRED", auto.assign=FALSE)
+head(UNRATE)
+```
+
+获取国债数据：
+
+```{r}
+MSFT <- getSymbols("MSFT", src="yahoo", auto.assign = FALSE)
+TNX <- getSymbols("^TNX", auto.assign = FALSE) # CBOE 10年国债日数据
+
+chartSeries(MSFT, theme="white", name="Microsoft",
+            subset="2017-12-01/2017-12-31")
+
+```
+
+
+获取St. Louis Federal Reserve Bank's FRED system某个债券数据。
+
+```{r}
+quantmod::getSymbols.FRED(
+  Symbols = "IPB50001SQ",
+  env = .GlobalEnv
+)
+plot(IPB50001SQ)
+```
+
+另一个方法是在函数`getSymbols`中的src`参数中设置为`FRED`。
+
+```{r}
+getSymbols('CPIAUCNS',src='FRED')
+plot(CPIAUCNS)
+```
+
+
+### tseries
+
+还有一个包是`tseries`能够帮助我们获取最新的金融数据（也需要VPN）。
+
+```{r}
+pacman::p_load(tseries)
+x <- get.hist.quote(instrument = "^gspc", start = "1998-01-01",
+                      quote = "Close")
+plot(x)
+```
+
+
+```{r}
+x <- get.hist.quote(instrument = "ibm", quote = c("Cl", "Vol"))
+plot(x, main = "International Business Machines Corp")
+```
+
+
+
+
+### quandl包
+
+quandl包似乎不用VPN：
+
+```{r}
+usa = Quandl::Quandl('UNAE/GDPCD_USA')
+tt = dim(usa)[1]
+tt
+kable(usa[,c("Date","Gross Domestic Product (GDP)")])
+```
+
+利用 [Quandl](https://github.com/quandl/quandl-r) 获取最新的GDP数据，但仍然有一定的滞后性。但并不妨碍我们用于一些非实时性的数据性探索工作。
+
+
+```{r}
+plot(usa[,c("Date","Gross Domestic Product (GDP)")])
+```
+
+
+
+
+### BatchGetSymbol
+
+
+
+```{r}
+library(BatchGetSymbols)
+first.date <- Sys.Date() - 60
+last.date <- Sys.Date()
+freq.data <- "daily"
+# set tickers
+tickers <- c(
+  "S&P500" = c, 
+  "Facebook" = "FB",
+  "上证综指" = "000001.SS", 
+  "兴业银行" = "601166.SS", 
+  "中兴通讯" = "000063.SZ"
+  )
+l.out <- BatchGetSymbols(
+  tickers = tickers, 
+  first.date = first.date,
+  last.date = last.date, 
+  freq.data = freq.data,
+  cache.folder = file.path(
+    tempdir(), 'BGS_Cache'))
+```
+
+
+```{r}
+names(l.out$df.tickers)
+```
+
+但这个`l.out$df.ticker`中的变量名与`tickers`中的名称并不对应，因此需要一个变量来再映射。
+
+```{r}
+nameMapInv <- function(x){
+  y <- names(x)
+  print(y)
+  names(y) <- x
+  y
+}
+```
+
+```{r}
+showtext::showtext_auto()
+library(ggplot2, quietly = TRUE)
+mapn <- nameMapInv(tickers)
+ggplot(data=l.out$df.tickers, mapping=aes(
+  x = ref.date, y = price.close)) +
+  geom_line() +
+  facet_wrap(~ mapn[ticker], scales = 'free_y') 
+```
+
+## finance-quant
+
+```{r}
+library(tidyverse)
+library(tidyquant)
+```
+
+```{r}
+prices <- tq_get("AAPL",
+  get = "stock.prices",
+  from = "2000-01-01",
+  to = "2021-12-31"
+)
+prices
+```
+
+```{r}
+prices %>%
+  ggplot(aes(x = date, y = adjusted)) +
+  geom_line() +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Apple stock prices between beginning of 2000 and end of 2021"
+  )
+prices
+```
+
+
+```{r}
+returns <- prices %>%
+  arrange(date) %>%
+  mutate(ret = lead(adjusted) / adjusted - 1) %>%
+  select(symbol, date, ret)
+returns <- returns %>%
+  drop_na(ret)
+returns
+```
+
+计算分位数：
+
+```{r}
+quantile_05 <- quantile(returns %>% pull(ret) * 100, probs = 0.05)
+```
+
+这里的`pull`类似于`$`操作运算，拿出需要的变量，但可以拿出多个变量，也类似于`select`运算。
+
+```{r}
+returns%>%
+  ggplot(aes(x = ret * 100)) +
+  geom_histogram(bins = 100) +
+  geom_vline(aes(xintercept = quantile_05),
+    linetype = "dashed"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Distribution of daily Apple stock returns in percent"
+  )
+```
+
+
+
+获得指数的`tq_index`
+
+```{r}
+ticker <- tq_index("DOW")
+ticker
+```
+
+
+
+
+
+### Famafrench 数据
+
+Fama-French的三因子模型/五因子的数据可直接通过`frenchdata`包来下载，不再需要上french数据官网下载。
+
+```{r}
+start_date <- ymd("1960-01-01")
+end_date <- ymd("2021-12-31")
+```
+
+
+```{r}
+library(frenchdata)
+start_date =
+factors_ff_monthly_raw <- download_french_data("Fama/French 3 Factors")
+factors_ff_monthly <- factors_ff_monthly_raw$subsets$data[[1]] %>%
+  transmute(
+    month = floor_date(ymd(str_c(date, "01")), "month"),
+    rf = as.numeric(RF) / 100,
+    mkt_excess = as.numeric(`Mkt-RF`) / 100,
+    smb = as.numeric(SMB) / 100,
+    hml = as.numeric(HML) / 100
+  ) 
+head(factors_ff_monthly)
+```
+
+
+
+```{r}
+industries_ff_monthly_raw <- download_french_data("10 Industry Portfolios")
+industries_ff_monthly <- industries_ff_monthly_raw$subsets$data[[1]] |>
+  mutate(month = floor_date(ymd(str_c(date, "01")), "month")) |>
+  mutate(across(where(is.numeric), ~ . / 100)) |>
+  select(month, everything(), -date)
+head(industries_ff_monthly)
+```
+
+
+
+
+### 宏观数据
+
+```{r}
+library(readxl)
+library(googledrive)
+library(tidyquant)
+drive_deauth()
+```
+
+
+
+
+```{r}
+cpi_monthly <- tq_get("CPIAUCNS",
+  get = "economic.data"
+) |>
+  transmute(
+    month = floor_date(date, "month"),
+    cpi = price / price[month == max(month)]
+  )
+tail(cpi_monthly)
+```
+
+最新的数据在2023年2月。
+
+
+还有一些其他的数据来源，tidyfinance这本书中有一些总结<https://www.tidy-finance.org/other-data-providers.html>
+
+## Resource
+
+- [tidyfinance](https://www.tidy-finance.org/index.html)
+- [金融时间序列分析](https://www.math.pku.edu.cn/teachers/lidf/course/fts/ftsnotes/html/_ftsnotes/rsoft.html#rsoft-ts-bgets)
