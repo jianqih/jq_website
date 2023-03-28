@@ -1,0 +1,960 @@
+---
+title: "金融时间序列数据获取"
+author: "Jianqi Huang"
+date: "2023-03-25"
+---
+
+
+
+<div id="生成时间序列数据" class="section level2">
+<h2>生成时间序列数据</h2>
+<pre class="r"><code>library(Quandl)
+library(tidyverse)
+library(knitr)</code></pre>
+<div id="posixt-类" class="section level3">
+<h3>POSIXt 类</h3>
+<p><code>POSIXt</code>是base包内的数据类型，其中包括了日期、时间和时区信息。
+创建一个<code>POSIXt</code>类可以通过字符串的时间序列数据来创建。<code>as.POSIXct</code>来作为将字符串转换为<code>POSIXt</code>对象类型。</p>
+<pre class="r"><code>myDateTimeStr = &quot;2013-12-19 10:17:07&quot; 
+class(myDateTimeStr)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>myPOSIXct = as.POSIXct(myDateTimeStr) 
+class(myPOSIXct)</code></pre>
+<pre><code>## [1] &quot;POSIXct&quot; &quot;POSIXt&quot;</code></pre>
+<p>默认的是日期-时间格式为“YYYY-mm-dd hh:mm:ss”/“YYYY/mm/dd hh:mm:ss”
+在这里，我们可以设置所使用时间的时区<code>tz</code>。</p>
+<pre class="r"><code>as.numeric(myPOSIXct) </code></pre>
+<pre><code>## [1] 1387419427</code></pre>
+<pre class="r"><code>Sys.timezone() </code></pre>
+<pre><code>## [1] &quot;Asia/Shanghai&quot;</code></pre>
+<p>可以将时间数据再转换为数值型数据。</p>
+<pre class="r"><code>attributes(myPOSIXct) </code></pre>
+<pre><code>## $class
+## [1] &quot;POSIXct&quot; &quot;POSIXt&quot; 
+## 
+## $tzone
+## [1] &quot;&quot;</code></pre>
+<pre class="r"><code>numDate = 0
+myPOSIXct2 = as.POSIXct(0,origin = &quot;1970-01-01&quot;)
+myPOSIXct2</code></pre>
+<pre><code>## [1] &quot;1970-01-01 08:00:00 CST&quot;</code></pre>
+<pre class="r"><code>as.numeric(myPOSIXct2) </code></pre>
+<pre><code>## [1] 0</code></pre>
+<div id="运算" class="section level4">
+<h4>运算</h4>
+<pre class="r"><code>dt1 = as.POSIXct(&quot;2022-12-23 00:00:00&quot;) 
+dt2 = as.POSIXct(&quot;2022-12-23 05:00:00&quot;) 
+dft = dt2 - dt1
+class(dft)</code></pre>
+<pre><code>## [1] &quot;difftime&quot;</code></pre>
+<pre class="r"><code>units(dft)</code></pre>
+<pre><code>## [1] &quot;hours&quot;</code></pre>
+<pre class="r"><code>as.numeric(dft)</code></pre>
+<pre><code>## [1] 5</code></pre>
+<p>设置单位：</p>
+<pre class="r"><code>units(dft) = &quot;secs&quot; 
+as.numeric(dft)</code></pre>
+<pre><code>## [1] 18000</code></pre>
+</div>
+</div>
+<div id="lubridate" class="section level3">
+<h3>lubridate</h3>
+<p><a href="https://lubridate.tidyverse.org/">lubridate</a>也是一个强大的用于处理日期时间数据的包，</p>
+<pre class="r"><code>library(lubridate)
+ymd(&quot;20131219&quot;)</code></pre>
+<pre><code>## [1] &quot;2013-12-19&quot;</code></pre>
+<p>这个函数实际上就是对应于<code>POSXIt</code>上的<code>as.POSIXt</code>函数。不过对于不同的format，可通过<code>y-m-d</code>这几个字母进行组合而改变读取格式。</p>
+<pre class="r"><code>ymd(20170629);myd(06201729);dmy(29062017)</code></pre>
+<pre><code>## [1] &quot;2017-06-29&quot;</code></pre>
+<pre><code>## [1] &quot;2017-06-29&quot;</code></pre>
+<pre><code>## [1] &quot;2017-06-29&quot;</code></pre>
+<p>同样可以对时区<code>tz</code>进行调整</p>
+<pre class="r"><code>test_date &lt;- ymd_hms(&quot;2017-06-29-12-01-30&quot;, tz = &quot;Asia/Shanghai&quot;)
+test_date</code></pre>
+<pre><code>## [1] &quot;2017-06-29 12:01:30 CST&quot;</code></pre>
+<p>不过中国的时区默认是<code>Asia/Shanghai</code>。并非beijing时区。</p>
+<div id="计算时间区间" class="section level4">
+<h4>计算时间区间</h4>
+<pre class="r"><code>begins &lt;- ymd_hms(&quot;20200919,12:00:00&quot;)
+ends &lt;- ymd_hms(&quot;20230311,12:00:00&quot;)
+ints &lt;- lubridate::interval(begins,ends)
+class(ints)</code></pre>
+<pre><code>## [1] &quot;Interval&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;lubridate&quot;</code></pre>
+<p>获取时间点之间的间隔，可以使用<code>interval</code>函数，最后返回的数据类型也是<code>Interval</code>。
+若需要计算间隔长度，使用<code>time_length</code>即可实现：</p>
+<pre class="r"><code>time_length(ints,&#39;day&#39;)#这个时间是我大学生活开始到目前的过去的时间</code></pre>
+<pre><code>## [1] 903</code></pre>
+<pre class="r"><code>time_length(ints,&#39;year&#39;)</code></pre>
+<pre><code>## [1] 2.473973</code></pre>
+<pre class="r"><code>time_length(ints,&#39;month&#39;)</code></pre>
+<pre><code>## [1] 29.71429</code></pre>
+</div>
+<div id="时间跨度" class="section level4">
+<h4>时间跨度</h4>
+<pre class="r"><code>minutes(1)   </code></pre>
+<pre><code>## [1] &quot;1M 0S&quot;</code></pre>
+<pre class="r"><code>dminutes(1)  </code></pre>
+<pre><code>## [1] &quot;60s (~1 minutes)&quot;</code></pre>
+<pre class="r"><code>leap_year(2016)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>ymd(20160101)+years(1)</code></pre>
+<pre><code>## [1] &quot;2017-01-01&quot;</code></pre>
+<pre class="r"><code>ymd(20160101)+dyears(1)</code></pre>
+<pre><code>## [1] &quot;2016-12-31 06:00:00 UTC&quot;</code></pre>
+<p>这些运算有点类似于在累积概率分布和概率密度之间的关系。</p>
+</div>
+</div>
+<div id="zoo类型" class="section level3">
+<h3><code>zoo</code>类型</h3>
+<p>R中有比ts数据类型更为灵活的类型。</p>
+<pre class="r"><code>zoo(x, order.by)</code></pre>
+<pre class="r"><code>set.seed(1)
+z.1 &lt;- zoo(sample(3:6, size=12, replace=TRUE), 
+           make_date(2018, 1, 1) + ddays(0:11)); z.1</code></pre>
+<pre><code>## 2018-01-01 2018-01-02 2018-01-03 2018-01-04 2018-01-05 2018-01-06 2018-01-07 
+##          3          6          5          3          4          3          5 
+## 2018-01-08 2018-01-09 2018-01-10 2018-01-11 2018-01-12 
+##          5          4          4          5          5</code></pre>
+</div>
+<div id="xts类型数据" class="section level3">
+<h3>xts类型数据</h3>
+<p><code>xts</code>是<code>zoo</code>类的扩展，<code>zoo</code>包的<code>rollapply</code>函数是对时间序列进行滚动计算的一个常用方法。</p>
+<p>其格式为：</p>
+<pre class="r"><code>xts(x,date)</code></pre>
+<pre class="r"><code>library(xts)
+d &lt;- read_table2(
+  &quot;/Users/a182501/project_set/fts/ftsdata/d-ibm-0110.txt&quot;, col_types=cols(
+    .default=col_double(),
+    date=col_date(format=&quot;%Y%m%d&quot;)))</code></pre>
+<pre><code>## Warning: `read_table2()` was deprecated in readr 2.0.0.
+## ℹ Please use `read_table()` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre class="r"><code>d</code></pre>
+<pre><code>## # A tibble: 2,515 × 2
+##    date         return
+##    &lt;date&gt;        &lt;dbl&gt;
+##  1 2001-01-02 -0.00221
+##  2 2001-01-03  0.116  
+##  3 2001-01-04 -0.0152 
+##  4 2001-01-05  0.00872
+##  5 2001-01-08 -0.00465
+##  6 2001-01-09 -0.0107 
+##  7 2001-01-10  0.00945
+##  8 2001-01-11  0.00268
+##  9 2001-01-12  0.00133
+## 10 2001-01-16 -0.0113 
+## # ℹ 2,505 more rows</code></pre>
+<p><code>d</code>为一个数据框格式的时间序列数据。转换为<code>xts</code>类别数据需要分别导入对应的列值。</p>
+<pre class="r"><code>ibmrtn &lt;- xts(d[[&quot;return&quot;]], d[[&quot;date&quot;]])
+plot(ibmrtn, 
+  main=&quot;IBM Log Return Daily&quot;,
+  major.ticks=&quot;years&quot;, minor.ticks=NULL, 
+  grid.ticks.on=&quot;years&quot;,
+  format.labels=&quot;%Y&quot;,
+  col=&quot;red&quot;)</code></pre>
+<p><img src="/post/2023-03-25-fin/2023-03-25-fin-data_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>可直接使用<code>plot</code>进行绘制收益率曲线。</p>
+<p>和<code>ts</code>对象一样，<code>xts</code>的时间索引也是隐式的，可以使用<code>index()</code>提取索引，使用<code>coredata()</code>提取观测序列：</p>
+<pre class="r"><code>library(TSstudio)
+library(xts)
+data(Michigan_CS)
+Mi_data&lt;-coredata(Michigan_CS) 
+head(Mi_data)</code></pre>
+<pre><code>##      [,1]
+## [1,] 67.0
+## [2,] 66.9
+## [3,] 56.5
+## [4,] 52.7
+## [5,] 51.7
+## [6,] 58.7</code></pre>
+<pre class="r"><code>#Mi_index&lt;-index()
+#head(Mi_index)</code></pre>
+<p>使用<code>as.xts()</code>可将非xts的时间序列数据转换为xts类型的时间序列数据。而使用<code>xts</code>可以将一般的向量转换为时间序列数据，</p>
+<pre class="r"><code>data = runif(5)
+time&lt;-as.Date(paste(&quot;2023-01-0&quot;,1:5,sep=&quot;&quot;))
+exam&lt;-xts(x=data,order.by=time)
+ts_info(exam)</code></pre>
+<pre><code>##  The exam series is a xts object with 1 variable and 5 observations
+##  Frequency: daily 
+##  Start time: 2023-01-01 
+##  End time: 2023-01-05</code></pre>
+</div>
+<div id="ts类型数据" class="section level3">
+<h3><code>ts</code>类型数据</h3>
+<p><code>ts</code>是R中对时间序列数据的支持。是在stats包内的，也是R中较为常用的包用于对时间序列数据进行操作的数据类型。</p>
+<pre class="r"><code>yd &lt;- ts(
+  c(4, 8, 7, 7, 3, 1, 8, 9, 8, 6, 3, 5,
+    5, 8, 2, 5, 9, 2, 5, 2, 3, 2, 2, 4), 
+  frequency=1, start=2001); yd</code></pre>
+<pre><code>## Time Series:
+## Start = 2001 
+## End = 2024 
+## Frequency = 1 
+##  [1] 4 8 7 7 3 1 8 9 8 6 3 5 5 8 2 5 9 2 5 2 3 2 2 4</code></pre>
+<p>默认的时间频率为以年为单位，同样也可以调整为12，即为月为单位。</p>
+<pre class="r"><code>ym &lt;- ts(
+  c(9, 6, 3, 5, 4, 8, 2, 5, 8, 4, 6, 3,
+    2, 2, 6, 4, 1, 4, 2, 1, 8, 9, 4, 6), 
+  frequency=12, start=c(2001,1)); ym</code></pre>
+<pre><code>##      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+## 2001   9   6   3   5   4   8   2   5   8   4   6   3
+## 2002   2   2   6   4   1   4   2   1   8   9   4   6</code></pre>
+<pre class="r"><code>library(tidyverse)
+library(lubridate)
+d &lt;- read_table(
+  &quot;/Users/a182501/project_set/fts/ftsdata/d-ibm-0110.txt&quot;, col_types=cols(
+    .default=col_double(),
+    date=col_date(format=&quot;%Y%m%d&quot;)))
+d</code></pre>
+<pre><code>## # A tibble: 2,515 × 2
+##    date         return
+##    &lt;date&gt;        &lt;dbl&gt;
+##  1 2001-01-02 -0.00221
+##  2 2001-01-03  0.116  
+##  3 2001-01-04 -0.0152 
+##  4 2001-01-05  0.00872
+##  5 2001-01-08 -0.00465
+##  6 2001-01-09 -0.0107 
+##  7 2001-01-10  0.00945
+##  8 2001-01-11  0.00268
+##  9 2001-01-12  0.00133
+## 10 2001-01-16 -0.0113 
+## # ℹ 2,505 more rows</code></pre>
+<pre class="r"><code>x &lt;- scan(&quot;/Users/a182501/project_set/fts/bp500-2691.txt&quot;,skip = 1)
+ts(x, start=c(2001, 1), frequency=12)</code></pre>
+<pre><code>##          Jan     Feb     Mar     Apr     May     Jun     Jul     Aug     Sep
+## 2001  0.0225 -0.0440 -0.0591  0.0227  0.0077  0.0432  0.0455  0.0171  0.0229
+## 2002 -0.0208  0.0477  0.0065  0.0172  0.0522 -0.0094  0.0650  0.0445  0.0432
+## 2003 -0.0051 -0.0176  0.1083  0.0324  0.0127 -0.0405  0.0125  0.0741  0.0240
+## 2004  0.0571 -0.0058 -0.0023  0.0161 -0.0428  0.1124  0.0456  0.0980 -0.0489
+## 2005  0.0625  0.0215  0.0799 -0.0095 -0.0165 -0.1646  0.0367  0.0075 -0.1301
+## 2006  0.0489  0.1144 -0.0692 -0.0959 -0.1372  0.1390 -0.0742  0.0095 -0.2994
+## 2007 -0.0283  0.0507 -0.1182 -0.2025 -0.2333 -0.0089  0.3770  0.3754 -0.0369
+## 2008  0.0073 -0.1844  0.0336  0.4222  0.1587  0.1317 -0.0880  0.1146 -0.1136
+## 2009  0.1059 -0.0367 -0.0009 -0.0270 -0.0813  0.0208 -0.1152  0.0541 -0.0055
+## 2010 -0.0421 -0.0396 -0.0309  0.0956  0.0323  0.0678  0.0831  0.0217  0.0239
+## 2011  0.0655  0.0168  0.0254 -0.0771  0.0458  0.0306  0.0681  0.0088  0.0013
+## 2012  0.0378  0.0146 -0.0094 -0.0831 -0.0103 -0.0529  0.1026 -0.0554 -0.1421
+## 2013  0.0133  0.0608 -0.2504  0.1412 -0.0443  0.2470  0.0727 -0.0274  0.0149
+## 2014 -0.0689  0.0325 -0.1354 -0.0055  0.0623 -0.0638  0.1087 -0.0714  0.1646
+## 2015 -0.0352  0.0066  0.0099 -0.0049 -0.2395  0.0766  0.0311  0.0262  0.0095
+## 2016 -0.0482 -0.0149  0.0040 -0.0653  0.0043  0.0535  0.0548 -0.0087 -0.0097
+## 2017  0.0138 -0.0250 -0.0675 -0.0437  0.0640  0.0184  0.0313  0.0070  0.0267
+## 2018  0.0716  0.0506  0.0527  0.0009  0.0449  0.0198 -0.0543  0.0103  0.0237
+## 2019  0.0154 -0.0025  0.0169 -0.0125  0.0404  0.0510 -0.0208  0.0087 -0.0031
+## 2020  0.0143  0.0616 -0.0462  0.0880  0.0115 -0.0033 -0.0201  0.0580  0.0419
+## 2021  0.0697 -0.0695  0.0463  0.0376  0.0224 -0.0391 -0.0255 -0.0729 -0.1015
+## 2022  0.0235 -0.0147 -0.0169 -0.0389 -0.0089  0.0526  0.0362 -0.0279 -0.0137
+## 2023 -0.0399 -0.0470  0.0771  0.0265  0.0782  0.0030 -0.0532  0.0076 -0.0301
+## 2024  0.0013 -0.0394  0.0301 -0.0212 -0.0373 -0.0021  0.0621  0.0120  0.0237
+## 2025  0.0173  0.0100  0.0041  0.0451  0.0393 -0.0580  0.0085  0.0325  0.0559
+## 2026  0.0612  0.0065 -0.0183  0.0481 -0.0406 -0.0260  0.0687  0.0393 -0.0009
+## 2027  0.0156 -0.0365  0.0477 -0.0431  0.0232  0.0461  0.0176 -0.0146 -0.0196
+## 2028 -0.0072 -0.0182 -0.0236 -0.0265 -0.0032 -0.0163  0.0253 -0.0578  0.0013
+## 2029  0.0512  0.0027  0.0302  0.0490  0.0329  0.0007  0.0572 -0.0340  0.0831
+## 2030  0.0181  0.0035 -0.0049  0.0377 -0.0013  0.0823  0.0607 -0.0078  0.0113
+## 2031 -0.0365  0.0347  0.0693 -0.0021 -0.0657  0.0392  0.0515 -0.0381 -0.0455
+## 2032 -0.0418 -0.0326  0.0196  0.0370  0.0369 -0.0013  0.0114 -0.0561 -0.0619
+## 2033  0.0428 -0.0206  0.0309  0.0318  0.0150  0.0261  0.0431  0.0119  0.0484
+## 2034  0.0038 -0.0002  0.0005  0.0388  0.0189 -0.0036  0.0349 -0.0150 -0.0456
+## 2035 -0.0715  0.0092 -0.0139 -0.0175  0.0269  0.0195 -0.0248  0.0261 -0.0604
+## 2036  0.0632  0.0269  0.0255  0.0038  0.0191 -0.0288  0.0328  0.0196 -0.0197
+## 2037 -0.0379  0.0163 -0.0059 -0.0620 -0.0860 -0.0818  0.0636  0.0153 -0.0482
+## 2038  0.0491 -0.0289  0.0355  0.0485  0.0143 -0.0202 -0.0035  0.0487 -0.0110
+## 2039  0.0269  0.0099  0.0152  0.0061  0.0115  0.0164  0.0182 -0.0162  0.0287
+## 2040  0.0332 -0.0015 -0.0145  0.0342 -0.0077 -0.0486  0.0134  0.0225  0.0320
+## 2041  0.0049 -0.0179 -0.0218  0.0205 -0.0541 -0.0161 -0.0135 -0.0778 -0.0070
+## 2042  0.0782  0.0020  0.0394  0.0422 -0.0524  0.0175  0.0453 -0.0117  0.0328
+## 2043 -0.0438 -0.0312  0.0094  0.0819  0.0112  0.0091 -0.0185  0.0115  0.0385
+## 2044 -0.0082 -0.0474  0.0344  0.0215 -0.0022 -0.0556 -0.0602  0.0401 -0.0250
+## 2045 -0.0765  0.0527  0.0015 -0.0905 -0.0610 -0.0500  0.0733  0.0445  0.0330
+## 2046  0.0405  0.0091  0.0368  0.0363 -0.0416  0.0007 -0.0413  0.0361 -0.0070
+## 2047  0.0181  0.0253  0.0059  0.0044  0.0173 -0.0218  0.0023  0.0345 -0.0049
+## 2048 -0.0171 -0.0375 -0.0014 -0.0408 -0.0189 -0.0066  0.0380 -0.0367  0.0401
+## 2049 -0.0100 -0.0036 -0.0233 -0.0391 -0.0336 -0.0147 -0.0778 -0.0903 -0.1193
+## 2050  0.1228  0.0599  0.0217  0.0473  0.0441  0.0443 -0.0677 -0.0211 -0.0346
+## 2051  0.1183 -0.0114  0.0307 -0.0110 -0.0144  0.0409 -0.0081 -0.0051  0.0226
+## 2052 -0.0505 -0.0217 -0.0140  0.0002 -0.0236  0.0454 -0.0162 -0.0210 -0.0025
+## 2053 -0.0615 -0.0248  0.0249  0.0854  0.0042 -0.0176  0.0539  0.0259 -0.0073
+## 2054  0.0397 -0.0365  0.0552  0.0017 -0.0263  0.0387  0.0087  0.0531  0.0000
+## 2055  0.0576 -0.0044 -0.1018  0.0411  0.0466  0.0270  0.0650  0.0058  0.0252
+## 2056 -0.0457  0.0133  0.0360 -0.0235 -0.0017 -0.0104 -0.0022 -0.0621 -0.0538
+## 2057 -0.0175 -0.0605 -0.0102  0.0400 -0.0392 -0.0203 -0.0230  0.1160  0.0076
+## 2058  0.0331  0.0190  0.0331  0.0749 -0.0123  0.0352 -0.0330  0.0113  0.0102
+## 2059 -0.0092 -0.0389  0.0135  0.0055 -0.0594  0.0175 -0.0165  0.1063 -0.0035
+## 2060  0.0741  0.0087 -0.0029 -0.0046  0.0541  0.0121 -0.0048 -0.0120 -0.0347
+## 2061  0.0024  0.0715  0.0528 -0.0141  0.0502  0.0141 -0.0587  0.0712 -0.0854
+## 2062  0.1318  0.0369  0.0264 -0.0115  0.0060  0.0479  0.0482  0.0350 -0.0242
+## 2063  0.0404  0.0418 -0.0333  0.0094  0.0032  0.0433 -0.0054 -0.0386  0.0397
+## 2064  0.0711 -0.0289  0.0208  0.0501  0.0351 -0.0079  0.0884  0.0155 -0.0065
+## 2065 -0.0688  0.0085  0.0243 -0.0269  0.0920 -0.0089 -0.0052 -0.0943 -0.0512
+## 2066  0.0415  0.0673  0.0222  0.0003  0.0386 -0.0479  0.0449  0.0196 -0.0191
+##          Oct     Nov     Dec
+## 2001 -0.0313  0.0223  0.0166
+## 2002 -0.0531  0.0678  0.0190
+## 2003  0.0145  0.1199  0.0029
+## 2004 -0.1993 -0.1337  0.0253
+## 2005 -0.0888 -0.0218 -0.0742
+## 2006  0.0844 -0.0978 -0.1453
+## 2007 -0.1386 -0.0589  0.0519
+## 2008 -0.0885  0.1027  0.0223
+## 2009 -0.0319  0.0829 -0.0042
+## 2010  0.0751  0.0393  0.0371
+## 2011  0.0750  0.0041 -0.0058
+## 2012 -0.1017 -0.1011 -0.0504
+## 2013  0.0760 -0.0334  0.0377
+## 2014 -0.0146 -0.0491  0.0238
+## 2015  0.0394 -0.0424 -0.0028
+## 2016 -0.0686 -0.0421 -0.0451
+## 2017  0.0644 -0.0138  0.0517
+## 2018 -0.0132 -0.0755  0.0590
+## 2019  0.0000  0.0039  0.0351
+## 2020  0.0303  0.0324  0.0099
+## 2021 -0.0080 -0.0115  0.0429
+## 2022  0.0212 -0.0285  0.0207
+## 2023  0.0678 -0.1082  0.0305
+## 2024  0.0295  0.0012  0.0436
+## 2025  0.0041 -0.0010  0.0461
+## 2026 -0.0138 -0.0026  0.0389
+## 2027 -0.0008  0.0465  0.0355
+## 2028  0.0510  0.0090  0.0020
+## 2029 -0.0195  0.0808  0.0508
+## 2030 -0.0305  0.0749 -0.0007
+## 2031  0.0051 -0.0110  0.0353
+## 2032 -0.0321  0.0161 -0.0415
+## 2033  0.0254  0.0224  0.0520
+## 2034  0.0113  0.0132  0.0276
+## 2035 -0.0024  0.0403  0.0463
+## 2036  0.0283  0.0393  0.0032
+## 2037  0.0044  0.1016  0.0135
+## 2038  0.0322 -0.0105  0.0244
+## 2039  0.0081 -0.0052  0.0039
+## 2040  0.0273 -0.0088  0.0090
+## 2041  0.0475  0.0031 -0.0015
+## 2042 -0.0291  0.0011  0.0263
+## 2043  0.0072  0.0480 -0.0416
+## 2044  0.0442 -0.0353 -0.0187
+## 2045 -0.0114  0.0474  0.0568
+## 2046 -0.0418 -0.0025  0.0862
+## 2047  0.0093  0.0456  0.0118
+## 2048 -0.0013 -0.1139  0.0166
+## 2049  0.1630 -0.0532 -0.0202
+## 2050  0.0616  0.0247 -0.0115
+## 2051 -0.0222 -0.0078  0.0525
+## 2052 -0.0434  0.0270  0.0028
+## 2053 -0.0916  0.0166  0.0149
+## 2054 -0.0686  0.0426  0.0168
+## 2055  0.0160  0.1024 -0.0339
+## 2056  0.0491  0.0366 -0.0301
+## 2057  0.1104  0.0361  0.0152
+## 2058 -0.0152  0.0174 -0.0088
+## 2059 -0.0001 -0.0151  0.0224
+## 2060  0.0425  0.0651  0.0451
+## 2061  0.0547  0.0215 -0.0283
+## 2062 -0.2176 -0.0853  0.0729
+## 2063  0.0260 -0.0189  0.0147
+## 2064 -0.0252  0.0165  0.0214
+## 2065 -0.0067  0.0599  0.0248
+## 2066  0.0119 -0.0439  0.1116</code></pre>
+<pre class="r"><code>d &lt;- read.table(
+  &quot;/Users/a182501/project_set/fts/ftsdata/m-unrate.txt&quot;, header=TRUE,
+  colClasses=rep(&quot;numeric&quot;, 4))
+unrate &lt;- ts(d[[&quot;rate&quot;]], start=c(1948,1), frequency=12)
+class(unrate)</code></pre>
+<pre><code>## [1] &quot;ts&quot;</code></pre>
+<pre class="r"><code>plot(unrate)</code></pre>
+<p><img src="/post/2023-03-25-fin/2023-03-25-fin-data_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+</div>
+<div id="tsibble类型" class="section level3">
+<h3><code>tsibble</code>类型</h3>
+<p>tsibble包提供了tsibble数据类型，是从tidyverse宇宙中扩展出来的一种时间序列处理方法。</p>
+<p>一个简单的创建方法：</p>
+<pre class="r"><code>library(tsibble)
+t1&lt;-tsibble(date=as.Date(&quot;2023-03-01&quot;)+1:5,value=rnorm(5))
+t1</code></pre>
+<pre><code>## # A tsibble: 5 x 2 [1D]
+##   date        value
+##   &lt;date&gt;      &lt;dbl&gt;
+## 1 2023-03-02  2.40 
+## 2 2023-03-03  0.764
+## 3 2023-03-04 -0.799
+## 4 2023-03-05 -1.15 
+## 5 2023-03-06 -0.289</code></pre>
+<pre class="r"><code>library(readr)
+d &lt;- read_table2(
+  &quot;/Users/a182501/project_set/fts/ftsdata/m-ibmsp-2611.txt&quot;,
+  col_types=cols(.default=col_double(),
+                 date=col_date(format=&quot;%Y%m%d&quot;)))</code></pre>
+<pre><code>## Warning: 1 parsing failure.
+## row col  expected    actual                                                      file
+## 226  -- 3 columns 4 columns &#39;/Users/a182501/project_set/fts/ftsdata/m-ibmsp-2611.txt&#39;</code></pre>
+<pre class="r"><code>tsb &lt;- as_tsibble(d, index=&quot;date&quot;)
+class(tsb)</code></pre>
+<pre><code>## [1] &quot;tbl_ts&quot;     &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
+<pre class="r"><code>head(tsb)</code></pre>
+<pre><code>## # A tsibble: 6 x 3 [1D]
+##   date           ibm       sp
+##   &lt;date&gt;       &lt;dbl&gt;    &lt;dbl&gt;
+## 1 1926-01-30 -0.0104  0.0225 
+## 2 1926-02-27 -0.0245 -0.0440 
+## 3 1926-03-31 -0.116  -0.0591 
+## 4 1926-04-30  0.0898  0.0227 
+## 5 1926-05-28  0.0369  0.00768
+## 6 1926-06-30  0.0685  0.0432</code></pre>
+<p>其中tsibble的一大特点是引入tibble数据框到时序数据中。</p>
+<pre class="r"><code># install.packages(&quot;nycflights13&quot;)
+library(nycflights13)
+data(weather)
+weather_tsbl&lt;-weather%&gt;%
+             select(origin, time_hour, temp, humid, precip)%&gt;%
+             as_tsibble(index=time_hour,key=origin)
+head(weather_tsbl)</code></pre>
+<pre><code>## # A tsibble: 6 x 5 [1h] &lt;America/New_York&gt;
+## # Key:       origin [1]
+##   origin time_hour            temp humid precip
+##   &lt;chr&gt;  &lt;dttm&gt;              &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+## 1 EWR    2013-01-01 01:00:00  39.0  59.4      0
+## 2 EWR    2013-01-01 02:00:00  39.0  61.6      0
+## 3 EWR    2013-01-01 03:00:00  39.0  64.4      0
+## 4 EWR    2013-01-01 04:00:00  39.9  62.2      0
+## 5 EWR    2013-01-01 05:00:00  39.0  64.4      0
+## 6 EWR    2013-01-01 06:00:00  37.9  67.2      0</code></pre>
+<p>同时我们可以看到这里有索引(index)、键(key)，每个观测值都是与键进行唯一识别。若间隔是有规律的，那么每一个观测单元共用一个区间进行测量。</p>
+<div id="处理tsibble对象" class="section level4">
+<h4>处理<code>tsibble</code>对象</h4>
+<p><code>tsibble</code>有一个关键函数<code>index_by()</code>对应于<code>dplyr</code>中的<code>group_by()</code>，按照索引进行划分组别。</p>
+<pre class="r"><code>precipavg_week&lt;-weather_tsbl %&gt;%
+  group_by_key() %&gt;%
+  index_by(year_week = ~ yearweek(.)) %&gt;%
+  summarise(precip_avg = mean(precip,na.rm=T))</code></pre>
+<pre class="r"><code>precipavg_week%&gt;%
+ggplot(aes(x=year_week,y=precip_avg))+
+geom_point()+
+geom_line()+
+facet_grid(origin ~ .)</code></pre>
+<p><img src="/post/2023-03-25-fin/2023-03-25-fin-data_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="金融数据获取" class="section level2">
+<h2>金融数据获取</h2>
+<div id="quantmod" class="section level3">
+<h3><code>quantmod</code></h3>
+<p>quantmod包的目的是为量化投资者提供方便的原型开发测试工具， 而不是提供新的统计方法。 quantmod包提供了金融时间序列数据的一些方便功能， 比如从公开数据源载入数据， 作股票行情图、时间序列图。</p>
+<p><code>getSymbols</code>函数能够帮助我们从多个公开数据源下载金融数据（需要使用VPN）。</p>
+<pre class="r"><code>pacman::p_load(quantmod)
+MSFT &lt;- getSymbols(&quot;MSFT&quot;, src=&quot;yahoo&quot;, auto.assign = FALSE)
+head(MSFT)</code></pre>
+<pre><code>##            MSFT.Open MSFT.High MSFT.Low MSFT.Close MSFT.Volume MSFT.Adjusted
+## 2007-01-03     29.91     30.25    29.40      29.86    76935100      21.57304
+## 2007-01-04     29.70     29.97    29.44      29.81    45774500      21.53692
+## 2007-01-05     29.63     29.75    29.45      29.64    44607200      21.41410
+## 2007-01-08     29.65     30.10    29.53      29.93    50220200      21.62362
+## 2007-01-09     30.00     30.18    29.73      29.96    44636600      21.64528
+## 2007-01-10     29.80     29.89    29.43      29.66    55017400      21.42855</code></pre>
+<p>获取失业率数据：</p>
+<pre class="r"><code>UNRATE &lt;- getSymbols(&quot;UNRATE&quot;, src=&quot;FRED&quot;, auto.assign=FALSE)
+head(UNRATE)</code></pre>
+<pre><code>##            UNRATE
+## 1948-01-01    3.4
+## 1948-02-01    3.8
+## 1948-03-01    4.0
+## 1948-04-01    3.9
+## 1948-05-01    3.5
+## 1948-06-01    3.6</code></pre>
+<p>获取国债数据：</p>
+<pre class="r"><code>MSFT &lt;- getSymbols(&quot;MSFT&quot;, src=&quot;yahoo&quot;, auto.assign = FALSE)
+TNX &lt;- getSymbols(&quot;^TNX&quot;, auto.assign = FALSE) # CBOE 10年国债日数据</code></pre>
+<pre><code>## Warning: ^TNX contains missing values. Some functions will not work if objects
+## contain missing values in the middle of the series. Consider using na.omit(),
+## na.approx(), na.fill(), etc to remove or replace them.</code></pre>
+<pre class="r"><code>chartSeries(MSFT, theme=&quot;white&quot;, name=&quot;Microsoft&quot;,
+            subset=&quot;2017-12-01/2017-12-31&quot;)</code></pre>
+<p><img src="/post/2023-03-25-fin/2023-03-25-fin-data_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p>获取St. Louis Federal Reserve Bank’s FRED system某个债券数据。</p>
+<pre class="r"><code>quantmod::getSymbols.FRED(
+  Symbols = &quot;IPB50001SQ&quot;,
+  env = .GlobalEnv
+)</code></pre>
+<pre><code>## [1] &quot;IPB50001SQ&quot;</code></pre>
+<pre class="r"><code>plot(IPB50001SQ)</code></pre>
+<p><img src="/post/2023-03-25-fin/2023-03-25-fin-data_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p>另一个方法是在函数<code>getSymbols</code>中的src<code>参数中设置为</code>FRED`。</p>
+<pre class="r"><code>getSymbols(&#39;CPIAUCNS&#39;,src=&#39;FRED&#39;)</code></pre>
+<pre><code>## [1] &quot;CPIAUCNS&quot;</code></pre>
+<pre class="r"><code>plot(CPIAUCNS)</code></pre>
+<p><img src="/post/2023-03-25-fin/2023-03-25-fin-data_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+</div>
+<div id="tseries" class="section level3">
+<h3>tseries</h3>
+<p>还有一个包是<code>tseries</code>能够帮助我们获取最新的金融数据（也需要VPN）。</p>
+<pre class="r"><code>pacman::p_load(tseries)
+x &lt;- get.hist.quote(instrument = &quot;^gspc&quot;, start = &quot;1998-01-01&quot;,
+                      quote = &quot;Close&quot;)</code></pre>
+<pre><code>## time series starts 1998-01-02
+## time series ends   2023-03-24</code></pre>
+<pre class="r"><code>plot(x)</code></pre>
+<p><img src="/post/2023-03-25-fin/2023-03-25-fin-data_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<pre class="r"><code>x &lt;- get.hist.quote(instrument = &quot;ibm&quot;, quote = c(&quot;Cl&quot;, &quot;Vol&quot;))</code></pre>
+<pre><code>## time series ends   2023-03-24</code></pre>
+<pre class="r"><code>plot(x, main = &quot;International Business Machines Corp&quot;)</code></pre>
+<p><img src="/post/2023-03-25-fin/2023-03-25-fin-data_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+</div>
+<div id="quandl包" class="section level3">
+<h3>quandl包</h3>
+<p>quandl包似乎不用VPN：</p>
+<pre class="r"><code>usa = Quandl::Quandl(&#39;UNAE/GDPCD_USA&#39;)
+tt = dim(usa)[1]
+tt</code></pre>
+<pre><code>## [1] 50</code></pre>
+<pre class="r"><code>kable(usa[,c(&quot;Date&quot;,&quot;Gross Domestic Product (GDP)&quot;)])</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Date</th>
+<th align="right">Gross Domestic Product (GDP)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2019-12-31</td>
+<td align="right">2.143323e+13</td>
+</tr>
+<tr class="even">
+<td align="left">2018-12-31</td>
+<td align="right">2.061186e+13</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-12-31</td>
+<td align="right">1.954298e+13</td>
+</tr>
+<tr class="even">
+<td align="left">2016-12-31</td>
+<td align="right">1.874508e+13</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-12-31</td>
+<td align="right">1.823830e+13</td>
+</tr>
+<tr class="even">
+<td align="left">2014-12-31</td>
+<td align="right">1.752726e+13</td>
+</tr>
+<tr class="odd">
+<td align="left">2013-12-31</td>
+<td align="right">1.678485e+13</td>
+</tr>
+<tr class="even">
+<td align="left">2012-12-31</td>
+<td align="right">1.619701e+13</td>
+</tr>
+<tr class="odd">
+<td align="left">2011-12-31</td>
+<td align="right">1.554258e+13</td>
+</tr>
+<tr class="even">
+<td align="left">2010-12-31</td>
+<td align="right">1.499205e+13</td>
+</tr>
+<tr class="odd">
+<td align="left">2009-12-31</td>
+<td align="right">1.444893e+13</td>
+</tr>
+<tr class="even">
+<td align="left">2008-12-31</td>
+<td align="right">1.471284e+13</td>
+</tr>
+<tr class="odd">
+<td align="left">2007-12-31</td>
+<td align="right">1.445186e+13</td>
+</tr>
+<tr class="even">
+<td align="left">2006-12-31</td>
+<td align="right">1.381461e+13</td>
+</tr>
+<tr class="odd">
+<td align="left">2005-12-31</td>
+<td align="right">1.303664e+13</td>
+</tr>
+<tr class="even">
+<td align="left">2004-12-31</td>
+<td align="right">1.221373e+13</td>
+</tr>
+<tr class="odd">
+<td align="left">2003-12-31</td>
+<td align="right">1.145825e+13</td>
+</tr>
+<tr class="even">
+<td align="left">2002-12-31</td>
+<td align="right">1.093642e+13</td>
+</tr>
+<tr class="odd">
+<td align="left">2001-12-31</td>
+<td align="right">1.058182e+13</td>
+</tr>
+<tr class="even">
+<td align="left">2000-12-31</td>
+<td align="right">1.025235e+13</td>
+</tr>
+<tr class="odd">
+<td align="left">1999-12-31</td>
+<td align="right">9.630663e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1998-12-31</td>
+<td align="right">9.062817e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1997-12-31</td>
+<td align="right">8.577552e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1996-12-31</td>
+<td align="right">8.073122e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1995-12-31</td>
+<td align="right">7.639749e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1994-12-31</td>
+<td align="right">7.287236e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1993-12-31</td>
+<td align="right">6.858559e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1992-12-31</td>
+<td align="right">6.520327e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1991-12-31</td>
+<td align="right">6.158129e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1990-12-31</td>
+<td align="right">5.963144e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1989-12-31</td>
+<td align="right">5.641580e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1988-12-31</td>
+<td align="right">5.236438e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1987-12-31</td>
+<td align="right">4.855215e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1986-12-31</td>
+<td align="right">4.579631e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1985-12-31</td>
+<td align="right">4.338979e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1984-12-31</td>
+<td align="right">4.037613e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1983-12-31</td>
+<td align="right">3.634038e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1982-12-31</td>
+<td align="right">3.343789e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1981-12-31</td>
+<td align="right">3.207042e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1980-12-31</td>
+<td align="right">2.857307e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1979-12-31</td>
+<td align="right">2.627334e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1978-12-31</td>
+<td align="right">2.351599e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1977-12-31</td>
+<td align="right">2.081826e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1976-12-31</td>
+<td align="right">1.873412e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1975-12-31</td>
+<td align="right">1.684904e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1974-12-31</td>
+<td align="right">1.545243e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1973-12-31</td>
+<td align="right">1.425376e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1972-12-31</td>
+<td align="right">1.279110e+12</td>
+</tr>
+<tr class="odd">
+<td align="left">1971-12-31</td>
+<td align="right">1.164850e+12</td>
+</tr>
+<tr class="even">
+<td align="left">1970-12-31</td>
+<td align="right">1.073303e+12</td>
+</tr>
+</tbody>
+</table>
+<p>利用 <a href="https://github.com/quandl/quandl-r">Quandl</a> 获取最新的GDP数据，但仍然有一定的滞后性。但并不妨碍我们用于一些非实时性的数据性探索工作。</p>
+<pre class="r"><code>plot(usa[,c(&quot;Date&quot;,&quot;Gross Domestic Product (GDP)&quot;)])</code></pre>
+<p><img src="/post/2023-03-25-fin/2023-03-25-fin-data_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+</div>
+<div id="batchgetsymbol" class="section level3">
+<h3>BatchGetSymbol</h3>
+<pre class="r"><code>library(BatchGetSymbols)
+first.date &lt;- Sys.Date() - 60
+last.date &lt;- Sys.Date()
+freq.data &lt;- &quot;daily&quot;
+# set tickers
+tickers &lt;- c(
+  &quot;S&amp;P500&quot; = c, 
+  &quot;Facebook&quot; = &quot;FB&quot;,
+  &quot;上证综指&quot; = &quot;000001.SS&quot;, 
+  &quot;兴业银行&quot; = &quot;601166.SS&quot;, 
+  &quot;中兴通讯&quot; = &quot;000063.SZ&quot;
+  )
+l.out &lt;- BatchGetSymbols(
+  tickers = tickers, 
+  first.date = first.date,
+  last.date = last.date, 
+  freq.data = freq.data,
+  cache.folder = file.path(
+    tempdir(), &#39;BGS_Cache&#39;))</code></pre>
+<pre><code>## Warning: `BatchGetSymbols()` was deprecated in BatchGetSymbols 2.6.4.
+## ℹ Please use `yfR::yf_get()` instead.
+## ℹ 2022-05-01: Package BatchGetSymbols will soon be replaced by yfR.  More
+##   details about the change is available at github
+##   &lt;&lt;www.github.com/msperlin/yfR&gt; You can install yfR by executing:
+## 
+## remotes::install_github(&#39;msperlin/yfR&#39;)
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre class="r"><code>names(l.out$df.tickers)</code></pre>
+<pre><code>##  [1] &quot;price.open&quot;          &quot;price.high&quot;          &quot;price.low&quot;          
+##  [4] &quot;price.close&quot;         &quot;volume&quot;              &quot;price.adjusted&quot;     
+##  [7] &quot;ref.date&quot;            &quot;ticker&quot;              &quot;ret.adjusted.prices&quot;
+## [10] &quot;ret.closing.prices&quot;</code></pre>
+<p>但这个<code>l.out$df.ticker</code>中的变量名与<code>tickers</code>中的名称并不对应，因此需要一个变量来再映射。</p>
+<pre class="r"><code>nameMapInv &lt;- function(x){
+  y &lt;- names(x)
+  print(y)
+  names(y) &lt;- x
+  y
+}</code></pre>
+<pre class="r"><code>showtext::showtext_auto()
+library(ggplot2, quietly = TRUE)
+mapn &lt;- nameMapInv(tickers)</code></pre>
+<pre><code>## [1] &quot;S&amp;P500&quot;   &quot;Facebook&quot; &quot;上证综指&quot; &quot;兴业银行&quot; &quot;中兴通讯&quot;</code></pre>
+<pre class="r"><code>ggplot(data=l.out$df.tickers, mapping=aes(
+  x = ref.date, y = price.close)) +
+  geom_line() +
+  facet_wrap(~ mapn[ticker], scales = &#39;free_y&#39;) </code></pre>
+<p><img src="/post/2023-03-25-fin/2023-03-25-fin-data_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
+</div>
+</div>
+<div id="finance-quant" class="section level2">
+<h2>finance-quant</h2>
+<pre class="r"><code>library(tidyverse)
+library(tidyquant)</code></pre>
+<pre class="r"><code>prices &lt;- tq_get(&quot;AAPL&quot;,
+  get = &quot;stock.prices&quot;,
+  from = &quot;2000-01-01&quot;,
+  to = &quot;2021-12-31&quot;
+)
+prices</code></pre>
+<pre><code>## # A tibble: 5,535 × 8
+##    symbol date        open  high   low close     volume adjusted
+##    &lt;chr&gt;  &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;
+##  1 AAPL   2000-01-03 0.936 1.00  0.908 0.999  535796800    0.851
+##  2 AAPL   2000-01-04 0.967 0.988 0.903 0.915  512377600    0.779
+##  3 AAPL   2000-01-05 0.926 0.987 0.920 0.929  778321600    0.790
+##  4 AAPL   2000-01-06 0.948 0.955 0.848 0.848  767972800    0.722
+##  5 AAPL   2000-01-07 0.862 0.902 0.853 0.888  460734400    0.756
+##  6 AAPL   2000-01-10 0.911 0.913 0.846 0.873  505064000    0.743
+##  7 AAPL   2000-01-11 0.857 0.887 0.808 0.828  441548800    0.705
+##  8 AAPL   2000-01-12 0.848 0.853 0.772 0.778  976068800    0.663
+##  9 AAPL   2000-01-13 0.844 0.882 0.826 0.864 1032684800    0.735
+## 10 AAPL   2000-01-14 0.893 0.913 0.887 0.897  390376000    0.763
+## # ℹ 5,525 more rows</code></pre>
+<pre class="r"><code>prices %&gt;%
+  ggplot(aes(x = date, y = adjusted)) +
+  geom_line() +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = &quot;Apple stock prices between beginning of 2000 and end of 2021&quot;
+  )</code></pre>
+<p><img src="/post/2023-03-25-fin/2023-03-25-fin-data_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
+<pre class="r"><code>prices</code></pre>
+<pre><code>## # A tibble: 5,535 × 8
+##    symbol date        open  high   low close     volume adjusted
+##    &lt;chr&gt;  &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;
+##  1 AAPL   2000-01-03 0.936 1.00  0.908 0.999  535796800    0.851
+##  2 AAPL   2000-01-04 0.967 0.988 0.903 0.915  512377600    0.779
+##  3 AAPL   2000-01-05 0.926 0.987 0.920 0.929  778321600    0.790
+##  4 AAPL   2000-01-06 0.948 0.955 0.848 0.848  767972800    0.722
+##  5 AAPL   2000-01-07 0.862 0.902 0.853 0.888  460734400    0.756
+##  6 AAPL   2000-01-10 0.911 0.913 0.846 0.873  505064000    0.743
+##  7 AAPL   2000-01-11 0.857 0.887 0.808 0.828  441548800    0.705
+##  8 AAPL   2000-01-12 0.848 0.853 0.772 0.778  976068800    0.663
+##  9 AAPL   2000-01-13 0.844 0.882 0.826 0.864 1032684800    0.735
+## 10 AAPL   2000-01-14 0.893 0.913 0.887 0.897  390376000    0.763
+## # ℹ 5,525 more rows</code></pre>
+<pre class="r"><code>returns &lt;- prices %&gt;%
+  arrange(date) %&gt;%
+  mutate(ret = lead(adjusted) / adjusted - 1) %&gt;%
+  select(symbol, date, ret)
+returns &lt;- returns %&gt;%
+  drop_na(ret)
+returns</code></pre>
+<pre><code>## # A tibble: 5,534 × 3
+##    symbol date           ret
+##    &lt;chr&gt;  &lt;date&gt;       &lt;dbl&gt;
+##  1 AAPL   2000-01-03 -0.0843
+##  2 AAPL   2000-01-04  0.0146
+##  3 AAPL   2000-01-05 -0.0865
+##  4 AAPL   2000-01-06  0.0474
+##  5 AAPL   2000-01-07 -0.0176
+##  6 AAPL   2000-01-10 -0.0512
+##  7 AAPL   2000-01-11 -0.0600
+##  8 AAPL   2000-01-12  0.110 
+##  9 AAPL   2000-01-13  0.0381
+## 10 AAPL   2000-01-14  0.0348
+## # ℹ 5,524 more rows</code></pre>
+<p>计算分位数：</p>
+<pre class="r"><code>quantile_05 &lt;- quantile(returns %&gt;% pull(ret) * 100, probs = 0.05)</code></pre>
+<p>这里的<code>pull</code>类似于<code>$</code>操作运算，拿出需要的变量，但可以拿出多个变量，也类似于<code>select</code>运算。</p>
+<pre class="r"><code>returns%&gt;%
+  ggplot(aes(x = ret * 100)) +
+  geom_histogram(bins = 100) +
+  geom_vline(aes(xintercept = quantile_05),
+    linetype = &quot;dashed&quot;
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = &quot;Distribution of daily Apple stock returns in percent&quot;
+  )</code></pre>
+<p><img src="/post/2023-03-25-fin/2023-03-25-fin-data_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
+<p>获得指数的<code>tq_index</code></p>
+<pre class="r"><code>ticker &lt;- tq_index(&quot;DOW&quot;)
+ticker</code></pre>
+<pre><code>## # A tibble: 30 × 8
+##    symbol company      identifier sedol weight sector shares_held local_currency
+##    &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;         
+##  1 UNH    UnitedHealt… 91324P10   2917… 0.0973 Healt…     5612874 USD           
+##  2 GS     Goldman Sac… 38141G10   2407… 0.0639 Finan…     5612874 USD           
+##  3 HD     Home Depot … 43707610   2434… 0.0579 Consu…     5612874 USD           
+##  4 MSFT   Microsoft C… 59491810   2588… 0.0574 Infor…     5612874 USD           
+##  5 MCD    McDonald&#39;s … 58013510   2550… 0.0555 Consu…     5612874 USD           
+##  6 AMGN   Amgen Inc.   03116210   2023… 0.0487 Healt…     5612874 USD           
+##  7 V      Visa Inc. C… 92826C83   B2PZ… 0.0452 Finan…     5612874 USD           
+##  8 CAT    Caterpillar… 14912310   2180… 0.0444 Indus…     5612874 USD           
+##  9 BA     Boeing Comp… 09702310   2108… 0.0404 Indus…     5612874 USD           
+## 10 CRM    Salesforce … 79466L30   2310… 0.0389 Infor…     5612874 USD           
+## # ℹ 20 more rows</code></pre>
+<div id="famafrench-数据" class="section level3">
+<h3>Famafrench 数据</h3>
+<p>Fama-French的三因子模型/五因子的数据可直接通过<code>frenchdata</code>包来下载，不再需要上french数据官网下载。</p>
+<pre class="r"><code>start_date &lt;- ymd(&quot;1960-01-01&quot;)
+end_date &lt;- ymd(&quot;2021-12-31&quot;)</code></pre>
+<pre class="r"><code>library(frenchdata)
+start_date =
+factors_ff_monthly_raw &lt;- download_french_data(&quot;Fama/French 3 Factors&quot;)
+factors_ff_monthly &lt;- factors_ff_monthly_raw$subsets$data[[1]] %&gt;%
+  transmute(
+    month = floor_date(ymd(str_c(date, &quot;01&quot;)), &quot;month&quot;),
+    rf = as.numeric(RF) / 100,
+    mkt_excess = as.numeric(`Mkt-RF`) / 100,
+    smb = as.numeric(SMB) / 100,
+    hml = as.numeric(HML) / 100
+  ) 
+head(factors_ff_monthly)</code></pre>
+<pre><code>## # A tibble: 6 × 5
+##   month          rf mkt_excess     smb     hml
+##   &lt;date&gt;      &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 1926-07-01 0.0022     0.0296 -0.0256 -0.0243
+## 2 1926-08-01 0.0025     0.0264 -0.0117  0.0382
+## 3 1926-09-01 0.0023     0.0036 -0.014   0.0013
+## 4 1926-10-01 0.0032    -0.0324 -0.0009  0.007 
+## 5 1926-11-01 0.0031     0.0253 -0.001  -0.0051
+## 6 1926-12-01 0.0028     0.0262 -0.0003 -0.0005</code></pre>
+<pre class="r"><code>industries_ff_monthly_raw &lt;- download_french_data(&quot;10 Industry Portfolios&quot;)
+industries_ff_monthly &lt;- industries_ff_monthly_raw$subsets$data[[1]] |&gt;
+  mutate(month = floor_date(ymd(str_c(date, &quot;01&quot;)), &quot;month&quot;)) |&gt;
+  mutate(across(where(is.numeric), ~ . / 100)) |&gt;
+  select(month, everything(), -date)
+head(industries_ff_monthly)</code></pre>
+<pre><code>## # A tibble: 6 × 11
+##   month        NoDur   Durbl   Manuf   Enrgy   HiTec   Telcm   Shops    Hlth
+##   &lt;date&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 1926-07-01  0.0145  0.156   0.0469 -0.0118  0.029   0.0083  0.0011  0.0177
+## 2 1926-08-01  0.0397  0.0368  0.0281  0.0347  0.0266  0.0217 -0.0071  0.0425
+## 3 1926-09-01  0.0114  0.048   0.0115 -0.0339 -0.0038  0.0241  0.0021  0.0069
+## 4 1926-10-01 -0.0124 -0.0823 -0.0363 -0.0078 -0.0458 -0.0011 -0.0229 -0.0057
+## 5 1926-11-01  0.052  -0.0019  0.041   0.0001  0.0471  0.0163  0.0643  0.0542
+## 6 1926-12-01  0.0082  0.0989  0.0374  0.0282 -0.0002  0.0199  0.0062  0.0011
+## # ℹ 2 more variables: Utils &lt;dbl&gt;, Other &lt;dbl&gt;</code></pre>
+</div>
+<div id="宏观数据" class="section level3">
+<h3>宏观数据</h3>
+<pre class="r"><code>library(readxl)
+library(googledrive)
+library(tidyquant)
+drive_deauth()</code></pre>
+<pre class="r"><code>cpi_monthly &lt;- tq_get(&quot;CPIAUCNS&quot;,
+  get = &quot;economic.data&quot;
+) |&gt;
+  transmute(
+    month = floor_date(date, &quot;month&quot;),
+    cpi = price / price[month == max(month)]
+  )
+tail(cpi_monthly)</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   month        cpi
+##   &lt;date&gt;     &lt;dbl&gt;
+## 1 2022-09-01 0.987
+## 2 2022-10-01 0.991
+## 3 2022-11-01 0.990
+## 4 2022-12-01 0.987
+## 5 2023-01-01 0.994
+## 6 2023-02-01 1</code></pre>
+<p>最新的数据在2023年2月。</p>
+<p>还有一些其他的数据来源，tidyfinance这本书中有一些总结<a href="https://www.tidy-finance.org/other-data-providers.html" class="uri">https://www.tidy-finance.org/other-data-providers.html</a></p>
+</div>
+</div>
+<div id="resource" class="section level2">
+<h2>Resource</h2>
+<ul>
+<li><a href="https://www.tidy-finance.org/index.html">tidyfinance</a></li>
+<li><a href="https://www.math.pku.edu.cn/teachers/lidf/course/fts/ftsnotes/html/_ftsnotes/rsoft.html#rsoft-ts-bgets">金融时间序列分析</a></li>
+</ul>
+</div>

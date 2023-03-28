@@ -34,7 +34,6 @@ EMH是Fama提出，用于检验市场的有效性的一个方式。EMH理论主�
 ### 独立性检验
 
 Abraham Wald 和 Jacob Wolfowitz对非参数检验的贡献，也称为是Wald-Wolfowitz检验。
-
 $$
 \mu=\frac{2(N_+)(N_-)}{N}-1
 \\\sigma^2=\frac{(\mu-1)(\mu-2)}{N-1}
@@ -77,7 +76,6 @@ err2 <- filter(err1, 0.9, method="recursive")
 y2 <- 1 + x + err2
 dwtest(y2 ~ x)
 ```
-
 - 这里的p值为0.6532，显然无法拒绝原假设，也就是认为不相关的。
 - 在第二个中，p值几乎接近于0，拒绝原假设，选择备择假设，也就是存在相关的。
 
@@ -98,7 +96,6 @@ $$
 诸如这类的统计量还有很多包括Bartell Rank-based Variance Ratio Test,Lo-MacKinlay Heteroscedastic Variance RT etc.
 
 ### R中实现
-
 ```{r}
 library("IntroCompFinR")
 smpl = "2002-09::2012-10" 

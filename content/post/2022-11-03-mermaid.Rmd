@@ -132,7 +132,6 @@ DiagrammeR("
     end
 ")
 ```
-
 That may be useful when doing project management
 
 ## Source

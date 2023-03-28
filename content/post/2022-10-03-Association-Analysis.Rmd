@@ -1,9 +1,7 @@
 ---
 title: "Association Analysis in R"
 author: "Jianqi Huang"
-katex: true
 date: '2022-10-03'
-output: html_document
 ---
 
 ### loading packages

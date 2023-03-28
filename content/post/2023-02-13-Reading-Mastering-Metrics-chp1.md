@@ -1,7 +1,6 @@
 ---
 title: "Reading Mastering Metrics(Chapter 1)"
 date: "2023-02-13"
-katex: true
 ---
 
 ### The chapter 1 randomized Trials

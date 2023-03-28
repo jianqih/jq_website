@@ -2,7 +2,7 @@ baseURL: "https://www.jianqihuang.com/"
 languageCode: "en-us"
 title: "Jianqi's Website"
 theme: "TeXtLite"
-disqusShortname: "disqus-shortname-here"
+disqusShortname: "jqh"
 footnoteReturnLinkContents: "↩"
 
 permalinks:

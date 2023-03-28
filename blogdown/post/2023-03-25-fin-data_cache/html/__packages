@@ -1,0 +1,17 @@
+ggplot2
+dplyr
+zoo
+xts
+Quandl
+tidyverse
+tibble
+tidyr
+readr
+purrr
+stringr
+forcats
+lubridate
+knitr
+TSstudio
+tsibble
+nycflights13
