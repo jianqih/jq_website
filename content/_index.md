@@ -5,7 +5,7 @@ position: "B.A. Student"
 institute: "Central University of Finance and Economics"
 interests:
     title: "Interests" 
-    items: ["Programming", "Economics", "Agricultural Economics","Applied Econometrics"]
+    items: ["Economics", "Agricultural Economics","Applied Econometrics","Macro Economics","Deep Learning"]
 education: 
     title: "Education"
     items:
@@ -15,12 +15,12 @@ projects:
     title: "Projects"
     items:
         - name: "The Literature Replication: Based on R"
-          tags: ['R','replication','Linguistics']
+          tags: ['R','replication']
           about: "This book based on Chinese Micro-Datasets like CHFS,CFPS and CHARLS using R to replicate. It also replicates some famous paper. It will help to get a deeper understand for the economic data processing and the econometric methods."
           url: https://jianqih.github.io/rrp3/
           img: '/project/rpp2.png'
         - name: "Statistics, Machine learning and Data mining(in Chinese)"
-          tags: ['R',  'Linguistics', 'Statistics','ML']
+          tags: ['R', 'Statistics','ML','DM']
           about: "This book based on daily learning about Data Mining, Machine Learning and Statistics. Not just for theory but the practice based on mainly R language."
           url: "http://stats-dm-ml-r.jianqihuang.com/"
           img: /project/stat-ml-dm-r.png
@@ -30,10 +30,10 @@ projects:
           url: "https://www.overleaf.com/latex/templates/cufe-beamer-theme/pcwbrgmntnky"
           img: /project/beamer.png
         - name: "About Econ"
-          tags: ['economics']
+          tags: ['economics','info']
           img: /project/ab-econ.png
           url: "https://about-econ.jianqihuang.com"
-          about: "It consists of two modules, one is the collection of postgraduate economic applying information and another is a collection of economic online resources. The aim is to help undergraduate who would apply econ master or PhD to get some useful information."
+          about: "It consists of two modules, one is the information collection of postgraduate economic application, another is a collection of economic online resources. This aim is to help undergraduate who would apply econ master/Predoc or PhD especially Chinese college student to get some useful information."
         - name: "Program Chunk"
           tags: ['programming','R','Python']
           about: "It's a blog container that program code or project will be uploaded. The codes and programs usually use the Python, R and Julia. I also upload these on Github."
@@ -73,7 +73,7 @@ sections:
 
 ## Biography
 
-My name is Huang Jianqi, an undergraduate college student from central university of finance and economics. I have great interest in programming especially in the field of economics and finance. 
+My name is Huang Jianqi(Chinese name is 黄建祺), an undergraduate college student from central university of finance and economics. I have great interest in programming especially in the field of economics and finance. 
 
 
 
