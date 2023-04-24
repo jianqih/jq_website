@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Social networks and mental health outcomes</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Paper authors: 孟欣·薛森" />
+    <meta name="author" content="Presenting group: 第 19 小组" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link rel="stylesheet" href="zh-CN.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Social networks and mental health outcomes
+]
+.subtitle[
+## Chinese rural–urban migrant experience
+]
+.author[
+### Paper authors: 孟欣·薛森
+]
+.author[
+### Presenting group: 第 19 小组
+]
+.date[
+### 2023/04/22
+]
+
+---
+
+
+
+
+
+
+
+
+
+# Introduction
+
+- 人口流动(immgration)是一个将个人从其熟悉的社会网络中分离出来并将其卷入陌生环境的过程。在这个过程中，人口流动必须适应新的、有时是不友好的环境，进入新的社会体系。
+
+- 中国城市的流动人口不仅面临着大多数社会所面临的正常流动压力，即失去家庭社会网络和社会环境，而且还面临着严重的歧视性制度。由于高工作压力、文化冲击和歧视，研究发现平均意义上流动人口的心理健康状况不如农村和城市的本地居民。
+
+- 心理健康是一种重要的人力资本形式，影响着生产力和幸福感。心理健康疾病会使个人在劳动力和婚姻市场上处于不利地位，并给社会带来巨大成本。
+
+- 人们一直在研究社会网络和心理健康之间的关系。理论上社会网络对心理健康既有好处也有坏处。它们可以改善心理健康通过创造社会融合感和缓冲压力，但参与社会网络也会诱发负债和义务压力的心理成本（Kawachi&amp;Berkman(2001)）。
+
+---
+### Back to this research
+
+- 该研究发现流动人口在流入城市的社会网络是否有助于保护他们的心理健康问题；
+
+- 这项研究分析来自中国城乡移民项目（RUMiC）的一项独特的大规模长期调查；
+
+- 关于社会网络对男性心理健康影响的研究往往面临两个挑战：心理健康和社会网络之间的潜在内生性，以及测量自然社会网络的困难。
+
+--
+
+#### RUMiC数据优势
+
+1. 可以用来代理自然的社会网络，而不是人为的网络，在我们的研究中，社会网络被衡量为主要在城市生活/工作的朋友和熟人的数量，以及个人在去年春节期间访问/呼叫/发送信件、微信信息或电子邮件的数量（包括移民和城市本地人）。
+
+1. 数据包含了大量纵向数据，这使我们能够估计固定效应模型，进而识别个体不可观测特征的内生性。
+
+1. RUMiC调查中观察到的移民来自大约1600个县。可以在各流出县找到合理的工具变量，以进一步缓解潜在的内生性问题。
+
+
+---
+# Background and Literature
+## 城乡居民收入差异大促使群众迁移
+
+-	在中国城市中，农村流动人口中存在制度歧视(institutional discrimination)
+  - 改革前期(1949-1978)严格限制人口自由流动
+  - 城市当地人有终身社会保障体系
+  -收入差距
+  - 粮食配给制度(1980s-1990s)
+  -FDI使劳动力需求增加，但仍然存在制度歧视
+-	心理压力
+  - 新的环境
+-	大量的文献研究均发现流动人口/外来务工者有一定的心理疾病（抑郁等）
+  - E.g. 富士康跳楼事件、打工诗人许立志
+-	也有个别发现一些地区存在反例
+
+
+&gt; 我咽下一枚铁做的月亮
+他们把它叫做螺丝
+.
+我咽下这工业的废水，失业的订单
+那些低于机台的青春早早夭亡
+.
+我咽下奔波，咽下流离失所
+咽下人行天桥，咽下长满水锈的生活
+.
+我再咽不下了
+所有我曾经咽下的现在都从喉咙汹涌而出
+在祖国的领土上铺成一首
+耻辱的诗
+
+
+
+---
+# 实证策略
+
+## Baseline regression
+
+`$$MHP_{ijct}=\beta_1*SN_{ijct}+X_{ijct}*\beta_2+W_{ct}*\beta_3+D_{jt}*\beta_4+C_c+\tau_t+\rho_j+\epsilon_{ijct}\tag{1}$$`
+
+其中，下标 `\(i\)`、 `\(j\)` 、 `\(c\)` 和 `\(t\)` 分别表示个人、目的地城市、输出县和调查年份；
+
+
+- `\(MHP_{ijct}\)` ：心理健康问题的测量；
+- `\(SN_{ijct}\)` ：衡量移民在城市中的社会网络；
+- `\(X_{ijct}\)`：个体特征的向量；
+- `\(W_{ct}\)` ：派遣社区特征的向量；
+- `\(D_{jt}\)`：流入城市时间变量特征的向量；
+- `\(C_c\)` ： 流出县固定效应，
+- `\(\tau\)` ： 年份固定效应；
+- `\(\rho\)` ： 目的地城市固定效应；
+- `\(\epsilon_{ijct}\)`：无法观测变量。
+
+
+---
+# 内生性
+
+## 内生来源
+
+- 反向因果：个体的心理健康影响社会网络；
+- 个体不可观测属性影响关键解释变量和被解释变量；
+- 测量误差：社会网络是受访者自我报告的；
+
+--
+### 降低内生性措施（一）——固定效应模型
+
+`$$MHP_{ijct}=\beta_1*SN_{ijct}+X_{ijct}*\beta_2+W_{ct}*\beta_3+D_{jt}*\beta_4+\tau_t+n_i+\epsilon_{ijct}
+\tag{2}$$`
+
+- `\(n_i\)` 为个体固定效应；
+- 考虑到 `\(X_{ijct}\)` 和 `\(W_{ct}\)` 的多重共线性，剔除流出县固定效应 `\(C_c\)`
+
+--
+### 局限性
+
+1. 它不能解决由未观察到的时间变量因素引起的内生性偏差。
+1. 测量误差问题会在FE估计中引起很大的衰减偏差([attenuation bias a.k.a. Regression dilution](https://en.wikipedia.org/wiki/Regression_dilution))，特别是当随时间变化的错误报告行为是不一致的。
+
+
+---
+# 内生性
+### 降低内生性措施（二）——工具变量
+
+横截面工具变量法联合估计(1)和社会网络估计方程
+
+`$$SN_{ijct}=\gamma_1*Z_{ct}+X_{ijct}*\gamma_2+W_{ct}*\gamma_3+C_c+\tau_t+\color{blue}{\rho_j}+e_{ijct}\tag{3}$$`
+固定效应工具变量(FEIV)的联合估计方程
+
+`$$SN_{ijct}=\gamma_1*Z_{ct}+X_{ijct}*\gamma_2+W_{ct}*\gamma_3+C_c+\tau_t+\color{red}{n_i}+e_{ijct}\tag{4}$$`
+
+---
+# 工具变量选取
+
+### 家乡县降雨量
+  - 降雨量可能会影响社会网络，因为降雨量与农业产出相关（正向），因此会降低流动的推力(push effect)
+  - 同样考虑到降雨量会使得心理健康，因此选择10年期（前3-13年）的平均日降雨量以及平方项来作为控制变量放到 `\(W_{ct}\)` 中，也就控制了长期降雨量对心理健康的影响；同时也有理由相信流出起的前两年的降雨并不会对心理健康造成影响；
+  - 再考虑降雨对于农业产出进而影响心理健康，产出导致收入上升，因此可以考虑再将当地日工资作为控制变量放入估计方程 (1) 和 (2)
+  - 最后考虑不可观测的偏好：降雨反映当地气候环境，选择流入地会有适应性偏好可能，文章中使用Munshi's(2003)的方法，认为这种偏好长时间不变，由此在FEIV中的估计是有效的。
+
+### 家乡村庄与最近交通站距离
+  - 与流动网络大小相关：一是决定流动成本，二是交通站选择在人口多的地方建，由此村民在地理距离上更加靠近
+  - 另一方面与交通站距离远近也反映了地方的经济水平，从而影响心理健康，作者又把这些特征放入 `\(W_{ct}\)` 来避免潜在遗漏变量。
+
+
+
+---
+# Data
+主要数据来自于RUMiC项目，包括：
+
+- Migrant Household Survey (MHS) ：
+- Urban Household Survey (UHS) 
+- Rural Household Survey (RHS)
+
+MHS有9个完整的基线调查(2009-2016)，其他两受制于经费终止于2011年。
+- 这篇文章主要使用MHS四期(2008,2009,2011和2012)调查数据
+- 为保证样本量，团队采用每年随机代表性重采样大约5000户
+
+这篇文章还用了中国城市统计年鉴数据——来自于中国气象信息中心
+
+---
+# 变量
+#### 关键变量
+- 心理健康：用MHS中的General Health Questionaire(GHQ) 12。这里选择李克特量表（Likert score）作为表示心理健康问题的度量指标，得分越高表示心理健康问题越严重。
+- 社会网络：社会网络模块在每个基线问题中都涵盖，，一般对于社会网络问题的测量需要从质量和数量上考虑，但这里直接进行了省略值考虑数量。
+
+&gt;(1) approximately how many people are your relatives?
+(2) how many are your friends and acquaintances?
+(3) how many are currently living in the city?
+(4) how many have city hukou?”
+
+#### 其他控制变量：
+  - 个体特征包括性别等、
+  - 城市GDP增长率、最低工资水平（通过爬取线上数据获取）
+  - 降雨数据来自于气象中心824个国家气象基站数据。
+
+
+#### 样本处理
+- 构建3个样本：全样本、代表性样本（固定第一期，后面的3期随机采样）以及面板样本（受访者参与至少两次）
+
+---
+class: middle
+# 统计性描述
+
+.pull-left[
+![](figures/fig1.png)]
+
+.pull-right[
+&lt;img src="figures/fig2.png" width="70%" /&gt;
+]
+
+- 受限于空间，就不展示统计性表。
+
+
+
+
+---
+class: center, middle, inverse
+# Results
+
+---
+
+# OLS和固定效应结果
+
+- panel B是标准化（z-score）之后的数据;
+- (1)-(3)用的样本不同，FE估计用面板样本；
+- 移民城市网络与心理健康问题有明显的负相关关系；
+
+
+&lt;img src="figures/t2.png" width="65%" style="display: block; margin: auto;" /&gt;
+
+
+---
+# OLS和固定效应
+
+.pull-left[
+- 男性移民工人的心理问题比女性移民工人少；
+- 受教育程度更高的流动人口心理健康程度更高；
+- 已婚者的心理健康状况比单身者好，而离婚者的心理健康状况比单身者差；
+
+### FE估计系数较小
+- 测量误差导致衰减偏差
+- 遗漏变量导致非FE模型有更高的估计（比如文章argue内向群体一般可能有更多的心理问题，OLS没有控制就忽略了这些影响，导致观察到更高的估计）
+]
+
+.pull-right[
+&lt;img src="figures/t8.png" width="70%" style="display: block; margin: auto auto auto 0;" /&gt;
+]
+
+
+
+---
+
+# IV results
+
+## [Falsification Test](https://erinhartman.com/project/falsification_tests/)
+
+- 为排除工具变量通过其他channel影响到流动人口的城市生活
+
+&lt;img src="figures/t3.png" width="68%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+---
+
+# IV results（续）
+
+.pull-left[
+&lt;img src="figures/t4.png" width="100%" style="display: block; margin: auto auto auto 0;" /&gt;
+]
+
+.pull-right[
+- Panels A和B分别用之前的两个IV估计的相关系数分别为-0.089和-0.154；
+- 标准化后的估计结果显示社会网络减少0.35和0.6个标准差；
+- Panel C 用两IV估计的结果的系数为-0.121，减少0.471个标准差；
+]
+
+
+---
+# IV 2SLS panel D result
+
+&lt;img src="figures/t4contin.png" width="68%" style="display: block; margin: auto;" /&gt;
+
+panel D 用降雨量作为IV对FE效应模型进行估计，得到未标准化和标准化后的相关系数为-0.171和-0.661（在5%统计显著性水平下）
+
+---
+# 为何IV估计系数大于OLS估计
+
+.pull-left[
+- 存在心理健康问题的人们会更加依赖于去寻求有更大潜在社会网络的城市。
+- 测量误差的存在：导致了在FE和OLS模型中衰减偏误（受访者基本上回答有5，10，15这样的社会网络大小）
+- 在IV/FEIV估计中，从家乡社会网络那获得的mental stability 比在城市中获得的来得大。
+]
+
+.pull-right[
+
+&lt;div class="figure"&gt;
+&lt;img src="figures/Visualization_of_errors-in-variables_linear_regression.png" alt="Illustration of regression dilution (or attenuation bias) by a range of regression estimates in errors-in-variables models from wikipedia" width="80%" /&gt;
+&lt;p class="caption"&gt;Illustration of regression dilution (or attenuation bias) by a range of regression estimates in errors-in-variables models from wikipedia&lt;/p&gt;
+&lt;/div&gt;
+
+]
+
+---
+
+# 不同项目的GHQ影响
+
+- 社会网络主要在提升自信和降低焦虑
+- “快感缺乏和社交功能障碍”一项中社会网络同样有显著帮助，但总体上效果不明显
+
+&lt;img src="figures/fig3.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# 分组分析
+
+.pull-left[
+
+- 对于一些特定人群进行分析：受教育程度低、长时间工作的、城市中没有社会保障人群。
+
+- **panel B-D**在FEIV估计中均高于panel A的估计值。
+ 
+- 这表明，社会网络在没有获得社会福利的移民中反应更强烈。
+]
+.pull-right[
+&lt;img src="figures/t5.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+
+
+
+
+---
+background-image: url(figures/double.png)
+background-position: 50% 50%
+class: center
+# 稳健性检验（略）
+
+
+
+
+---
+
+# 结论
+
+- 这篇文章检验了社会网络在何种程度上帮助流动人口缓解他的心理健康问题。
+
+- 研究表明，城市流动人口的社会网络确实有助于缓解流动人口的心理健康问题。IV（FEIV）估计显示社会网络降低了心理健康问题从0.46到0.66的标准差。
+
+- 本文得出的结论只考虑了心理健康的一个方面，因为它与农村-城市移民有关。为了了解全貌，还需要进行更多的研究，例如移民如何影响农村留守家庭和非移民家庭的社会网络，以及这种影响如何反过来影响这些群体的心理健康状况。
+
+
+&gt; 中国的城市劳动力唱出来最大的从中国到世界其他地方，二仍然存在制度歧视，工作时长更长而工资更低，无法同城市居民一般享受社会福利，往往他们与家人分离。
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

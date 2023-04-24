@@ -46,11 +46,13 @@ sections:
         - [Certainty Factor Model][lnk2], Dec, 2022
         - [The Punishment in Experimental Economics][lnk3], Nov,2022
         - [Introduction to Social Science][lnk4] Feb, 2023
+        - [Paper presentation: Social networks and mental health outcomes][lnk5] Apr, 2023
         
         [lnk1]: https://www.jianqihuang.com/slides/bagging-22-10/bagging10-22#1
         [lnk2]: https://www.jianqihuang.com/slides/CF-model_hjq_11-18.pdf
         [lnk3]: https://www.jianqihuang.com/slides/Punishment-EE-22-11/ee/#/title-slide
         [lnk4]: https://www.jianqihuang.com/slides/why-social-sci-23-02/why-social-sci#1
+        [lnk5]: https://www.jianqihuang.com/slides/deve-pre/deve-pre.html#1
     - title: "Tutorial"
       about: |
         - [Gauss Distribution: From Specially to Generally(in Chinese)](https://www.jianqihuang.com/tutorials/guass22-10-27.pdf)
