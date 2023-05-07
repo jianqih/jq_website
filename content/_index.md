@@ -63,6 +63,7 @@ sections:
         - [LaTeX Environment](https://www.jianqihuang.com/tutorials/latex-env.pdf)
         - [The Basics of LaTeX](https://www.jianqihuang.com/tutorials/latex-basics0228.pdf)
         - [Classification(in Chinese)](https://www.jianqihuang.com/tutorials/classify_22-11-16.pdf)
+        - [Financial Economics(in Chinese)](https://www.jianqihuang.com/tutorials/finecon_may23.pdf)
     - title: "Notes"
       about: |
         - [Machine Learning(in Chinese)](https://www.jianqihuang.com/notes/ml-12-19.pdf) : It's about the Machine Learning included the linear model, clustering, SVM, GD, Decision Tree etc. 
